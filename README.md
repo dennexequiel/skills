@@ -65,4 +65,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the skill contract, required evaluati
 
 ## License
 
-Repository tooling is available under the [MIT License](LICENSE). Each skill includes its own license in its installable bundle.
+This repository is licensed under the [MIT License](LICENSE). Each skill bundles a copy so standalone installations retain the applicable terms.

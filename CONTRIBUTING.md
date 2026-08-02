@@ -5,10 +5,10 @@ Contributions should keep each skill portable, self-contained, and independently
 ## Add Or Change A Skill
 
 1. Keep the canonical path at `skills/<name>/SKILL.md`.
-2. Include Agent Skills fields `name`, `description`, and `license`, plus repository catalog metadata for `display-name`, `summary`, `status`, and `areas`.
+2. Include Agent Skills fields `name` and `description`, set `license: MIT`, and add repository catalog metadata for `display-name`, `summary`, `status`, and `areas`.
 3. Use an `experimental`, `stable`, or `deprecated` status. Write areas as unique, comma-separated kebab-case values.
 4. Add `skills/<name>/README.md` with `Install`, `Use`, `Compatibility`, and `Limitations` sections.
-5. Bundle a `LICENSE` and keep runtime resources inside the skill directory with direct links from `SKILL.md`.
+5. Bundle a copy of the root `LICENSE` and keep runtime resources inside the skill directory with direct links from `SKILL.md`.
 6. Add positive, negative, and ambiguous trigger cases under `evals/<name>/triggers.json`.
 7. Add at least five behavioral cases with expected behavior and anti-patterns under `evals/<name>/evals.json`.
 8. Record each claimed host in the per-skill [compatibility matrix](docs/compatibility.md). Use `Unverified` instead of implying untested support.

@@ -57,6 +57,7 @@ function hasLevelTwoHeading(markdown: string, heading: string): boolean {
 const skills = await loadSkills()
 const names = new Set<string>()
 const compatibility = await readFile(resolve(repositoryRoot, "docs", "compatibility.md"), "utf8")
+const repositoryLicense = await readFile(resolve(repositoryRoot, "LICENSE"), "utf8")
 
 for (const skill of skills) {
   const source = relative(repositoryRoot, skill.skillPath)
@@ -65,7 +66,7 @@ for (const skill of skills) {
   if (skill.description.length > 1024) fail(`${source} description exceeds 1024 characters`)
   if (skill.summary.length > 200) fail(`${source} metadata.summary exceeds 200 characters`)
   if (skill.compatibility && skill.compatibility.length > 500) fail(`${source} compatibility exceeds 500 characters`)
-  if (!skill.license) fail(`${source} needs a license field`)
+  if (skill.license !== "MIT") fail(`${source} license must be MIT`)
   if (names.has(skill.name)) fail(`Duplicate skill name: ${skill.name}`)
   names.add(skill.name)
 
@@ -77,6 +78,8 @@ for (const skill of skills) {
       fail(`${source} must bundle ${requiredFile}`)
     }
   }
+  const bundledLicense = await readFile(resolve(skill.directory, "LICENSE"), "utf8")
+  if (bundledLicense !== repositoryLicense) fail(`${source} must bundle the root MIT license`)
   const readmePath = resolve(skill.directory, "README.md")
   const readme = await readFile(readmePath, "utf8")
   for (const requiredText of [`# ${skill.displayName}`, `--skill ${skill.name}`]) {

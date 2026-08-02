@@ -6,7 +6,7 @@ The repository optimizes for stable install paths, self-contained skills, small 
 
 Keep skills flat at `skills/<name>/`. Areas and lifecycle states belong in frontmatter metadata and the generated catalog. Moving a skill between subject areas must not change its install path.
 
-Every skill is an independent package. Its runtime references, scripts, assets, and license stay inside its directory. Repository-level evaluations and authoring tools may remain outside because clients do not need them to run the skill.
+Every skill is an independent package. Its runtime references, scripts, assets, and license stay inside its directory. Every first-party skill uses MIT and bundles a copy of the root `LICENSE`. Repository-level evaluations and authoring tools may remain outside because clients do not need them to run the skill.
 
 ## Lifecycle
 
