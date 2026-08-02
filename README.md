@@ -1,6 +1,6 @@
 # Agent Skills
 
-Portable skills for coding agents. Each skill keeps its behavioral contract independent of a specific runtime. Optional adapters add persistence, commands, or event hooks without leaking those details into the core skill.
+Portable skills for coding agents. Each skill keeps its behavioral contract independent of a specific runtime. Optional automation adapters add persistence, commands, or event hooks without leaking those details into the core skill.
 
 ## Skills
 
@@ -28,19 +28,32 @@ Releases use verified repository-wide SemVer tags without publishing an npm pack
 
 ## Install
 
-Agent Skills-compatible clients can install a skill from this repository:
+### Portable Skill
+
+Install Ace in any Agent Skills-compatible client. Choose the package runner already available on your machine:
 
 ```sh
+# Node.js
 npx skills add dennexequiel/skills --skill ace
+
+# Bun
+bunx skills add dennexequiel/skills --skill ace
 ```
 
-The OpenCode adapter can be installed from a local checkout:
+This installs the portable skill only. Run one command, not both.
+
+### OpenCode Automation Adapter
+
+OpenCode users who want durable mission state and automatic continuation can install the optional automation adapter from a checkout:
 
 ```sh
+git clone https://github.com/dennexequiel/skills.git
+cd skills
 bun run install:opencode
+bun run smoke:opencode
 ```
 
-The installer does not overwrite existing Ace files unless passed `--force`. It installs the pinned OpenCode plugin package when absent and refuses a conflicting version for review.
+The adapter installer includes the portable skill, so OpenCode users do not need the portable installation command first. It does not overwrite existing Ace files unless passed `--force`. It installs the pinned OpenCode plugin package when absent and refuses a conflicting version for review.
 
 ## Verify
 

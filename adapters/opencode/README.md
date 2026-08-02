@@ -1,6 +1,6 @@
-# OpenCode Adapter
+# OpenCode Automation Adapter
 
-The OpenCode adapter adds capabilities that the portable Ace skill does not assume:
+The OpenCode automation adapter adds capabilities that the portable Ace skill does not assume:
 
 - `/ace` command routing,
 - project-and-session-scoped durable state,
@@ -39,4 +39,4 @@ bun run smoke:opencode
 /ace clear
 ```
 
-The adapter defaults to 20 automatic continuations, 60 minutes, and 3 consecutive stalls. Runtime limits bound execution; they do not weaken the mission's acceptance criteria.
+The automation adapter defaults to 20 automatic continuations, 60 minutes, and 3 consecutive stalls. Runtime limits bound execution; they do not weaken the mission's acceptance criteria.
