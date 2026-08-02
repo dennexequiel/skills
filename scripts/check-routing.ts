@@ -29,7 +29,7 @@ function normalized(value: string): string {
 }
 
 const skills = await loadSkills()
-const seenPrompts = new Map<string, string>()
+const seenPrompts = new Map<string, { skills: Set<string>; kind: string }>()
 
 for (const skill of skills) {
   const path = resolve(repositoryRoot, "evals", skill.name, "triggers.json")
@@ -48,8 +48,16 @@ for (const skill of skills) {
     if (!prompt.trim()) throw new Error(`${skill.name} has an empty ${kind} trigger prompt`)
     const key = normalized(prompt)
     const previous = seenPrompts.get(key)
-    if (previous) throw new Error(`Trigger prompt collision between ${previous} and ${skill.name}:${kind}: ${prompt}`)
-    seenPrompts.set(key, `${skill.name}:${kind}`)
+    if (previous) {
+      const sharedNegative = previous.kind === "negative" && kind === "negative" && !previous.skills.has(skill.name)
+      if (!sharedNegative) {
+        const owners = [...previous.skills].map((owner) => `${owner}:${previous.kind}`).join(", ")
+        throw new Error(`Trigger prompt collision between ${owners} and ${skill.name}:${kind}: ${prompt}`)
+      }
+      previous.skills.add(skill.name)
+    } else {
+      seenPrompts.set(key, { skills: new Set([skill.name]), kind })
+    }
   }
   for (const entry of cases.ambiguous) {
     if (!entry.expected.trim()) throw new Error(`${skill.name} has an ambiguous prompt without expected routing`)

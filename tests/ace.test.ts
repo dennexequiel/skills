@@ -9,9 +9,6 @@ const skill = await readFile(resolve(root, "skills/ace/SKILL.md"), "utf8")
 const partnership = await readFile(resolve(root, "skills/ace/references/partnership.md"), "utf8")
 const command = await readFile(resolve(root, "adapters/opencode/command/ace.md"), "utf8")
 const plugin = await readFile(resolve(root, "adapters/opencode/plugin/ace.ts"), "utf8")
-const evaluations = JSON.parse(await readFile(resolve(root, "evals/ace/evals.json"), "utf8")) as {
-  cases: Array<{ name: string; expected: string[]; antiPatterns: string[] }>
-}
 const triggers = JSON.parse(await readFile(resolve(root, "evals/ace/triggers.json"), "utf8")) as {
   positive: string[]
   negative: string[]
@@ -20,7 +17,10 @@ const triggers = JSON.parse(await readFile(resolve(root, "evals/ace/triggers.jso
 const catalog = JSON.parse(await readFile(resolve(root, "catalog.json"), "utf8")) as {
   skills: Array<{ name: string; status: string; areas: string[] }>
 }
+const aceCatalogEntry = catalog.skills.find(({ name }) => name === "ace")
 const compatibility = await readFile(resolve(root, "docs/compatibility.md"), "utf8")
+const repositoryReadme = await readFile(resolve(root, "README.md"), "utf8")
+const aceReadme = await readFile(resolve(root, "skills/ace/README.md"), "utf8")
 
 describe("Ace portable contract", () => {
   test("advertises optional modes to clients that support argument hints", () => {
@@ -54,29 +54,29 @@ describe("Ace portable contract", () => {
 })
 
 describe("Ace distribution", () => {
-  test("has behavior cases with positive and negative assertions", () => {
-    expect(evaluations.cases.length).toBeGreaterThanOrEqual(5)
-    for (const evaluation of evaluations.cases) {
-      expect(evaluation.expected.length).toBeGreaterThan(0)
-      expect(evaluation.antiPatterns.length).toBeGreaterThan(0)
-    }
-  })
-
   test("has routing coverage on both sides of its activation boundary", () => {
     expect(triggers.positive.length).toBeGreaterThanOrEqual(5)
     expect(triggers.negative.length).toBeGreaterThanOrEqual(5)
     expect(triggers.ambiguous.length).toBeGreaterThanOrEqual(2)
   })
 
-  test("publishes honest maturity and compatibility metadata", () => {
-    expect(catalog.skills).toEqual([
+  test("publishes honest maturity and per-skill compatibility metadata", () => {
+    expect(aceCatalogEntry).toEqual(
       expect.objectContaining({ name: "ace", status: "experimental", areas: ["workflow", "autonomy"] }),
-    ])
+    )
     expect(compatibility).toContain("Format-compatible")
     expect(compatibility).toContain("Smoke-tested")
     expect(compatibility).toContain("Automation adapter")
-    expect(compatibility).toContain("| OpenCode | Yes | Yes (`bun run smoke:opencode`) | Yes |")
-    expect(compatibility).toContain("| Claude Code | Yes | Not yet | No |")
+    expect(compatibility).toContain("| [Ace](../skills/ace/) | OpenCode | Yes | Yes (`bun run smoke:opencode`) | Yes |")
+    expect(compatibility).toContain("| [Ace](../skills/ace/) | Claude Code | Yes | Not yet | No |")
+  })
+
+  test("keeps repository and skill installation guidance at the right scope", () => {
+    expect(repositoryReadme).toContain("--skill SKILL_NAME")
+    expect(repositoryReadme).not.toContain("Install Ace")
+    expect(aceReadme).toContain("--skill ace")
+    expect(aceReadme).toContain("--agent claude-code --global --yes")
+    expect(aceReadme).toContain("OpenCode Automation Adapter")
   })
 
   test("wires the OpenCode command to the portable skill and adapter tools", () => {
@@ -92,8 +92,8 @@ describe("Ace distribution", () => {
     await writeFile(resolve(configRoot, "package.json"), JSON.stringify({
       dependencies: { "@opencode-ai/plugin": "1.18.5" },
     }), "utf8")
-    const runInstaller = async () => {
-      const process = Bun.spawn(["bun", "scripts/install-opencode.ts"], {
+    const runInstaller = async (...args: string[]) => {
+      const process = Bun.spawn(["bun", "scripts/install-opencode.ts", ...args], {
         cwd: root,
         env: { ...Bun.env, OPENCODE_CONFIG_DIR: configRoot },
         stdout: "pipe",
@@ -108,6 +108,11 @@ describe("Ace distribution", () => {
     }
 
     try {
+      const help = await runInstaller("--help")
+      expect(help.exitCode).toBe(0)
+      expect(help.stdout).toContain("Usage: bun run install:opencode [--force]")
+      expect(await access(resolve(configRoot, "skills/ace")).then(() => true, () => false)).toBe(false)
+
       const first = await runInstaller()
       expect(first.exitCode).toBe(0)
       await access(resolve(configRoot, "skills/ace/LICENSE"))

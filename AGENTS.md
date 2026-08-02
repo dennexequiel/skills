@@ -25,7 +25,7 @@ This repository contains portable agent skills and optional runtime adapters. A 
 - Define observable completion evidence. Do not treat activity or a success claim as proof.
 - Add evaluations for ambiguity, stopping, safety, and overreach, not only happy paths.
 - Keep canonical skill paths flat. Put areas and lifecycle state in metadata.
-- Keep every runtime dependency inside its skill directory.
+- Keep portable skill resources inside the skill directory. Keep adapter dependencies and installation logic isolated from portable skill bundles.
 
 ## Change Policy
 
