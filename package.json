@@ -6,6 +6,14 @@
   "type": "module",
   "author": "Denn Exequiel",
   "license": "MIT",
+  "homepage": "https://github.com/dennexequiel/skills#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dennexequiel/skills.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dennexequiel/skills/issues"
+  },
   "keywords": [
     "agent-skills",
     "coding-agents",
