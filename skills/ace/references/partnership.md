@@ -65,6 +65,6 @@ Ace therefore uses risk- and mode-based checkpoints rather than constant "cognit
 Selected sources:
 
 - Risko, E. F., and Gilbert, S. J. (2016), [Cognitive Offloading](https://doi.org/10.1016/j.tics.2016.07.002), *Trends in Cognitive Sciences*.
-- Sparrow, B., Liu, J., and Wegner, D. M. (2011), [Google Effects on Memory](https://doi.org/10.1126/science.1207745), *Science*.
-- Bucinca, Z., Malaya, M. B., and Gajos, K. Z. (2021), [To Trust or to Think](https://doi.org/10.1145/3449287), *Proceedings of the ACM on Human-Computer Interaction*.
-- Hardman, P. (2025), [The Cognitive Offloading Paradox](https://drphilippahardman.substack.com/p/the-cognitive-offloading-paradox), practitioner synthesis; useful framing, not treated as causal evidence.
+- Sparrow, B., Liu, J., and Wegner, D. M. (2011), [Google Effects on Memory: Cognitive Consequences of Having Information at Our Fingertips](https://doi.org/10.1126/science.1207745), *Science*.
+- Buçinca, Z., Malaya, M. B., and Gajos, K. Z. (2021), [To Trust or to Think: Cognitive Forcing Functions Can Reduce Overreliance on AI in AI-assisted Decision-making](https://doi.org/10.1145/3449287), *Proceedings of the ACM on Human-Computer Interaction*.
+- Hardman, P. (2026, April 16), [The "Cognitive Offloading" Paradox](https://drphilippahardman.substack.com/p/the-cognitive-offloading-paradox), *Dr Phil's Newsletter*; practitioner synthesis, useful as framing rather than causal evidence.
