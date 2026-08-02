@@ -4,7 +4,14 @@ import { join, resolve } from "node:path"
 
 const root = resolve(import.meta.dir, "..")
 const configRoot = process.env.OPENCODE_CONFIG_DIR ?? join(homedir(), ".config", "opencode")
-const force = process.argv.includes("--force")
+const options = process.argv.slice(2)
+const unknownOptions = options.filter((option) => option !== "--force" && option !== "--help")
+if (unknownOptions.length) throw new Error(`Unknown option: ${unknownOptions.join(", ")}`)
+if (options.includes("--help")) {
+  console.log("Usage: bun run install:opencode [--force]")
+  process.exit(0)
+}
+const force = options.includes("--force")
 const packagePath = join(configRoot, "package.json")
 const repositoryPackage = JSON.parse(await readFile(join(root, "package.json"), "utf8")) as {
   devDependencies?: Record<string, string>

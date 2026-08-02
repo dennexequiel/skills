@@ -12,22 +12,22 @@ Reusable skills for coding agents. Each skill is independently installable and k
 
 ## Install A Skill
 
-Choose a skill from the catalog and open its page for purpose, usage, compatibility, and exact installation guidance. Agent Skills-compatible clients can install a selected skill directly from this repository:
+Choose a skill from the catalog and open its page for purpose, usage, compatibility, and exact installation guidance. The `skills` CLI can install a selected skill for its supported clients:
 
 ```sh
 # Node.js
-npx skills add dennexequiel/skills --skill <skill-name>
+npx skills add dennexequiel/skills --skill SKILL_NAME
 
 # Bun
-bunx skills add dennexequiel/skills --skill <skill-name>
+bunx skills add dennexequiel/skills --skill SKILL_NAME
 ```
 
-Use one package runner, not both. Host invocation and optional integrations vary by skill.
+Replace `SKILL_NAME` with a name from the catalog. Use one package runner, not both. Host invocation and optional integrations vary by skill.
 
 To install a selected skill globally for Claude Code without interactive prompts:
 
 ```sh
-npx skills add dennexequiel/skills --skill <skill-name> --agent claude-code --global --yes
+npx skills add dennexequiel/skills --skill SKILL_NAME --agent claude-code --global --yes
 ```
 
 ## Work On The Repository
@@ -41,7 +41,7 @@ bun install --frozen-lockfile
 bun run check
 ```
 
-Skills have no runtime package dependencies. Repository development uses pinned TypeScript and host API types. The full check validates TypeScript, skill metadata, bundle containment, references, routing fixtures, description collisions, generated catalog state, installer behavior, and behavioral contracts.
+The current skill bundles have no runtime package dependencies. Repository development uses pinned TypeScript and host API types. The full check validates TypeScript, skill metadata, bundle containment, references, routing fixtures, description collisions, generated catalog state, installer behavior, and behavioral contracts.
 
 ## Structure
 
@@ -65,4 +65,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the skill contract, required evaluati
 
 ## License
 
-[MIT](LICENSE)
+Repository tooling is available under the [MIT License](LICENSE). Each skill includes its own license in its installable bundle.

@@ -13,13 +13,15 @@ State is stored under `${XDG_STATE_HOME:-~/.local/state}/opencode/ace/`. Automat
 
 ## Install
 
-From the repository root:
+This installation is an alternative to installing the core skill through the `skills` CLI. It requires Bun and includes the Ace skill, command, and plugin.
 
 ```sh
+git clone https://github.com/dennexequiel/skills.git
+cd skills
 bun run install:opencode
 ```
 
-The installer verifies the pinned `@opencode-ai/plugin` version and installs it in the OpenCode configuration package when absent. It refuses a conflicting installed version rather than changing another plugin's runtime without review. Restart OpenCode after installation.
+The installer verifies the pinned `@opencode-ai/plugin` version and installs it in the OpenCode configuration package when absent. It refuses to overwrite existing Ace, command, or plugin files and refuses a conflicting plugin version. Use `--force` only after reviewing the reported files. Restart OpenCode after installation.
 
 Run the host-level smoke test after installation:
 
@@ -35,6 +37,7 @@ bun run smoke:opencode
 /ace status
 /ace pause <reason>
 /ace resume <next action>
+/ace complete
 /ace cancel <reason>
 /ace clear
 ```

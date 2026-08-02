@@ -3,6 +3,20 @@ import { dirname, relative, resolve, sep } from "node:path"
 import { loadSkills, repositoryRoot } from "./skill-data"
 
 const NAME_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
+const MINIMUM_BEHAVIOR_CASES = 5
+
+type BehaviorCase = {
+  name?: unknown
+  prompt?: unknown
+  expected?: unknown
+  antiPatterns?: unknown
+}
+
+type Evaluations = {
+  skill?: string
+  version?: number
+  cases?: unknown
+}
 
 function fail(message: string): never {
   throw new Error(message)
@@ -27,8 +41,22 @@ function localLinkTarget(rawTarget: string): string | undefined {
   return path === undefined ? undefined : decodeURIComponent(path)
 }
 
+function isNonEmptyString(value: unknown): value is string {
+  return typeof value === "string" && Boolean(value.trim())
+}
+
+function isNonEmptyStringArray(value: unknown): value is string[] {
+  return Array.isArray(value) && value.length > 0 && value.every(isNonEmptyString)
+}
+
+function hasLevelTwoHeading(markdown: string, heading: string): boolean {
+  const escaped = heading.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+  return new RegExp(`^## ${escaped}\\s*$`, "m").test(markdown)
+}
+
 const skills = await loadSkills()
 const names = new Set<string>()
+const compatibility = await readFile(resolve(repositoryRoot, "docs", "compatibility.md"), "utf8")
 
 for (const skill of skills) {
   const source = relative(repositoryRoot, skill.skillPath)
@@ -44,14 +72,41 @@ for (const skill of skills) {
   if (skill.content.split(/\r?\n/).length > 500) fail(`${source} exceeds 500 lines`)
 
   const files = await filesInside(skill.directory)
-  if (!files.some((path) => path === resolve(skill.directory, "LICENSE"))) {
-    fail(`${source} must bundle its license`)
+  for (const requiredFile of ["README.md", "LICENSE"]) {
+    if (!files.some((path) => path === resolve(skill.directory, requiredFile))) {
+      fail(`${source} must bundle ${requiredFile}`)
+    }
+  }
+  const readmePath = resolve(skill.directory, "README.md")
+  const readme = await readFile(readmePath, "utf8")
+  for (const requiredText of [`# ${skill.displayName}`, `--skill ${skill.name}`]) {
+    if (!readme.includes(requiredText)) fail(`${relative(repositoryRoot, readmePath)} must contain ${requiredText}`)
+  }
+  for (const requiredHeading of ["Install", "Use", "Compatibility", "Limitations"]) {
+    if (!hasLevelTwoHeading(readme, requiredHeading)) {
+      fail(`${relative(repositoryRoot, readmePath)} needs a level-two ${requiredHeading} heading`)
+    }
+  }
+
+  const compatibilityPrefix = `| [${skill.displayName}](../skills/${skill.name}/) |`
+  const compatibilityRows = compatibility.split(/\r?\n/).filter((line) => line.startsWith(compatibilityPrefix))
+  if (!compatibilityRows.length) {
+    fail(`${source} needs an entry in docs/compatibility.md`)
+  }
+  for (const row of compatibilityRows) {
+    const cells = row.split("|").slice(1, -1).map((cell) => cell.trim())
+    if (cells.length !== 6 || cells.some((cell) => !cell)) {
+      fail(`${source} has an incomplete entry in docs/compatibility.md`)
+    }
   }
 
   for (const markdownPath of files.filter((path) => path.endsWith(".md"))) {
     const markdown = await readFile(markdownPath, "utf8")
-    for (const match of markdown.matchAll(/!?\[[^\]]*\]\(([^)]+)\)/g)) {
-      const rawTarget = match[1]
+    const rawTargets = [
+      ...[...markdown.matchAll(/!?\[[^\]]*\]\(([^)]+)\)/g)].map((match) => match[1]),
+      ...[...markdown.matchAll(/^\s{0,3}\[(?!\^)[^\]]+\]:\s*(\S+)/gm)].map((match) => match[1]),
+    ]
+    for (const rawTarget of rawTargets) {
       if (rawTarget === undefined) continue
       const target = localLinkTarget(rawTarget)
       if (!target) continue
@@ -65,12 +120,31 @@ for (const skill of skills) {
   }
 
   const evalDirectory = resolve(repositoryRoot, "evals", skill.name)
-  for (const file of ["evals.json", "triggers.json"]) {
-    const path = resolve(evalDirectory, file)
-    const data = JSON.parse(await readFile(path, "utf8")) as { skill?: string; version?: number }
-    if (data.skill !== skill.name || data.version !== 1) {
-      fail(`${relative(repositoryRoot, path)} must identify ${skill.name} with schema version 1`)
+  const evaluationsPath = resolve(evalDirectory, "evals.json")
+  const evaluations = JSON.parse(await readFile(evaluationsPath, "utf8")) as Evaluations
+  if (evaluations.skill !== skill.name || evaluations.version !== 1) {
+    fail(`${relative(repositoryRoot, evaluationsPath)} must identify ${skill.name} with schema version 1`)
+  }
+  if (!Array.isArray(evaluations.cases) || evaluations.cases.length < MINIMUM_BEHAVIOR_CASES) {
+    fail(`${relative(repositoryRoot, evaluationsPath)} needs at least ${MINIMUM_BEHAVIOR_CASES} behavior cases`)
+  }
+  for (const [index, value] of evaluations.cases.entries()) {
+    if (!value || typeof value !== "object" || Array.isArray(value)) {
+      fail(`${relative(repositoryRoot, evaluationsPath)} case ${index + 1} must be an object`)
     }
+    const evaluation = value as BehaviorCase
+    if (!isNonEmptyString(evaluation.name) || !isNonEmptyString(evaluation.prompt)) {
+      fail(`${relative(repositoryRoot, evaluationsPath)} case ${index + 1} needs a name and prompt`)
+    }
+    if (!isNonEmptyStringArray(evaluation.expected) || !isNonEmptyStringArray(evaluation.antiPatterns)) {
+      fail(`${relative(repositoryRoot, evaluationsPath)} case ${index + 1} needs expected behaviors and anti-patterns`)
+    }
+  }
+
+  const triggersPath = resolve(evalDirectory, "triggers.json")
+  const triggers = JSON.parse(await readFile(triggersPath, "utf8")) as { skill?: string; version?: number }
+  if (triggers.skill !== skill.name || triggers.version !== 1) {
+    fail(`${relative(repositoryRoot, triggersPath)} must identify ${skill.name} with schema version 1`)
   }
 }
 

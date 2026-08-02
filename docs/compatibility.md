@@ -8,19 +8,19 @@ Compatibility has three explicit levels. Format support does not imply that ever
 | Smoke-tested | The repository provides and has passed a host-level discovery and invocation test. |
 | Automation adapter | A maintained host adapter adds durable state, lifecycle events, or automatic continuation. |
 
+`Unverified` means the repository has not established the claimed behavior through native documentation or a host-level smoke test.
+
 ## Current Matrix
 
 Compatibility is recorded per skill so unrelated skills can adopt integrations independently.
 
 | Skill | Host | Format-compatible | Smoke-tested | Automation adapter | Invocation |
 | --- | --- | --- | --- | --- | --- |
-| [Ace](../skills/ace/) | OpenCode | Yes | Yes (`bun run smoke:opencode`) | Yes | `/ace` |
+| [Ace](../skills/ace/) | OpenCode | Yes | Yes (`bun run smoke:opencode`) | Yes | Native skill discovery; `/ace` with adapter |
 | [Ace](../skills/ace/) | Claude Code | Yes | Not yet | No | `/ace` |
 | [Ace](../skills/ace/) | Codex CLI | Yes | Not yet | No | `$ace` or `/skills` |
 | [Ace](../skills/ace/) | Pi | Yes | Not yet | No | `/skill:ace` |
-| [Ace](../skills/ace/) | Antigravity CLI (`agy`) | Installer-supported; native package shape needs verification | Not yet | No | `/ace` |
-
-The portable Ace contract remains useful without an automation adapter. The host may keep executing within its normal run, while Ace records the mission brief in available conversation or task state.
+| [Ace](../skills/ace/) | Antigravity CLI (`agy`) | Unverified | Not yet | No | Unverified |
 
 ## Integration Gate
 
