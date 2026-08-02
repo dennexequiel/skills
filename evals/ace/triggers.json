@@ -1,0 +1,34 @@
+{
+  "skill": "ace",
+  "version": 1,
+  "positive": [
+    "Use Ace to own this migration until the compatibility tests and production build pass.",
+    "Take ownership of implementing account deletion and keep working until the documented acceptance criteria are verified.",
+    "Run this as a bounded mission: diagnose the flaky checkout flow, fix its cause, and prove it is stable.",
+    "Keep moving this release-readiness task forward until every agreed check passes or you hit a real authorization blocker.",
+    "Help me learn OAuth by building a PKCE client together; keep us moving until login works, but leave architecture decisions to me.",
+    "Own the investigation for the next hour and finish with a recommendation supported by measured evidence."
+  ],
+  "negative": [
+    "Fix the typo in the page title.",
+    "What does this function do?",
+    "Brainstorm ten names for this feature.",
+    "Review these two options with me, but do not implement anything.",
+    "Keep improving the codebase forever.",
+    "Show me how to print the current date in JavaScript."
+  ],
+  "ambiguous": [
+    {
+      "prompt": "Can you improve authentication?",
+      "expected": "Do not activate Ace until the request establishes mission ownership or a bounded finish line."
+    },
+    {
+      "prompt": "Own this mission: make the app perfect.",
+      "expected": "Activate Ace only to negotiate a bounded observable contract before implementation."
+    },
+    {
+      "prompt": "Get the failing tests green.",
+      "expected": "Use the normal coding workflow unless context shows this is a substantial persistent mission."
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "name": "denn-agent-skills",
+  "description": "Portable, evidence-driven skills for coding agents.",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "author": "Denn Exequiel",
+  "license": "MIT",
+  "keywords": [
+    "agent-skills",
+    "coding-agents",
+    "opencode"
+  ],
+  "packageManager": "bun@1.3.14",
+  "scripts": {
+    "check": "bun run typecheck && bun run check:skills && bun run check:routing && bun run check:catalog && bun test",
+    "check:catalog": "bun scripts/generate-catalog.ts",
+    "check:routing": "bun scripts/check-routing.ts",
+    "check:skills": "bun scripts/check-skills.ts",
+    "generate:catalog": "bun scripts/generate-catalog.ts --write",
+    "install:opencode": "bun scripts/install-opencode.ts",
+    "release:version": "bun scripts/release-version.ts",
+    "smoke:opencode": "bun scripts/smoke-opencode.ts",
+    "typecheck": "tsc --project tsconfig.json"
+  },
+  "devDependencies": {
+    "@opencode-ai/plugin": "1.18.5",
+    "@types/bun": "1.3.14",
+    "typescript": "7.0.2"
+  }
+}
