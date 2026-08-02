@@ -28,10 +28,10 @@ Releases use verified repository-wide SemVer tags without publishing an npm pack
 
 ## Install
 
-Agent Skills-compatible clients can install a skill from this repository once it has a public Git URL:
+Agent Skills-compatible clients can install a skill from this repository:
 
 ```sh
-npx skills add <repository-url> --skill ace
+npx skills add dennexequiel/skills --skill ace
 ```
 
 The OpenCode adapter can be installed from a local checkout:
