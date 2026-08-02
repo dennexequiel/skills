@@ -1,6 +1,7 @@
 ---
 name: ace
 description: Use when the user invokes Ace, asks an agent to own a substantial mission through measurable completion, or asks it to keep working until an outcome is verified. Ace may first bound an open-ended request. Do not use for one-step tasks, passive brainstorming, or indefinite improvement without agreement on an observable finish line.
+argument-hint: "[deliver|learn|explore|decide] <mission>"
 license: MIT
 compatibility: Works in Agent Skills-compatible coding agents. Durable state and automatic continuation require an optional host integration.
 metadata:

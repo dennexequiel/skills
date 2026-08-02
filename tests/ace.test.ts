@@ -23,6 +23,10 @@ const catalog = JSON.parse(await readFile(resolve(root, "catalog.json"), "utf8")
 const compatibility = await readFile(resolve(root, "docs/compatibility.md"), "utf8")
 
 describe("Ace portable contract", () => {
+  test("advertises optional modes to clients that support argument hints", () => {
+    expect(skill).toContain('argument-hint: "[deliver|learn|explore|decide] <mission>"')
+  })
+
   test("keeps consequential questions and reversible defaults together", () => {
     expect(skill).toContain("Ask a question only when")
     expect(skill).toContain("choose the safest reversible default")
