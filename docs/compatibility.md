@@ -6,11 +6,11 @@ Compatibility has three explicit levels. A portable format claim is not a claim 
 | --- | --- |
 | Format-compatible | The host implements Agent Skills discovery and can load `SKILL.md` plus relative resources. |
 | Smoke-tested | The repository provides and has passed a host-level discovery and invocation test. |
-| Enhanced | A maintained host integration adds durable state, lifecycle events, or automatic continuation. |
+| Automation adapter | A maintained host adapter adds durable state, lifecycle events, or automatic continuation. |
 
 ## Current Matrix
 
-| Host | Format-compatible | Smoke-tested | Enhanced | Invocation |
+| Host | Format-compatible | Smoke-tested | Automation adapter | Invocation |
 | --- | --- | --- | --- | --- |
 | OpenCode | Yes | Yes (`bun run smoke:opencode`) | Yes | `/ace` |
 | Claude Code | Yes | Not yet | No | `/ace` |
@@ -18,7 +18,7 @@ Compatibility has three explicit levels. A portable format claim is not a claim 
 | Pi | Yes | Not yet | No | `/skill:ace` |
 | Antigravity CLI (`agy`) | Installer-supported; native package shape needs verification | Not yet | No | `/ace` |
 
-The portable Ace contract remains useful without an enhanced integration. The host may keep executing within its normal run, while Ace records the mission brief in available conversation or task state.
+The portable Ace contract remains useful without an automation adapter. The host may keep executing within its normal run, while Ace records the mission brief in available conversation or task state.
 
 ## Integration Gate
 

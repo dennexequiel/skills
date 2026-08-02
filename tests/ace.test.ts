@@ -70,7 +70,7 @@ describe("Ace distribution", () => {
     ])
     expect(compatibility).toContain("Format-compatible")
     expect(compatibility).toContain("Smoke-tested")
-    expect(compatibility).toContain("Enhanced")
+    expect(compatibility).toContain("Automation adapter")
     expect(compatibility).toContain("| OpenCode | Yes | Yes (`bun run smoke:opencode`) | Yes |")
     expect(compatibility).toContain("| Claude Code | Yes | Not yet | No |")
   })
