@@ -58,13 +58,13 @@ Avoid two failure modes:
 
 ## Evidence Basis
 
-Research on cognitive offloading shows that external tools can reduce working-memory demands and improve immediate task performance, while also changing what people remember and practice. Results depend on task, incentives, metacognition, and tool design. This does not support a universal claim that AI assistance either improves or harms cognition.
+Research on cognitive offloading finds that external tools can reduce working-memory demands and improve performance in some tasks, while changing what people remember and practice. Effects vary by task, incentives, metacognition, and tool design. This evidence does not establish that AI assistance universally improves or harms cognition.
 
-Ace therefore uses risk- and mode-based checkpoints rather than constant "cognitive forcing." The policy is an engineering synthesis, not a clinical or educational guarantee.
+Ace applies these findings cautiously through risk- and mode-based checkpoints rather than constant "cognitive forcing." This policy is an engineering synthesis, not a clinical or educational guarantee.
 
 Selected sources:
 
 - Risko, E. F., and Gilbert, S. J. (2016), [Cognitive Offloading](https://doi.org/10.1016/j.tics.2016.07.002), *Trends in Cognitive Sciences*.
 - Sparrow, B., Liu, J., and Wegner, D. M. (2011), [Google Effects on Memory: Cognitive Consequences of Having Information at Our Fingertips](https://doi.org/10.1126/science.1207745), *Science*.
 - Buçinca, Z., Malaya, M. B., and Gajos, K. Z. (2021), [To Trust or to Think: Cognitive Forcing Functions Can Reduce Overreliance on AI in AI-assisted Decision-making](https://doi.org/10.1145/3449287), *Proceedings of the ACM on Human-Computer Interaction*.
-- Hardman, P. (2026, April 16), [The "Cognitive Offloading" Paradox](https://drphilippahardman.substack.com/p/the-cognitive-offloading-paradox), *Dr Phil's Newsletter*; practitioner synthesis, useful as framing rather than causal evidence.
+- Hardman, P. (2026, April 16), [The "Cognitive Offloading" Paradox](https://drphilippahardman.substack.com/p/the-cognitive-offloading-paradox), *Dr Phil's Newsletter*; practitioner synthesis used for context, not as primary research evidence.
