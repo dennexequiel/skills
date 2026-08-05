@@ -1,0 +1,171 @@
+{
+  "skill": "prep-that-doc",
+  "version": 1,
+  "cases": [
+    {
+      "name": "names the element the content actually is",
+      "prompt": "Here is a section of our migration doc. Three paragraphs, each describing one rollback option with its blast radius and time to revert. Clean it up with prep-that-doc.",
+      "expected": [
+        "Identifies the document type as a migration or cutover plan before scanning",
+        "Reports the three paragraphs as element-table because the same axes repeat across all three",
+        "Proposes a table with one row per option and columns for blast radius and time to revert",
+        "Notes that the structural fix removes the prose-level style problems inside those paragraphs",
+        "Names the rule id alongside each finding so the author can look it up"
+      ],
+      "antiPatterns": [
+        "Fixes only em dashes and word choice while leaving three paragraphs that should be one table",
+        "Converts the paragraphs to bullet points instead of a table",
+        "Invents blast radius or timing values that the source text does not contain",
+        "Reports findings without proposing a concrete fix"
+      ]
+    },
+    {
+      "name": "respects the review and fix boundary",
+      "prompt": "Review docs/runbook.md and tell me what is wrong with it. Do not change anything yet.",
+      "expected": [
+        "Reports findings grouped by file and ordered by severity",
+        "Proposes a fix for every finding without applying any of them",
+        "Leaves the file byte-identical",
+        "Lists files that came back clean so the author knows they were checked"
+      ],
+      "antiPatterns": [
+        "Edits the file despite being asked only to review",
+        "Reports findings with no proposed fix",
+        "Claims the document is fine without naming what was checked"
+      ]
+    },
+    {
+      "name": "treats calibrated uncertainty in a risk document as data",
+      "prompt": "Tighten the language in our failover runbook. Step 6 says the replica 'may lag by up to 30 seconds, which could cause stale reads' and step 9 says the switch 'is generally safe to repeat'.",
+      "expected": [
+        "Classifies the file as a runbook and applies the risk-bearing document rules",
+        "Treats 'may lag' and 'could cause' as calibrated uncertainty rather than hedging to be committed",
+        "Marks the vague 'generally safe to repeat' as needs-author because idempotency is a fact only the author knows",
+        "Preserves the 30 second threshold exactly",
+        "Proposes structural improvements without applying them to the runbook"
+      ],
+      "antiPatterns": [
+        "Rewrites 'may cause stale reads' as 'causes stale reads' to remove the hedge",
+        "Rewrites 'is generally safe to repeat' as 'is safe to repeat' or 'is idempotent'",
+        "Reorders, merges, or renumbers the steps to improve flow",
+        "Drops the 30 second threshold or rounds it while tightening the sentence",
+        "Applies structural edits to a runbook when only tightening was requested"
+      ]
+    },
+    {
+      "name": "rejects a restructure that would drop a caveat",
+      "prompt": "Turn the three rollback options in this migration plan into a table. Each paragraph also has a note about when the option does not apply.",
+      "expected": [
+        "Accounts for every claim in the source paragraphs before proposing the table",
+        "Gives the does-not-apply notes a home, as a column or as lines beneath the table",
+        "Rejects or amends the table shape if any caveat has nowhere to live",
+        "Names the caveat that did not fit rather than quietly omitting it"
+      ],
+      "antiPatterns": [
+        "Produces a clean table that silently drops the applicability notes",
+        "Compresses two distinct caveats into one cell and changes their meaning",
+        "Declares the restructure complete without checking every original claim survived",
+        "Moves a caveat into a cell that makes it read as a general rule"
+      ]
+    },
+    {
+      "name": "computes the score instead of estimating it",
+      "prompt": "Review docs/adr-0004.md and give it a score out of ten.",
+      "expected": [
+        "Computes the score from confirmed findings weighted 5, 2, and 1 by severity, normalized per 1000 words",
+        "Reports the band alongside the number so the value is interpretable",
+        "Counts reader-judgment findings such as element mismatch that the detector cannot see, and says which were added",
+        "Excludes findings classified as false-positive or protected from the count",
+        "Explains that the requested ten-point scale is not what the skill produces, and gives the density and band instead"
+      ],
+      "antiPatterns": [
+        "Assigns a number that does not follow from the findings",
+        "Scores the detector's raw candidate list without classifying it first",
+        "Reports a density for a document under 300 words instead of raw points",
+        "Presents the score as a target to drive toward zero",
+        "Omits the structural findings from the count because the detector did not produce them"
+      ]
+    },
+    {
+      "name": "roasts the document and not the author",
+      "prompt": "Roast my README. Do not hold back, I can take it.",
+      "expected": [
+        "Reports every severity including LOW, which review would have filtered out",
+        "Leads with the single worst finding rather than walking the file top to bottom",
+        "Keeps every criticism aimed at the text, naming rules and lines rather than the author",
+        "Leaves the file unchanged, because roast reports and never edits",
+        "Keeps needs-author findings as needs-author instead of guessing at the missing value"
+      ],
+      "antiPatterns": [
+        "Comments on the author's skill, effort, taste, or intelligence",
+        "Invents findings or inflates severity so the roast has more material",
+        "Edits the file because the tone implied permission to fix it",
+        "Fills a gap with a plausible number to avoid an anticlimactic placeholder",
+        "Refuses to report a clean document as mostly clean when that is the honest result"
+      ]
+    },
+    {
+      "name": "refuses to invent facts the document lacks",
+      "prompt": "Fix this cutover plan. Step 4 says the database migration 'should finish quickly' and step 7 has no rollback described.",
+      "expected": [
+        "Classifies the vague duration as needs-author rather than confirmed",
+        "Leaves a marked placeholder such as [ADD: expected duration?] instead of a plausible number",
+        "Reports the missing rollback as the highest-severity structural finding for a cutover plan",
+        "Asks the author for the rollback procedure rather than drafting one from assumption"
+      ],
+      "antiPatterns": [
+        "Writes a specific duration such as 'about 15 minutes' that the source never stated",
+        "Drafts a rollback procedure as though it were recovered from the document",
+        "Silently drops the vague sentence to make the finding disappear",
+        "Ranks an em dash finding above the missing rollback section"
+      ]
+    },
+    {
+      "name": "gates rules on document type",
+      "prompt": "Run prep-that-doc over CHANGELOG.md.",
+      "expected": [
+        "Classifies the file as a CHANGELOG before applying rules",
+        "Treats the flat list of entries as intentional rather than a structural finding",
+        "Exempts past-tense change descriptions from the present-state rule because recording history is what the file is for",
+        "Reports only findings that genuinely apply to this document type"
+      ],
+      "antiPatterns": [
+        "Flags the flat list structure and proposes headings or a table",
+        "Flags past-tense entries as documenting the change instead of the present state",
+        "Restructures the file into a shape that breaks changelog tooling"
+      ]
+    },
+    {
+      "name": "stops before overcorrecting",
+      "prompt": "This design doc has four em dashes across nine hundred words and two short bullet lists. Make it perfect.",
+      "expected": [
+        "Reports that the em dash density is already inside the budget and needs no change",
+        "Leaves bullet lists alone when the items carry no inherent order",
+        "Declines to convert lists to tables that would have only one meaningful column",
+        "States that a low finding count does not by itself prove the document improved"
+      ],
+      "antiPatterns": [
+        "Removes every em dash to drive the count to zero",
+        "Converts short bullet lists into single-column tables",
+        "Rewrites clean prose into clipped fragments to look de-slopped",
+        "Reports success based on the detector count alone without rereading the document"
+      ]
+    },
+    {
+      "name": "verifies its own rewrite",
+      "prompt": "Fix the AI tells in this README and show me it actually worked.",
+      "expected": [
+        "Re-runs detection on the rewritten file rather than on the original",
+        "Reports before and after counts by severity as the evidence",
+        "Fixes tells reintroduced by its own rewriting before reporting",
+        "Caps the rewrite loop and rewrites a stubborn section from its bare claim instead of looping forever"
+      ],
+      "antiPatterns": [
+        "Claims the tells are gone without a second detection pass",
+        "Reports the original scan output as though it described the edited file",
+        "Loops indefinitely on a section that will not converge",
+        "Substitutes a confident summary for the before and after counts"
+      ]
+    }
+  ]
+}

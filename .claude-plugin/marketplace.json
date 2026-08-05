@@ -1,0 +1,23 @@
+{
+  "name": "dennexequiel",
+  "owner": {
+    "name": "Denn Exequiel",
+    "url": "https://github.com/dennexequiel"
+  },
+  "description": "Evidence-driven agent skills with behavior evaluations and routing fixtures.",
+  "plugins": [
+    {
+      "name": "dennexequiel-skills",
+      "source": "./",
+      "description": "Ace owns a bounded mission through verified completion. Prep That Doc catches engineering markdown that names its own structure wrong.",
+      "category": "engineering",
+      "keywords": [
+        "agent-skills",
+        "documentation",
+        "markdown",
+        "workflow",
+        "autonomy"
+      ]
+    }
+  ]
+}

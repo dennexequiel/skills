@@ -1,0 +1,24 @@
+{
+  "name": "dennexequiel-skills",
+  "version": "0.1.0",
+  "description": "Evidence-driven agent skills. Ace owns a bounded mission through verified completion. Prep That Doc catches engineering markdown that names its own structure wrong.",
+  "author": {
+    "name": "Denn Exequiel",
+    "url": "https://github.com/dennexequiel"
+  },
+  "homepage": "https://skills.sh/dennexequiel/skills",
+  "repository": "https://github.com/dennexequiel/skills",
+  "license": "MIT",
+  "keywords": [
+    "agent-skills",
+    "documentation",
+    "markdown",
+    "technical-writing",
+    "workflow",
+    "autonomy"
+  ],
+  "skills": [
+    "./skills/ace",
+    "./skills/prep-that-doc"
+  ]
+}

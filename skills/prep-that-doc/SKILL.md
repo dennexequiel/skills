@@ -1,0 +1,200 @@
+---
+name: prep-that-doc
+description: Use when writing, reviewing, or fixing engineering markdown so it uses the correct element and says something. Covers specs, design docs, ADRs, runbooks, cutover and migration plans, READMEs, CHANGELOGs, PR descriptions, incident writeups, and infrastructure or DevOps documentation. Catches structure that names itself wrong, such as prose that should be a table, bullets that should be ordered steps, skipped heading levels, and unlabeled code fences. Also catches AI writing tells, including em dash pileups, bold scattered through prose, empty significance claims, and sentences that add no information. Do not use for marketing copy, fiction, or source code refactoring.
+argument-hint: "[review|fix|roast] <path>"
+license: MIT
+compatibility: Works in Agent Skills-compatible coding agents. The bundled detector needs Bun or Node when the agent can run commands; every rule also applies by hand.
+metadata:
+  display-name: Prep That Doc
+  summary: Catch engineering markdown that names its own structure wrong, then fix it with evidence instead of vibes.
+  status: experimental
+  areas: documentation, writing
+---
+
+# Prep That Doc
+
+A kid points out the car window and asks to pet that dawg. It was a bear.
+
+Documents do this constantly. A comparison names itself a paragraph. A sequence of steps names itself a bullet list. A heading claims to be level four with no level three above it. Naming the thing correctly is most of the work, and it is the part generated prose gets wrong first.
+
+- **IS:** structural and stylistic correctness of engineering markdown. Which element the content actually is, whether the hierarchy holds, whether each sentence carries information.
+- **IS NOT:** deciding what the document should argue, inventing facts it lacks, marketing and landing-page copy, fiction, or refactoring the code the document describes.
+
+## Spot The Bear
+
+Run five phases in order. Skip none.
+
+1. **Scope.** Establish the document type and the reader.
+2. **Scan.** Detect mechanically, never by impression.
+3. **Classify.** Judge every finding before touching it.
+4. **Fix.** Rewrite by meaning, not by pattern.
+5. **Re-scan.** Prove the fix with a second detection pass.
+
+### 1. Scope
+
+Record three things before reading for problems:
+
+- **Document type.** Spec, design doc, ADR, runbook, cutover plan, README, CHANGELOG, PR description, incident writeup, API reference. Type decides which rules apply. A runbook wants numbered steps and a rollback section. An ADR wants context, decision, and consequences. Flagging a README for missing rollback steps is noise.
+- **Reader and what they do next.** Someone paging through a cutover plan at 3am reads differently from someone evaluating a library. The reader decides how much can be assumed.
+- **Protected regions.** Record these before editing and do not touch them: YAML frontmatter, fenced code blocks, tables whose structure is deliberate, links, image paths, HTML comments, quoted source material, citations, version numbers, and command output.
+
+Never change a fact, number, URL, command, path, or citation target to make prose read better. If something looks factually wrong, flag it. Do not silently correct it.
+
+### Risk-Bearing Documents
+
+Cutover plans, migration plans, runbooks, incident writeups, risk assessments, and security notes carry operational consequence. Someone follows them under pressure. Four rules replace the defaults:
+
+- **Qualified language is data, not hedging.** "May cause data loss" and "causes data loss" are different claims. Only the author knows which is true. Never sharpen a hedge into a certainty or soften a certainty into a hedge. Treat these as `needs-author`.
+- **Never reorder steps.** Sequence is the document. Renumbering, merging, or splitting steps changes what someone executes.
+- **Never drop a caveat, precondition, warning, owner, timing, or threshold**, however redundant it reads. Repetition in an operational document is usually deliberate.
+- **Structural change is proposed, never applied**, unless the author asks for `fix` on that specific document. Report the improvement and let them decide.
+
+When a document's type is unclear and it might be one of these, ask before scanning. Guessing wrong here is the one mistake with real cost.
+
+### Restructuring Is Lossless
+
+Converting prose to a table, or bullets to ordered steps, moves content between containers. Content is lost when it does not fit the new shape.
+
+Before proposing any restructure, account for every claim in the original. Every fact, condition, exception, and qualifier lands somewhere in the replacement, or the restructure is rejected.
+
+A caveat with no column to live in is not a caveat to delete. It means the table is the wrong element, or it needs another column, or the caveat belongs in a line beneath the table. When a restructure cannot carry everything, say so and leave the original.
+
+### 2. Scan
+
+Run the bundled detector when the agent can execute commands:
+
+```sh
+bun skills/prep-that-doc/scripts/scan.ts <path-to-markdown>
+```
+
+It reports file, line, rule id, severity, and the matched text. Its rules live in [references/elements.md](references/elements.md) and [references/tells.md](references/tells.md), written so every one can also be applied by hand when no runtime is available.
+
+The detector owns mechanical detection. Do not substitute improvised greps for it, and do not treat its silence as a pass. Three checks need a reader and are yours:
+
+- **Element mismatch.** Content whose shape contradicts its markup. This is the highest-value check and the one no regex settles. See [references/elements.md](references/elements.md).
+- **Empty sentences.** Sentences that survive deletion with no loss. Cut them.
+- **Type mismatch.** A document doing a job its type does not do, such as a reference page walking through a tutorial.
+
+### 3. Classify
+
+Every finding gets exactly one label before any edit:
+
+| Label | Meaning |
+| --- | --- |
+| `confirmed` | Real. Fix it. |
+| `intentional` | The type or house style requires it. Leave it. |
+| `protected` | Inside a protected region. Leave it. |
+| `false-positive` | The rule misfired. Leave it and say why. |
+| `needs-author` | Real, but fixing it requires a fact only the author has. |
+
+A `needs-author` finding never gets an invented fix. Leave a marked placeholder such as `[ADD: which timeout?]` and report it.
+
+### 4. Fix
+
+Work finding by finding. The rule that governs every rewrite: **decide what the content actually is, then give it that form.** Do not paraphrase around a pattern.
+
+Structure first, because structure changes delete style problems for free. Three paragraphs comparing options become a table, and the em dashes inside them stop existing. Style passes over prose that survives.
+
+Rewriting reintroduces the exact patterns being removed, because the same habits produce the fix. Expect it. This is why phase 5 is not optional.
+
+**Overcorrection is its own failure.** Em dashes are not banned. Tables are not always right. Bullets are not slop. A document stripped to bare declaratives is worse than the one you started with. The target is a document that says what it means in the form that means it, not a document that scores zero on a checklist.
+
+### 5. Re-scan
+
+Re-run the detector on the rewritten file. Re-check the three reader-judgment items on your own output. Repeat until a pass produces no confirmed findings, capped at four passes. If a finding survives four passes, rewrite that section from scratch starting from one question: what is this section for?
+
+A lower count does not prove the document got better. Read the whole thing once more for continuity before reporting.
+
+## Verbs
+
+Three requests, three different jobs. Detection and classification are identical in all three. What changes is what gets reported and who edits.
+
+| Verb | Reports | Edits |
+| --- | --- | --- |
+| `review` | HIGH and MED, scoped to the files named, prioritized so structure stays visible | Nothing |
+| `fix` | What changed, with before and after counts | The file |
+| `roast` | Every severity including LOW, every file in scope, worst finding first, nothing softened | Nothing |
+
+`roast` exists because `review` deliberately suppresses noise, and sometimes the author wants the whole list. It drops the LOW filter and the hedging, not the standards. Everything else holds:
+
+- It never invents a finding to have more to say. A short roast on a good document is the correct output, and saying so is the honest result.
+- It roasts the document, never the person who wrote it. No commentary on the author's skill, effort, or intelligence. The target is always the text.
+- It never edits, exactly like `review`.
+- `needs-author` findings stay `needs-author`. Being blunt is not license to guess at a missing number.
+
+## Score
+
+`review` and `roast` both end with a score. It is computed, never estimated. An invented number is the defect this skill exists to catch.
+
+Weight every **confirmed** finding, then normalize by length:
+
+```text
+points  = 5 x HIGH + 2 x MED + 1 x LOW
+density = points x 1000 / words
+```
+
+| Density | Band |
+| --- | --- |
+| 0 | clean |
+| up to 10 | light |
+| up to 25 | rough |
+| up to 50 | heavy |
+| above 50 | severe |
+
+Four rules keep the number honest:
+
+- **Score confirmed findings only.** The detector's raw output includes false positives, so scoring it punishes documents for quoting a banned phrase as an example. A rules file scored on raw hits lands in `severe` while being correct.
+- **Below 300 words, report points and no density.** A short document with three findings computes to `heavy` on arithmetic alone. The detector withholds density under that floor; do the same.
+- **Say what the score cannot see.** The detector implements the mechanical rules only. Element mismatch, empty sentences, and a runbook missing its rollback are reader judgment. Add those to the count as confirmed findings, or the worst problems never reach the number.
+- **Never optimize the score.** A document can be `clean` and still bad, and `light` is a fine resting state. Deleting a real caveat to drop two points makes the document worse and the number better. Bands rank severity; they are not a target.
+
+`fix` reports the score before and after, which is the evidence that the edit worked.
+
+## Preserve Author Authority
+
+- Asked to **review**, report findings and propose fixes. Do not rewrite the file.
+- Asked to **fix** or **improve**, edit the file and report what changed.
+- Asked to **roast**, report everything and still change nothing.
+- Never change meaning, claims, or facts. This is a form pass.
+- Never delete a section because it seems redundant. Redundancy in a runbook is often deliberate.
+- Scope to the files named or changed. Unscoped findings bury the real ones.
+
+## Report
+
+Group by file, order by severity, and name the rule so the author can find it:
+
+```markdown
+## Prep That Doc findings
+
+### docs/cutover.md
+- [HIGH] `element-table`: Lines 34-49 compare three rollback options in prose.
+  - Fix: One table, columns Option / Blast radius / Time to revert.
+- [MED] `heading-skip`: Line 61 is h4 under an h2.
+  - Fix: Promote to h3, or add the missing h3 above it.
+- [NEEDS-AUTHOR] `vague-number`: Line 72 says "should finish quickly".
+  - Fix: `[ADD: expected duration?]`
+
+### README.md
+- pass
+
+Scanned 2 files, 1840 words. 3 confirmed, 1 needs-author, 2 false-positive (see notes).
+Score: 9.2 per 1000 words, band light (17 points). Verify passes: 2.
+Not counted by the detector: 1 element mismatch, 1 missing rollback section. Both confirmed above.
+```
+
+List clean files explicitly so the author knows they were checked. Every finding names a rule, states the problem, and proposes a fix. A finding without a fix is not reportable.
+
+## Gotchas
+
+- Document-type misclassification is the top source of false positives. A CHANGELOG is supposed to be a flat list. An ADR is supposed to read as prose. Classify before you scan.
+- Do not convert every list to a table. Tables need at least two real columns of distinct information. A one-column table is a list wearing a costume.
+- Do not flag heading depth in files whose type has a fixed shape, such as a PR template or an issue template.
+- Do not rewrite content the author asked you only to review. Report and propose.
+- Do not report style nits above structural problems. Authors fix what they see first, and a serial comma note can bury a broken hierarchy.
+- Generated files, vendored docs, and lockfile-adjacent markdown are out of scope unless named explicitly.
+- A document that quotes writing rules will match those rules. Style guides, rule catalogs, and this skill's own reference files are the standard `false-positive` case, because the banned phrase appears as the example. Check whether a hit is used or merely named.
+
+## Reference
+
+- [references/elements.md](references/elements.md) decides which markdown element the content actually is.
+- [references/tells.md](references/tells.md) catalogs style rules and their detection patterns.

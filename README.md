@@ -8,6 +8,7 @@ Reusable skills for coding agents. Each skill is independently installable and k
 | Skill | Status | Areas | Purpose |
 | --- | --- | --- | --- |
 | [Ace](skills/ace/) | experimental | workflow, autonomy | Own a bounded mission through evidence-backed completion while preserving user judgment and authority. |
+| [Prep That Doc](skills/prep-that-doc/) | experimental | documentation, writing | Catch engineering markdown that names its own structure wrong, then fix it with evidence instead of vibes. |
 <!-- catalog:end -->
 
 ## Install A Skill
@@ -29,6 +30,15 @@ To install a selected skill globally for Claude Code without interactive prompts
 ```sh
 npx skills add dennexequiel/skills --skill SKILL_NAME --agent claude-code --global --yes
 ```
+
+Claude Code can also take the whole collection as a plugin, which tracks this repository instead of copying editable files into your project:
+
+```text
+/plugin marketplace add dennexequiel/skills
+/plugin install dennexequiel-skills
+```
+
+Pick one route. Installing both leaves you with every skill twice.
 
 ## Work On The Repository
 

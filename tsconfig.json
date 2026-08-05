@@ -17,5 +17,5 @@
     "forceConsistentCasingInFileNames": true,
     "types": ["bun"]
   },
-  "include": ["adapters/**/*.ts", "scripts/**/*.ts", "tests/**/*.ts"]
+  "include": ["adapters/**/*.ts", "scripts/**/*.ts", "skills/**/*.ts", "tests/**/*.ts"]
 }
