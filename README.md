@@ -1,6 +1,12 @@
 # Agent Skills
 
-Reusable skills for coding agents. Each skill is independently installable and keeps its core instructions separate from optional host integrations.
+[![skills.sh](https://skills.sh/b/dennexequiel/skills)](https://skills.sh/dennexequiel/skills)
+
+Skills that have to prove they work.
+
+Most agent skills are a prompt in a folder. These ship with behavior evaluations, routing fixtures that test both sides of the activation boundary, and a validation suite that fails the build when a skill drifts from its contract. Each one states when it should not activate, and none of them let an agent claim success without evidence.
+
+Every skill is independently installable and keeps its portable instructions separate from optional host integrations.
 
 ## Skills
 
