@@ -40,6 +40,31 @@ Invocation syntax varies by host; see the live repository [compatibility matrix]
 - `explore` time-boxes investigation and ends with evidence and a recommendation.
 - `decide` compares viable options while leaving the final value judgment to the user.
 
+## Lifecycle
+
+A mission has states between start and finish. What the host gives you depends on whether an automation adapter is installed.
+
+| Action | Portable skill | With the OpenCode adapter |
+| --- | --- | --- |
+| Start a mission | Invoke with a mode and mission | `/ace <objective>` |
+| See current state | Ask for mission status | `/ace status` |
+| Record progress | Happens in the mission brief | Ace records it through `ace_progress`; no user command |
+| Pause for input | Ace reports `paused` and stops | `/ace pause <reason>` |
+| Resume | Restate the next action | `/ace resume <next action>` |
+| Finish | Ace reports `completed` with evidence | `/ace complete` |
+| Abandon | Ace reports `cancelled` | `/ace cancel <reason>` |
+| Discard stored state | Nothing is stored | `/ace clear` |
+
+Execution limits are set at start time. The portable defaults are 20 continuation cycles, 60 minutes, and 3 consecutive stalled iterations. The adapter accepts overrides:
+
+```text
+/ace --max-turns 30 --max-minutes 90 --max-stalls 3 <objective>
+```
+
+Limits bound execution only. They never lower the mission's acceptance criteria, so hitting one produces a `limit-reached` handoff rather than a completion claim.
+
+Without an adapter the same lifecycle exists as conversation. Ace still reports one terminal state and still refuses to claim completion without evidence; it just cannot survive a stopped session or continue on its own.
+
 ## Partnership
 
 Ace is intentionally not a generic "be autonomous" prompt. It separates responsibilities:
