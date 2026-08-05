@@ -64,9 +64,11 @@ The current skill bundles have no runtime package dependencies. Repository devel
 ```text
 skills/<name>/SKILL.md       Portable instructions and discovery metadata
 skills/<name>/references/    Detail loaded only when the task needs it
+skills/<name>/scripts/       Executables the skill ships to the user
 evals/<name>/                Behavioral scenarios and expected outcomes
 adapters/<runtime>/          Runtime-specific commands, plugins, and install notes
 scripts/                     Repository validation and local installers
+.claude-plugin/              Claude Code marketplace and plugin manifests
 ```
 
 The skill package is the source of truth. Adapters may implement capabilities such as durable state or automatic continuation, but may not weaken the skill's behavioral, safety, or verification guarantees.

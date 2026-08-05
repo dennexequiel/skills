@@ -12,8 +12,10 @@ Contributions should keep each skill portable, self-contained, and independently
 6. Add positive, negative, and ambiguous trigger cases under `evals/<name>/triggers.json`.
 7. Add at least five behavioral cases with expected behavior and anti-patterns under `evals/<name>/evals.json`.
 8. Record each claimed host in the per-skill [compatibility matrix](docs/compatibility.md). Use `Unverified` instead of implying untested support.
-9. Run `bun run generate:catalog` after metadata changes.
-10. Run `bun run check`.
+9. Add the skill to the `skills` array in `.claude-plugin/plugin.json` so the Claude Code plugin ships the same set as the catalog.
+10. Run `bun run generate:catalog` after metadata changes.
+11. Run `bun run check`.
+12. Confirm the installer discovers the skill with `npx skills add . --list`. Repository checks validate this project's schema, not the installer's.
 
 Install the pinned development toolchain with `bun install --frozen-lockfile`. Portable skill bundles should not gain runtime package dependencies without a concrete need. Adapter dependencies and installation logic must remain isolated from portable skill bundles.
 
