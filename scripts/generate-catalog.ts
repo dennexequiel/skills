@@ -2,13 +2,16 @@ import { readFile, writeFile } from "node:fs/promises"
 import { resolve } from "node:path"
 import { loadSkills, repositoryRoot } from "./skill-data"
 
-const startMarker = "<!-- catalog:start -->"
-const endMarker = "<!-- catalog:end -->"
-const write = process.argv.includes("--write")
+const CATALOG_SCHEMA_VERSION = 1
+const START_MARKER = "<!-- catalog:start -->"
+const END_MARKER = "<!-- catalog:end -->"
+const WRITE_OPTION = "--write"
+
+const shouldWrite = process.argv.includes(WRITE_OPTION)
 const skills = await loadSkills()
 
 const catalog = {
-  schemaVersion: 1,
+  schemaVersion: CATALOG_SCHEMA_VERSION,
   skills: skills.map((skill) => ({
     name: skill.name,
     displayName: skill.displayName,
@@ -22,21 +25,21 @@ const catalog = {
 
 const catalogContent = `${JSON.stringify(catalog, null, 2)}\n`
 const table = [
-  startMarker,
+  START_MARKER,
   "| Skill | Status | Areas | Purpose |",
   "| --- | --- | --- | --- |",
   ...catalog.skills.map((skill) => `| [${skill.displayName}](${skill.path}/) | ${skill.status} | ${skill.areas.join(", ")} | ${skill.summary} |`),
-  endMarker,
+  END_MARKER,
 ].join("\n")
 
 const catalogPath = resolve(repositoryRoot, "catalog.json")
 const readmePath = resolve(repositoryRoot, "README.md")
 const readme = await readFile(readmePath, "utf8")
-const markerPattern = new RegExp(`${startMarker}[\\s\\S]*?${endMarker}`)
+const markerPattern = new RegExp(`${START_MARKER}[\\s\\S]*?${END_MARKER}`)
 if (!markerPattern.test(readme)) throw new Error("README.md has no generated catalog markers")
 const nextReadme = readme.replace(markerPattern, table)
 
-if (write) {
+if (shouldWrite) {
   await writeFile(catalogPath, catalogContent, "utf8")
   await writeFile(readmePath, nextReadme, "utf8")
   console.log(`Generated catalog for ${skills.length} skill${skills.length === 1 ? "" : "s"}`)

@@ -10,10 +10,16 @@ type TriggerCases = {
   ambiguous: Array<{ prompt: string; expected: string }>
 }
 
+const TRIGGER_SCHEMA_VERSION = 1
+const MINIMUM_POSITIVE_PROMPTS = 5
+const MINIMUM_NEGATIVE_PROMPTS = 5
+const MINIMUM_AMBIGUOUS_PROMPTS = 2
+const MINIMUM_TOKEN_LENGTH = 3
+const MAXIMUM_DESCRIPTION_SIMILARITY = 0.65
 const STOP_WORDS = new Set(["a", "an", "and", "asks", "for", "from", "in", "is", "it", "of", "or", "the", "to", "use", "user", "when", "with"])
 
 function tokens(value: string): Set<string> {
-  return new Set(value.toLowerCase().match(/[a-z0-9]+/g)?.filter((token) => token.length > 2 && !STOP_WORDS.has(token)) ?? [])
+  return new Set(value.toLowerCase().match(/[a-z0-9]+/g)?.filter((token) => token.length >= MINIMUM_TOKEN_LENGTH && !STOP_WORDS.has(token)) ?? [])
 }
 
 function similarity(left: string, right: string): number {
@@ -34,10 +40,10 @@ const seenPrompts = new Map<string, { skills: Set<string>; kind: string }>()
 for (const skill of skills) {
   const path = resolve(repositoryRoot, "evals", skill.name, "triggers.json")
   const cases = JSON.parse(await readFile(path, "utf8")) as TriggerCases
-  if (cases.skill !== skill.name || cases.version !== 1) throw new Error(`${skill.name} has invalid trigger metadata`)
-  if (cases.positive.length < 5) throw new Error(`${skill.name} needs at least 5 positive trigger prompts`)
-  if (cases.negative.length < 5) throw new Error(`${skill.name} needs at least 5 negative trigger prompts`)
-  if (cases.ambiguous.length < 2) throw new Error(`${skill.name} needs at least 2 ambiguous trigger prompts`)
+  if (cases.skill !== skill.name || cases.version !== TRIGGER_SCHEMA_VERSION) throw new Error(`${skill.name} has invalid trigger metadata`)
+  if (cases.positive.length < MINIMUM_POSITIVE_PROMPTS) throw new Error(`${skill.name} needs at least ${MINIMUM_POSITIVE_PROMPTS} positive trigger prompts`)
+  if (cases.negative.length < MINIMUM_NEGATIVE_PROMPTS) throw new Error(`${skill.name} needs at least ${MINIMUM_NEGATIVE_PROMPTS} negative trigger prompts`)
+  if (cases.ambiguous.length < MINIMUM_AMBIGUOUS_PROMPTS) throw new Error(`${skill.name} needs at least ${MINIMUM_AMBIGUOUS_PROMPTS} ambiguous trigger prompts`)
 
   const prompts = [
     ...cases.positive.map((prompt) => [prompt, "positive"] as const),
@@ -70,7 +76,7 @@ for (let left = 0; left < skills.length; left += 1) {
     const rightSkill = skills[right]
     if (!leftSkill || !rightSkill) throw new Error("Skill catalog changed during routing validation")
     const overlap = similarity(leftSkill.description, rightSkill.description)
-    if (overlap >= 0.65) {
+    if (overlap >= MAXIMUM_DESCRIPTION_SIMILARITY) {
       throw new Error(`Description collision risk: ${leftSkill.name} and ${rightSkill.name} overlap by ${Math.round(overlap * 100)}%`)
     }
   }
