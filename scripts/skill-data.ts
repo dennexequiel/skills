@@ -1,7 +1,12 @@
 import { readdir, readFile } from "node:fs/promises"
 import { join, relative, resolve } from "node:path"
 
-export type SkillStatus = "experimental" | "stable" | "deprecated"
+const SKILL_STATUSES = ["experimental", "stable", "deprecated"] as const
+const FRONTMATTER_PATTERN = /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/
+const SINGLE_LINE_PATTERN = /[\r\n|]/
+const AREA_NAME_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
+
+export type SkillStatus = typeof SKILL_STATUSES[number]
 
 export type SkillData = {
   name: string
@@ -20,6 +25,10 @@ export type SkillData = {
 export const repositoryRoot = resolve(import.meta.dir, "..")
 export const skillsDirectory = join(repositoryRoot, "skills")
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value)
+}
+
 function requiredString(record: Record<string, unknown>, key: string, source: string): string {
   const value = record[key]
   if (typeof value !== "string" || !value.trim()) {
@@ -30,7 +39,7 @@ function requiredString(record: Record<string, unknown>, key: string, source: st
 
 function requiredSingleLine(record: Record<string, unknown>, key: string, source: string): string {
   const value = requiredString(record, key, source)
-  if (/[\r\n|]/.test(value)) {
+  if (SINGLE_LINE_PATTERN.test(value)) {
     throw new Error(`${source} ${key} must be one line and cannot contain a table separator`)
   }
   return value
@@ -47,7 +56,7 @@ function optionalString(record: Record<string, unknown>, key: string, source: st
 
 export function parseSkill(content: string, directory: string, skillPath: string): SkillData {
   const source = relative(repositoryRoot, skillPath)
-  const frontmatter = content.match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/)
+  const frontmatter = content.match(FRONTMATTER_PATTERN)
   if (!frontmatter) throw new Error(`${source} has no YAML frontmatter`)
   const yaml = frontmatter[1]
   if (yaml === undefined) throw new Error(`${source} has empty YAML frontmatter`)
@@ -58,26 +67,27 @@ export function parseSkill(content: string, directory: string, skillPath: string
   } catch (error) {
     throw new Error(`${source} has invalid YAML: ${error instanceof Error ? error.message : String(error)}`)
   }
-  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+  if (!isRecord(parsed)) {
     throw new Error(`${source} frontmatter must be a mapping`)
   }
 
-  const metadata = (parsed as Record<string, unknown>).metadata
-  if (!metadata || typeof metadata !== "object" || Array.isArray(metadata)) {
+  const metadata = parsed.metadata
+  if (!isRecord(metadata)) {
     throw new Error(`${source} needs metadata for catalog generation`)
   }
 
-  const fields = parsed as Record<string, unknown>
-  const catalog = metadata as Record<string, unknown>
+  const fields = parsed
+  const catalog = metadata
   const name = requiredSingleLine(fields, "name", source)
   const description = requiredSingleLine(fields, "description", source)
-  const status = requiredSingleLine(catalog, "status", source)
-  if (!["experimental", "stable", "deprecated"].includes(status)) {
+  const statusValue = requiredSingleLine(catalog, "status", source)
+  const status = SKILL_STATUSES.find((candidate) => candidate === statusValue)
+  if (!status) {
     throw new Error(`${source} metadata.status must be experimental, stable, or deprecated`)
   }
 
   const areas = requiredSingleLine(catalog, "areas", source).split(",").map((area) => area.trim()).filter(Boolean)
-  if (!areas.length || new Set(areas).size !== areas.length || areas.some((area) => !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(area))) {
+  if (!areas.length || new Set(areas).size !== areas.length || areas.some((area) => !AREA_NAME_PATTERN.test(area))) {
     throw new Error(`${source} metadata.areas must contain unique comma-separated areas`)
   }
 
@@ -88,7 +98,7 @@ export function parseSkill(content: string, directory: string, skillPath: string
     compatibility: optionalString(fields, "compatibility", source),
     displayName: requiredSingleLine(catalog, "display-name", source),
     summary: requiredSingleLine(catalog, "summary", source),
-    status: status as SkillStatus,
+    status,
     areas,
     directory,
     skillPath,

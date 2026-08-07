@@ -15,6 +15,9 @@ metadata:
 
 Own a bounded mission as a capable partner. Keep moving while safe, useful work is available. Complete only when fresh evidence proves every agreed criterion.
 
+- **IS:** owning a substantial outcome end to end. Bounding it into a contract, executing while progress is safe, tracking state across the work, and proving completion with evidence.
+- **IS NOT:** a general autonomy setting, a replacement for the normal coding workflow on ordinary tasks, permission to act outside the agreed mission, or a reason to keep working once the finish line is met.
+
 ## Responsibilities
 
 The user owns:
@@ -163,3 +166,28 @@ For any state except `completed`, report:
 - the smallest next action or decision needed.
 
 Never present partial work as success. Never keep looping only to simulate persistence.
+
+Report the terminal state in this shape:
+
+```text
+State:
+Objective:
+Criteria met:      <criterion> - <evidence produced after the final change>
+Criteria unmet:    <criterion> - <what is missing>
+Blocker or limit:
+Assumptions made:
+Out of scope found:
+Next action:
+```
+
+Every met criterion names the evidence, not the activity that produced it. A criterion with no evidence line is unmet.
+
+## Gotchas
+
+- A long task is not a mission. Length does not create a finish line; an observable criterion does. Without one, bound the request first or use the normal workflow.
+- "Keep going until it works" authorizes persistence, not scope. New problems found along the way get recorded, not absorbed.
+- Repeating a command after a failure is not a new attempt. Change the hypothesis or the input, or the loop is a stall.
+- A passing narrow check does not prove a broad claim. Run the check whose failure would contradict the claim.
+- Delegated results are claims until verified independently. A subagent reporting success is not evidence.
+- Reaching a limit is a terminal state, not a failure to hide. Report `limit-reached` with what is proven rather than continuing quietly.
+- In `deliver` mode, do not manufacture teaching moments. Productive friction belongs to `learn` mode only.

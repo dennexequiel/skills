@@ -1,0 +1,35 @@
+{
+  "skill": "prep-that-doc",
+  "version": 1,
+  "positive": [
+    "Run prep-that-doc over this cutover plan before I share it with the on-call team.",
+    "This spec reads like an AI wrote it. Fix the structure and the em dashes.",
+    "Review my ADR for heading hierarchy and whether the comparison should be a table.",
+    "Clean up the README so the install steps are numbered and every code fence declares a language.",
+    "Check this incident writeup for sentences that do not say anything.",
+    "My PR description is three paragraphs of prose. Give it the shape a reviewer can act on.",
+    "Roast this design doc and give me every nit, including the ones you would normally filter out."
+  ],
+  "negative": [
+    "Write me a landing page headline for the pricing tier.",
+    "Rename this function and update every call site.",
+    "Draft a short story about a bear in a car.",
+    "Explain what a markdown table is.",
+    "Translate this documentation into Japanese.",
+    "Generate release notes from the last twenty commits."
+  ],
+  "ambiguous": [
+    {
+      "prompt": "Make this document better.",
+      "expected": "Activate Prep That Doc only after establishing the document type and whether the request is review or fix."
+    },
+    {
+      "prompt": "This paragraph is confusing, rewrite it.",
+      "expected": "Handle as ordinary editing unless the file is engineering markdown and the problem is structural or a writing tell."
+    },
+    {
+      "prompt": "Our docs are inconsistent across the whole repo.",
+      "expected": "Ask which files are in scope before scanning, because unscoped findings bury the real ones."
+    }
+  ]
+}

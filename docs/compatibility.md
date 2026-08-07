@@ -20,7 +20,12 @@ Compatibility is recorded per skill so unrelated skills can adopt integrations i
 | [Ace](../skills/ace/) | Claude Code | Yes | Not yet | No | `/ace` |
 | [Ace](../skills/ace/) | Codex CLI | Yes | Not yet | No | `$ace` or `/skills` |
 | [Ace](../skills/ace/) | Pi | Yes | Not yet | No | `/skill:ace` |
-| [Ace](../skills/ace/) | Antigravity CLI (`agy`) | Unverified | Not yet | No | Unverified |
+| [Ace](../skills/ace/) | Antigravity CLI (`agy`) | Yes | Yes (`bun run smoke:agy`) | No | Plugin skill discovery after `agy plugin install` |
+| [Prep That Doc](../skills/prep-that-doc/) | OpenCode | Yes | Not yet | No | Native skill discovery |
+| [Prep That Doc](../skills/prep-that-doc/) | Claude Code | Yes | Not yet | No | `/prep-that-doc` |
+| [Prep That Doc](../skills/prep-that-doc/) | Codex CLI | Yes | Not yet | No | `$prep-that-doc` or `/skills` |
+| [Prep That Doc](../skills/prep-that-doc/) | Pi | Yes | Not yet | No | `/skill:prep-that-doc` |
+| [Prep That Doc](../skills/prep-that-doc/) | Antigravity CLI (`agy`) | Yes | Yes (`bun run smoke:agy`) | No | Plugin skill discovery after `agy plugin install` |
 
 ## Integration Gate
 
@@ -29,7 +34,7 @@ Add a host integration only when all conditions hold:
 1. A reproducible host limitation prevents the portable skill from completing a representative mission.
 2. The host exposes a documented lifecycle API that solves that limitation.
 3. The integration can delegate policy to the canonical skill instead of copying it.
-4. Installation, invocation, stopping, and upgrade behavior have automated smoke tests.
+4. The host discovery and invocation path has a reproducible smoke command. Adapter installers have automated installation and forced-upgrade regression tests when present.
 5. A maintainer accepts responsibility for tracking that host API.
 
 MCP can expose shared skill state tools but cannot universally resume a stopped host conversation. It is not a cross-host lifecycle control plane.

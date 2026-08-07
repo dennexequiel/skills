@@ -1,0 +1,24 @@
+{
+  "name": "dennexequiel-skills",
+  "version": "0.2.0",
+  "description": "Skills that have to prove they work. Each one states when it should not activate, and none can claim success without evidence.",
+  "author": {
+    "name": "Denn Exequiel",
+    "url": "https://github.com/dennexequiel"
+  },
+  "homepage": "https://skills.sh/dennexequiel/skills",
+  "repository": "https://github.com/dennexequiel/skills",
+  "license": "MIT",
+  "keywords": [
+    "agent-skills",
+    "documentation",
+    "markdown",
+    "technical-writing",
+    "workflow",
+    "autonomy"
+  ],
+  "skills": [
+    "./skills/ace",
+    "./skills/prep-that-doc"
+  ]
+}

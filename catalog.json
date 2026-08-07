@@ -12,6 +12,18 @@
         "autonomy"
       ],
       "path": "skills/ace"
+    },
+    {
+      "name": "prep-that-doc",
+      "displayName": "Prep That Doc",
+      "description": "Use when writing, reviewing, or fixing engineering markdown so it uses the correct element and says something. Covers specs, design docs, ADRs, runbooks, cutover and migration plans, READMEs, CHANGELOGs, PR descriptions, incident writeups, and infrastructure or DevOps documentation. Catches structure that names itself wrong, such as prose that should be a table, bullets that should be ordered steps, skipped heading levels, and unlabeled code fences. Also catches AI writing tells, including em dash pileups, bold scattered through prose, empty significance claims, and sentences that add no information. Do not use for marketing copy, fiction, or source code refactoring.",
+      "summary": "Catch engineering markdown that names its own structure wrong, then fix it with evidence instead of vibes.",
+      "status": "experimental",
+      "areas": [
+        "documentation",
+        "writing"
+      ],
+      "path": "skills/prep-that-doc"
     }
   ]
 }

@@ -8,10 +8,12 @@ This repository contains portable agent skills and optional runtime adapters. A 
 
 - `skills/<name>/SKILL.md`: portable source of truth with discovery frontmatter.
 - `skills/<name>/references/`: focused details linked from the skill.
+- `skills/<name>/scripts/`: executables the skill ships, resolved relative to the installed skill directory.
 - `evals/<name>/`: realistic prompts, expected behaviors, and anti-patterns.
 - `adapters/<runtime>/`: runtime-specific persistence, commands, and hooks.
 - `scripts/`: repository checks and installers using only Bun and Node built-ins at runtime.
 - `tests/`: contract and regression tests.
+- `.claude-plugin/`: Claude Code marketplace and plugin manifests, kept in step with the catalog.
 - `catalog.json`: generated discovery catalog; never edit manually.
 
 ## Skill Design
@@ -35,4 +37,5 @@ This repository contains portable agent skills and optional runtime adapters. A 
 - Run `bun run generate:catalog` after changing skill metadata.
 - Update the skill, evaluations, adapter behavior, and documentation together when a contract changes.
 - Keep all TypeScript within the strict root `tsconfig.json`; do not suppress errors with broad casts or disabled checks.
-- Run `bun run check` before review.
+- Describe the collection without naming the skills it contains, so a new skill dates nothing.
+- Run `bun run check` before review. Host smoke commands need that host installed and run separately.

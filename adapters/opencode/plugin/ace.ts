@@ -46,7 +46,11 @@ const MAX_CONTINUATIONS = 100
 const MAX_MINUTES = 480
 const MAX_STALLS = 10
 const MAX_EVIDENCE_ENTRIES = 100
+const MILLISECONDS_PER_MINUTE = 60_000
 const MODES: AceMode[] = ["deliver", "learn", "explore", "decide"]
+const STATUSES: AceStatus[] = ["active", "paused", "blocked", "limit-reached", "completed", "cancelled"]
+const PROTECTED_START_STATUSES: AceStatus[] = ["active", "paused"]
+const RESUMABLE_STATUSES: AceStatus[] = ["paused", "blocked", "limit-reached"]
 
 const stateRoot = process.env.XDG_STATE_HOME ?? join(homedir(), ".local", "state")
 const stateDirectory = join(stateRoot, "opencode", "ace")
@@ -67,6 +71,8 @@ function now(): string {
   return new Date().toISOString()
 }
 
+// Lossy by design: distinct IDs can collapse to one filename, so every read and delete
+// re-checks the stored projectID and sessionID before trusting or removing the file.
 function safeID(value: string): string {
   return value.replace(/[^a-zA-Z0-9_-]/g, "_")
 }
@@ -75,25 +81,159 @@ function stateFile(projectID: string, sessionID: string): string {
   return join(stateDirectory, `${safeID(projectID)}--${safeID(sessionID)}.json`)
 }
 
-function validateState(state: AceState, projectID: string, sessionID: string): AceState {
-  if (state.version !== 1 || state.projectID !== projectID || state.sessionID !== sessionID) {
-    throw new Error("Ace state has an unsupported or mismatched format")
+function isMissingFileError(error: unknown): boolean {
+  return (error as { code?: string }).code === "ENOENT"
+}
+
+function invalidState(path: string, field: string, expected: string): never {
+  throw new Error(`Invalid Ace state at ${path}: field ${field} ${expected}`)
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value)
+}
+
+function stateString(state: Record<string, unknown>, field: string, path: string): string {
+  const value = state[field]
+  if (typeof value !== "string" || !value) invalidState(path, field, "must be a non-empty string")
+  return value
+}
+
+function stateStringValue(state: Record<string, unknown>, field: string, path: string): string {
+  const value = state[field]
+  if (typeof value !== "string") invalidState(path, field, "must be a string")
+  return value
+}
+
+function stateStringArray(state: Record<string, unknown>, field: string, path: string, allowEmpty: boolean): string[] {
+  const value = state[field]
+  if (!Array.isArray(value)) invalidState(path, field, "must be an array")
+  if (!allowEmpty && !value.length) invalidState(path, field, "must contain at least one item")
+  for (const [index, item] of value.entries()) {
+    if (typeof item !== "string" || !item) invalidState(path, `${field}[${index}]`, "must be a non-empty string")
   }
+  return value
+}
+
+function stateInteger(state: Record<string, unknown>, field: string, path: string, minimum: number): number {
+  const value = state[field]
+  if (typeof value !== "number" || !Number.isInteger(value) || value < minimum) {
+    invalidState(path, field, `must be an integer greater than or equal to ${minimum}`)
+  }
+  return value
+}
+
+function stateTimestamp(state: Record<string, unknown>, field: string, path: string): string {
+  const value = stateString(state, field, path)
+  if (!Number.isFinite(Date.parse(value))) invalidState(path, field, "must be a valid timestamp")
+  return value
+}
+
+function optionalStateString(state: Record<string, unknown>, field: string, path: string): string | undefined {
+  if (state[field] === undefined) return undefined
+  return stateStringValue(state, field, path)
+}
+
+function stateEnum<T extends string>(
+  state: Record<string, unknown>,
+  field: string,
+  path: string,
+  allowed: readonly T[],
+): T {
+  const value = state[field]
+  const matched = allowed.find((candidate) => candidate === value)
+  if (!matched) invalidState(path, field, `must be one of ${allowed.join(", ")}`)
+  return matched
+}
+
+function stateEvidence(state: Record<string, unknown>, path: string): AceEvidence[] {
+  const value = state.evidence
+  if (!Array.isArray(value)) invalidState(path, "evidence", "must be an array")
+  return value.map((entry, index) => {
+    if (!isRecord(entry)) invalidState(path, `evidence[${index}]`, "must be an object")
+    return {
+      note: stateStringValue(entry, "note", path),
+      recordedAt: stateTimestamp(entry, "recordedAt", path),
+    }
+  })
+}
+
+function validateState(value: unknown, path: string, projectID: string, sessionID: string): AceState {
+  if (!isRecord(value)) invalidState(path, "root", "must be an object")
+  if (value.version !== 1) invalidState(path, "version", "must be 1")
+  const storedProjectID = stateString(value, "projectID", path)
+  if (storedProjectID !== projectID) invalidState(path, "projectID", `must match ${JSON.stringify(projectID)}`)
+  const storedSessionID = stateString(value, "sessionID", path)
+  if (storedSessionID !== sessionID) invalidState(path, "sessionID", `must match ${JSON.stringify(sessionID)}`)
+  const suppressNextContinuation = value.suppressNextContinuation
+  if (suppressNextContinuation !== undefined && typeof suppressNextContinuation !== "boolean") {
+    invalidState(path, "suppressNextContinuation", "must be a boolean")
+  }
+
+  const state: AceState = {
+    version: 1,
+    projectID: storedProjectID,
+    sessionID: storedSessionID,
+    mode: stateEnum(value, "mode", path, MODES),
+    objective: stateString(value, "objective", path),
+    acceptanceCriteria: stateStringArray(value, "acceptanceCriteria", path, false),
+    constraints: stateStringArray(value, "constraints", path, true),
+    verificationPlan: stateStringArray(value, "verificationPlan", path, false),
+    status: stateEnum(value, "status", path, STATUSES),
+    continuationCount: stateInteger(value, "continuationCount", path, 0),
+    maxContinuations: stateInteger(value, "maxContinuations", path, 1),
+    stallCount: stateInteger(value, "stallCount", path, 0),
+    maxStalls: stateInteger(value, "maxStalls", path, 1),
+    maxMinutes: stateInteger(value, "maxMinutes", path, 1),
+    revision: stateInteger(value, "revision", path, 1),
+    evidence: stateEvidence(value, path),
+    createdAt: stateTimestamp(value, "createdAt", path),
+    budgetStartedAt: stateTimestamp(value, "budgetStartedAt", path),
+    updatedAt: stateTimestamp(value, "updatedAt", path),
+  }
+
+  const lastHandledMessageID = optionalStateString(value, "lastHandledMessageID", path)
+  if (lastHandledMessageID !== undefined) state.lastHandledMessageID = lastHandledMessageID
+  if (suppressNextContinuation !== undefined) state.suppressNextContinuation = suppressNextContinuation
+  const latestSummary = optionalStateString(value, "latestSummary", path)
+  if (latestSummary !== undefined) state.latestSummary = latestSummary
+  const nextAction = optionalStateString(value, "nextAction", path)
+  if (nextAction !== undefined) state.nextAction = nextAction
+  const stopReason = optionalStateString(value, "stopReason", path)
+  if (stopReason !== undefined) state.stopReason = stopReason
+  const finalVerification = optionalStateString(value, "finalVerification", path)
+  if (finalVerification !== undefined) state.finalVerification = finalVerification
   return state
+}
+
+function parseState(content: string, path: string, projectID: string, sessionID: string): AceState {
+  let value: unknown
+  try {
+    value = JSON.parse(content)
+  } catch (error) {
+    invalidState(path, "JSON", `could not be parsed: ${error instanceof Error ? error.message : String(error)}`)
+  }
+  return validateState(value, path, projectID, sessionID)
+}
+
+async function loadState(projectID: string, sessionID: string): Promise<AceState> {
+  const path = stateFile(projectID, sessionID)
+  return parseState(await readFile(path, "utf8"), path, projectID, sessionID)
 }
 
 async function readState(projectID: string, sessionID: string): Promise<AceState | undefined> {
   return serialized(async () => {
     try {
-      const state = JSON.parse(await readFile(stateFile(projectID, sessionID), "utf8")) as AceState
-      return validateState(state, projectID, sessionID)
+      return await loadState(projectID, sessionID)
     } catch (error) {
-      if ((error as { code?: string }).code === "ENOENT") return undefined
+      if (isMissingFileError(error)) return undefined
       throw error
     }
   })
 }
 
+// Write to a temporary file and rename, so a crash mid-write cannot leave truncated state
+// that later reads would have to recover from.
 async function writeState(state: AceState): Promise<void> {
   await mkdir(stateDirectory, { recursive: true })
   const destination = stateFile(state.projectID, state.sessionID)
@@ -117,13 +257,9 @@ async function mutateState(
   return serialized(async () => {
     let current: AceState
     try {
-      current = validateState(
-        JSON.parse(await readFile(stateFile(projectID, sessionID), "utf8")) as AceState,
-        projectID,
-        sessionID,
-      )
+      current = await loadState(projectID, sessionID)
     } catch (error) {
-      if ((error as { code?: string }).code === "ENOENT") {
+      if (isMissingFileError(error)) {
         throw new Error("No Ace mission exists for this session")
       }
       throw error
@@ -141,14 +277,25 @@ function clamp(value: number | undefined, fallback: number, maximum: number): nu
 
 function normalizeMode(value: string | undefined): AceMode {
   if (!value) return "deliver"
-  if (!MODES.includes(value as AceMode)) {
+  const mode = MODES.find((candidate) => candidate === value)
+  if (!mode) {
     throw new Error(`Ace mode must be one of: ${MODES.join(", ")}`)
   }
-  return value as AceMode
+  return mode
+}
+
+function requiredTrimmed(value: string, field: string): string {
+  const trimmed = value.trim()
+  if (!trimmed) throw new Error(`Ace ${field} must not be empty`)
+  return trimmed
+}
+
+function requiredTrimmedArray(values: string[], field: string): string[] {
+  return values.map((value, index) => requiredTrimmed(value, `${field}[${index}]`))
 }
 
 function elapsedMinutes(state: AceState): number {
-  return (Date.now() - Date.parse(state.budgetStartedAt)) / 60_000
+  return (Date.now() - Date.parse(state.budgetStartedAt)) / MILLISECONDS_PER_MINUTE
 }
 
 function formatState(state: AceState): string {
@@ -180,13 +327,9 @@ async function claimContinuation(
   return serialized(async () => {
     let state: AceState
     try {
-      state = validateState(
-        JSON.parse(await readFile(stateFile(projectID, sessionID), "utf8")) as AceState,
-        projectID,
-        sessionID,
-      )
+      state = await loadState(projectID, sessionID)
     } catch (error) {
-      if ((error as { code?: string }).code === "ENOENT") {
+      if (isMissingFileError(error)) {
         throw new Error("No Ace mission exists for this session")
       }
       throw error
@@ -310,8 +453,12 @@ export const AcePlugin: Plugin = async ({ client, project, directory }) => ({
         replace: tool.schema.boolean().optional(),
       },
       async execute(args, context) {
+        const objective = requiredTrimmed(args.objective, "objective")
+        const acceptanceCriteria = requiredTrimmedArray(args.acceptanceCriteria, "acceptanceCriteria")
+        const constraints = requiredTrimmedArray(args.constraints ?? [], "constraints")
+        const verificationPlan = requiredTrimmedArray(args.verificationPlan, "verificationPlan")
         const existing = await readState(project.id, context.sessionID)
-        if (existing && ["active", "paused"].includes(existing.status) && !args.replace) {
+        if (existing && PROTECTED_START_STATUSES.includes(existing.status) && !args.replace) {
           throw new Error("An unfinished Ace mission exists. Confirm replacement before using replace=true.")
         }
         const timestamp = now()
@@ -320,10 +467,10 @@ export const AcePlugin: Plugin = async ({ client, project, directory }) => ({
           projectID: project.id,
           sessionID: context.sessionID,
           mode: normalizeMode(args.mode),
-          objective: args.objective.trim(),
-          acceptanceCriteria: args.acceptanceCriteria.map((value) => value.trim()),
-          constraints: (args.constraints ?? []).map((value) => value.trim()),
-          verificationPlan: args.verificationPlan.map((value) => value.trim()),
+          objective,
+          acceptanceCriteria,
+          constraints,
+          verificationPlan,
           status: "active",
           continuationCount: 0,
           maxContinuations: clamp(args.maxContinuations, DEFAULT_MAX_CONTINUATIONS, MAX_CONTINUATIONS),
@@ -421,7 +568,7 @@ export const AcePlugin: Plugin = async ({ client, project, directory }) => ({
       },
       async execute(args, context) {
         return formatState(await mutateState(project.id, context.sessionID, (state) => {
-          if (!["paused", "blocked", "limit-reached"].includes(state.status)) {
+          if (!RESUMABLE_STATUSES.includes(state.status)) {
             throw new Error(`Cannot resume a ${state.status} Ace mission`)
           }
           const resumed: AceState = {
@@ -450,9 +597,11 @@ export const AcePlugin: Plugin = async ({ client, project, directory }) => ({
         finalVerification: tool.schema.string().min(1),
       },
       async execute(args, context) {
+        const criterionEvidence = requiredTrimmedArray(args.criterionEvidence, "criterionEvidence")
+        const finalVerification = requiredTrimmed(args.finalVerification, "finalVerification")
         return formatState(await mutateState(project.id, context.sessionID, (state) => {
           requireActive(state)
-          if (args.criterionEvidence.length !== state.acceptanceCriteria.length) {
+          if (criterionEvidence.length !== state.acceptanceCriteria.length) {
             throw new Error(`Expected exactly ${state.acceptanceCriteria.length} criterion evidence entries`)
           }
           const completed: AceState = {
@@ -460,9 +609,9 @@ export const AcePlugin: Plugin = async ({ client, project, directory }) => ({
             status: "completed",
             evidence: [
               ...state.evidence,
-              ...args.criterionEvidence.map((note) => ({ note: note.trim(), recordedAt: now() })),
+              ...criterionEvidence.map((note) => ({ note, recordedAt: now() })),
             ].slice(-MAX_EVIDENCE_ENTRIES),
-            finalVerification: args.finalVerification.trim(),
+            finalVerification,
             latestSummary: "Every acceptance criterion has fresh verification evidence.",
             revision: state.revision + 1,
             updatedAt: now(),
@@ -493,11 +642,19 @@ export const AcePlugin: Plugin = async ({ client, project, directory }) => ({
       args: {},
       async execute(_args, context) {
         return serialized(async () => {
+          const path = stateFile(project.id, context.sessionID)
           try {
-            await unlink(stateFile(project.id, context.sessionID))
+            try {
+              parseState(await readFile(path, "utf8"), path, project.id, context.sessionID)
+            } catch (error) {
+              throw new Error(
+                `Cannot clear Ace state for project ${JSON.stringify(project.id)} and session ${JSON.stringify(context.sessionID)}: ${error instanceof Error ? error.message : String(error)}`,
+              )
+            }
+            await unlink(path)
             return "Ace state cleared for this session."
           } catch (error) {
-            if ((error as { code?: string }).code === "ENOENT") {
+            if (isMissingFileError(error)) {
               return "No Ace mission exists for this session."
             }
             throw error
