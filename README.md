@@ -67,7 +67,7 @@ skills/<name>/references/    Detail loaded only when the task needs it
 skills/<name>/scripts/       Executables the skill ships to the user
 evals/<name>/                Behavioral scenarios and expected outcomes
 adapters/<runtime>/          Runtime-specific commands, plugins, and install notes
-scripts/                     Repository validation and local installers
+scripts/                     Repository validation, local installers, and host smoke checks
 .claude-plugin/              Claude Code marketplace and plugin manifests
 ```
 

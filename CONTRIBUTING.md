@@ -16,6 +16,7 @@ Contributions should keep each skill portable, self-contained, and independently
 10. Run `bun run generate:catalog` after metadata changes.
 11. Run `bun run check`.
 12. Confirm the installer discovers the skill with `npx skills add . --list`, and the frontmatter with `npx skills-ref validate ./skills/<name>`. Repository checks validate this project's schema, not the installer's or the specification's.
+13. Run the smoke command for any host whose row claims one, currently `bun run smoke:opencode` and `bun run smoke:agy`. They need that host installed, so `bun run check` cannot run them.
 
 Install the pinned development toolchain with `bun install --frozen-lockfile`. Portable skill bundles should not gain runtime package dependencies without a concrete need. Adapter dependencies and installation logic must remain isolated from portable skill bundles.
 

@@ -28,6 +28,7 @@
     "generate:catalog": "bun scripts/generate-catalog.ts --write",
     "install:opencode": "bun scripts/install-opencode.ts",
     "release:version": "bun scripts/release-version.ts",
+    "smoke:agy": "bun scripts/smoke-agy.ts",
     "smoke:opencode": "bun scripts/smoke-opencode.ts",
     "typecheck": "tsc --project tsconfig.json"
   },
