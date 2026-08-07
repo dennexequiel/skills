@@ -3,7 +3,7 @@ name: prep-that-doc
 description: Use when writing, reviewing, or fixing engineering markdown so it uses the correct element and says something. Covers specs, design docs, ADRs, runbooks, cutover and migration plans, READMEs, CHANGELOGs, PR descriptions, incident writeups, and infrastructure or DevOps documentation. Catches structure that names itself wrong, such as prose that should be a table, bullets that should be ordered steps, skipped heading levels, and unlabeled code fences. Also catches AI writing tells, including em dash pileups, bold scattered through prose, empty significance claims, and sentences that add no information. Do not use for marketing copy, fiction, or source code refactoring.
 argument-hint: "[review|fix|roast] <path>"
 license: MIT
-compatibility: Works in Agent Skills-compatible coding agents. The bundled detector needs Bun or Node when the agent can run commands; every rule also applies by hand.
+compatibility: Works in Agent Skills-compatible coding agents. The bundled detector needs Bun, or a Node new enough to run TypeScript directly, and only when the agent can run commands; every rule also applies by hand.
 metadata:
   display-name: Prep That Doc
   summary: Catch engineering markdown that names its own structure wrong, then fix it with evidence instead of vibes.
@@ -34,9 +34,9 @@ Run five phases in order. Skip none.
 
 Record three things before reading for problems:
 
-- **Document type.** Spec, design doc, ADR, runbook, cutover plan, README, CHANGELOG, PR description, incident writeup, API reference. Type decides which rules apply. A runbook wants numbered steps and a rollback section. An ADR wants context, decision, and consequences. Flagging a README for missing rollback steps is noise.
+- **Document type.** Spec, design doc, architecture decision record (ADR), runbook, cutover plan, README, CHANGELOG, PR description, incident writeup, API reference. Type decides which rules apply. A runbook wants numbered steps and a rollback section. An ADR wants context, decision, and consequences. Flagging a README for missing rollback steps is noise.
 - **Reader and what they do next.** Someone paging through a cutover plan at 3am reads differently from someone evaluating a library. The reader decides how much can be assumed.
-- **Protected regions.** Record these before editing and do not touch them: YAML frontmatter, fenced code blocks, tables whose structure is deliberate, links, image paths, HTML comments, quoted source material, citations, version numbers, and command output.
+- **Protected regions.** Record these before editing and do not touch them: YAML frontmatter, fenced code blocks, tables whose structure is deliberate, link destinations, image paths, HTML comments, quoted source material, citations, version numbers, and command output.
 
 Never change a fact, number, URL, command, path, or citation target to make prose read better. If something looks factually wrong, flag it. Do not silently correct it.
 
@@ -61,15 +61,17 @@ A caveat with no column to live in is not a caveat to delete. It means the table
 
 ### 2. Scan
 
-Run the bundled detector when the agent can execute commands:
+Run the bundled detector when the agent can execute commands. It sits at `scripts/scan.ts` beside this file, wherever the skill was installed, so resolve that directory first rather than assuming a path:
 
 ```sh
-bun skills/prep-that-doc/scripts/scan.ts <path-to-markdown>
+bun <this-skill-directory>/scripts/scan.ts <path-to-markdown>
 ```
+
+Use `node` in place of `bun` when only Node is available. If neither runs the script, say so once and apply every rule by hand from the reference files. Do not silently skip the scan.
 
 It reports file, line, rule id, severity, and the matched text. Its rules live in [references/elements.md](references/elements.md) and [references/tells.md](references/tells.md), written so every one can also be applied by hand when no runtime is available.
 
-The detector owns mechanical detection. Do not substitute improvised greps for it, and do not treat its silence as a pass. Three checks need a reader and are yours:
+The detector owns the rules it implements. Do not substitute improvised greps for those, and do not treat its silence as a pass. The reference files carry the rest, including these three, which no regex settles and which are yours:
 
 - **Element mismatch.** Content whose shape contradicts its markup. This is the highest-value check and the one no regex settles. See [references/elements.md](references/elements.md).
 - **Empty sentences.** Sentences that survive deletion with no loss. Cut them.
@@ -171,7 +173,7 @@ Group by file, order by severity, and name the rule so the author can find it:
   - Fix: One table, columns Option / Blast radius / Time to revert.
 - [MED] `heading-skip`: Line 61 is h4 under an h2.
   - Fix: Promote to h3, or add the missing h3 above it.
-- [NEEDS-AUTHOR] `vague-number`: Line 72 says "should finish quickly".
+- [NEEDS-AUTHOR] `tell-vague-number`: Line 72 says "should finish quickly".
   - Fix: `[ADD: expected duration?]`
 
 ### README.md

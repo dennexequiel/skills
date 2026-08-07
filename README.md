@@ -57,7 +57,7 @@ bun install --frozen-lockfile
 bun run check
 ```
 
-The current skill bundles have no runtime package dependencies. Repository development uses pinned TypeScript and host API types. The full check validates TypeScript, skill metadata, bundle containment, references, routing fixtures, description collisions, generated catalog state, installer behavior, and behavioral contracts.
+The current skill bundles have no runtime package dependencies. Repository development uses pinned TypeScript and host API types. The full check validates TypeScript, skill metadata, bundle containment, references, routing fixtures, description collisions, generated catalog state, installer behavior, behavioral-case schemas, and the contract clauses each skill publishes. No command runs a behavioral case against a live model.
 
 ## Structure
 

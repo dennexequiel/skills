@@ -57,23 +57,27 @@ Only confirmed findings count, so a document is never punished for quoting a ban
 
 `roast` drops the noise filter, not the standards. It will not invent findings to pad the list, and a short roast on a good document is the honest answer. It targets the document, never the author.
 
-Documents it covers: specs, design docs, ADRs, runbooks, cutover and migration plans, READMEs, CHANGELOGs, PR descriptions, incident writeups, and infrastructure or DevOps docs.
+Documents it covers: specs, design docs, architecture decision records (ADRs), runbooks, cutover and migration plans, READMEs, CHANGELOGs, PR descriptions, incident writeups, and infrastructure or DevOps docs.
 
 ### Detector
 
-The bundled detector finds the mechanical rules so findings are evidence rather than impressions:
+The bundled detector finds the mechanical rules so findings are evidence rather than impressions. It ships at `scripts/scan.ts` inside the skill directory, so the command depends on where your client installed the skill:
 
 ```sh
-bun skills/prep-that-doc/scripts/scan.ts docs/cutover.md
+# installed globally for Claude Code
+bun ~/.claude/skills/prep-that-doc/scripts/scan.ts docs/cutover.md
+
+# installed into a project
+bun .claude/skills/prep-that-doc/scripts/scan.ts docs/cutover.md
 ```
 
-It prints file, line, severity, and rule id. It never edits. Every rule it implements is also written out in [references/tells.md](references/tells.md) so the skill still works when no runtime is available.
+It prints file, line, severity, and rule id. It never edits. Every rule it implements is also written out in [references/elements.md](references/elements.md) and [references/tells.md](references/tells.md) so the skill still works when no runtime is available.
 
 ## Compatibility
 
 The core skill works in Agent Skills-compatible clients with no adapter.
 
-The detector needs Bun or Node, and only when the client can run commands. Without one, every rule applies by hand from the reference files, and the workflow is unchanged.
+The detector needs Bun, or a Node that runs TypeScript without a build step (22.18 and newer on the 22 line, 23.6 and newer otherwise), and only when the client can run commands. Older Node exits with a syntax error on the type annotations. Without either runtime, every rule applies by hand from the reference files, and the workflow is unchanged.
 
 ## Limitations
 

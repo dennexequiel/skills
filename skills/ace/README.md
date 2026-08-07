@@ -36,7 +36,7 @@ Start Ace with a mode and a bounded mission. For hosts that expose Ace as a slas
 Invocation syntax varies by host; see the live repository [compatibility matrix](https://github.com/dennexequiel/skills/blob/main/docs/compatibility.md).
 
 - `deliver` owns routine execution through verified completion.
-- `learn` keeps the user involved in key reasoning while building.
+- `learn` leaves the architecture and reasoning decisions to the user while building.
 - `explore` time-boxes investigation and ends with evidence and a recommendation.
 - `decide` compares viable options while leaving the final value judgment to the user.
 
