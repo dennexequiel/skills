@@ -4,12 +4,12 @@
     "name": "Denn Exequiel",
     "url": "https://github.com/dennexequiel"
   },
-  "description": "Evidence-driven agent skills with behavior evaluations and routing fixtures.",
+  "description": "Skills that have to prove they work. Behavior evaluations, routing fixtures for both sides of every activation boundary, and a build that fails when a skill drifts from its contract.",
   "plugins": [
     {
       "name": "dennexequiel-skills",
       "source": "./",
-      "description": "Ace owns a bounded mission through verified completion. Prep That Doc catches engineering markdown that names its own structure wrong.",
+      "description": "Skills that have to prove they work. Each one states when it should not activate, and none can claim success without evidence.",
       "category": "engineering",
       "keywords": [
         "agent-skills",

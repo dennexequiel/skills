@@ -1,6 +1,6 @@
 {
-  "name": "denn-agent-skills",
-  "description": "Portable, evidence-driven skills for coding agents.",
+  "name": "dennexequiel-skills",
+  "description": "Skills that have to prove they work.",
   "private": true,
   "version": "0.2.0",
   "type": "module",

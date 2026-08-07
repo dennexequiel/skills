@@ -1,11 +1,12 @@
 import { describe, expect, test } from "bun:test"
-import { readFile } from "node:fs/promises"
+import { readdir, readFile } from "node:fs/promises"
 import { resolve } from "node:path"
 
 const ROOT = resolve(import.meta.dir, "..")
 const VERSION_MANIFESTS = ["package.json", ".claude-plugin/plugin.json"]
 const PLUGIN_MANIFEST = ".claude-plugin/plugin.json"
 const MARKETPLACE_MANIFEST = ".claude-plugin/marketplace.json"
+const COLLECTION_LEAD = "Skills that have to prove they work."
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value)
@@ -56,5 +57,24 @@ describe("Repository invariants", () => {
 
     expect(requireString(marketplacePlugin, "name", `${MARKETPLACE_MANIFEST} plugins[0]`))
       .toBe(requireString(plugin, "name", PLUGIN_MANIFEST))
+    expect(requireString(marketplacePlugin, "description", `${MARKETPLACE_MANIFEST} plugins[0]`))
+      .toBe(requireString(plugin, "description", PLUGIN_MANIFEST))
+  })
+
+  test("keeps the collection description free of the skills it happens to contain", async () => {
+    const manifests = await Promise.all(
+      [PLUGIN_MANIFEST, MARKETPLACE_MANIFEST, "package.json"].map(async (path) =>
+        [path, requireString(await readManifest(path), "description", path)] as const),
+    )
+    const skillNames = (await readdir(resolve(ROOT, "skills"), { withFileTypes: true }))
+      .filter((entry) => entry.isDirectory())
+      .map(({ name }) => name)
+    for (const [path, description] of manifests) {
+      expect(description.startsWith(COLLECTION_LEAD)).toBe(true)
+      for (const name of skillNames) {
+        expect(`${path} names ${name}: ${description.toLowerCase().includes(name.replace(/-/g, " "))}`)
+          .toBe(`${path} names ${name}: false`)
+      }
+    }
   })
 })
