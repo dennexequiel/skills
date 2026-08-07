@@ -1,7 +1,7 @@
 {
   "name": "dennexequiel-skills",
   "version": "0.2.0",
-  "description": "Skills that have to prove they work. Each one states when it should not activate, and none can claim success without evidence.",
+  "description": "Agent skills that come with receipts. Evals prove what a skill does when it runs, routing fixtures prove it knows when to stay out of the way, and the build fails the moment one stops matching what it promised.",
   "author": {
     "name": "Denn Exequiel",
     "url": "https://github.com/dennexequiel"

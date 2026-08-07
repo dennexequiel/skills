@@ -6,7 +6,7 @@ const ROOT = resolve(import.meta.dir, "..")
 const VERSION_MANIFESTS = ["package.json", ".claude-plugin/plugin.json"]
 const PLUGIN_MANIFEST = ".claude-plugin/plugin.json"
 const MARKETPLACE_MANIFEST = ".claude-plugin/marketplace.json"
-const COLLECTION_LEAD = "Skills that have to prove they work."
+const COLLECTION_LEAD = "Agent skills that come with receipts."
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value)
