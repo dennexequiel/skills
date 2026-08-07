@@ -140,10 +140,6 @@ grep -nP '[\x{2018}\x{2019}\x{201C}\x{201D}]' FILE
 
 Use straight ASCII quotes and apostrophes in engineering docs. Curly quotes break copy-paste into terminals and code.
 
-### `tell-emoji` LOW
-
-Emoji in headings or as bullet markers. Remove unless the document's house style uses them deliberately and consistently.
-
 ### `tell-cadence` MED
 
 Runs of three or more consecutive sentences within a few words of the same length, or a paragraph where every sentence has the same subject-verb-elaboration shape. Read it aloud. Metronomic rhythm is the tell.

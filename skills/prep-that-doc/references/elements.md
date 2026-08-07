@@ -37,7 +37,6 @@ If the reader must not reorder them, numbers are mandatory. A runbook with unord
 - `heading-skip` No level may be skipped. An h4 requires an h3 above it.
 - `heading-one` One h1 per document, matching what the document is.
 - `heading-empty` A heading followed immediately by another heading has no content of its own. Either write the content or drop the level.
-- `heading-case` Match the document's existing convention. Do not mix sentence case and title case in one file.
 - `heading-question` Headings name a topic. A heading phrased as a question belongs in an FAQ and nowhere else.
 - `heading-orphan` A lone subheading with no sibling means the level is unnecessary. Fold it into the parent.
 
@@ -47,12 +46,14 @@ If the reader must not reorder them, numbers are mandatory. A runbook with unord
 - `fence-prompt` Do not prefix runnable commands with `$`. It survives copy-paste and breaks.
 - `fence-mixed` Never mix a command and its output in one fence unless the language is `console`. The reader cannot tell what to paste.
 - `fence-untested` A block presented as runnable must be runnable. Placeholders are marked, such as `<region>` or `YOUR_TOKEN`, never left as plausible-looking fake values.
+- `fence-unclosed` Every fence closes with the same marker, at least as long as the one that opened it. An unclosed fence swallows the rest of the document, so a scan can come back clean because nothing after it was read.
+- `frontmatter-unclosed` Frontmatter opened with `---` closes with `---`. Unclosed frontmatter hides the whole file for the same reason.
 
 ## Links
 
-- `link-here` Link text names the destination. "See [the rollback plan]", never "see [here]" or "[this doc]".
+- `link-here` Link text names the destination. "See [the rollback plan]", never "see [here]" or "[this doc]". The label is editable; the URL it points at is protected.
 - `link-bare` A bare URL in prose gets link text unless the URL itself is the point.
-- `link-dead` Every relative link resolves. Check, do not assume.
+- `link-dead` Every relative link resolves. The detector checks each one against the filesystem, relative to the file that contains it. External URLs are never fetched.
 
 ## Document Shapes
 
@@ -61,7 +62,7 @@ Each type has an expected skeleton. Missing sections are findings. Extra section
 | Type | Expected skeleton |
 | --- | --- |
 | Spec | Problem, goals, non-goals, proposed design, alternatives, open questions |
-| ADR | Context, decision, status, consequences |
+| ADR (architecture decision record) | Context, decision, status, consequences |
 | Runbook | Preconditions, numbered steps, verification per step, rollback, escalation |
 | Cutover plan | Scope, sequence with owners and times, verification gates, rollback trigger, comms |
 | README | What it is, install, minimal working example, where to go next |

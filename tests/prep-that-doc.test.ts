@@ -22,6 +22,50 @@ const plugin = JSON.parse(await readFile(resolve(root, ".claude-plugin/plugin.js
   skills: string[]
 }
 
+const TYPESCRIPT_NODE = [[22, 18], [23, 6]] as const
+
+async function nodeVersion(): Promise<[number, number] | undefined> {
+  let exitCode: number
+  let stdout: string
+  try {
+    const child = Bun.spawn(["node", "--version"], { stdout: "pipe", stderr: "pipe" })
+    ;[exitCode, stdout] = await Promise.all([child.exited, new Response(child.stdout).text()])
+  } catch {
+    return undefined
+  }
+  if (exitCode !== 0) return undefined
+  const parts = stdout.trim().replace(/^v/, "").split(".").map(Number)
+  const [major, minor] = parts
+  return major === undefined || minor === undefined || Number.isNaN(major) || Number.isNaN(minor)
+    ? undefined
+    : [major, minor]
+}
+
+function runsTypeScript([major, minor]: [number, number]): boolean {
+  const floor = TYPESCRIPT_NODE.find(([line]) => line === major)
+  return floor ? minor >= floor[1] : major > 23
+}
+
+async function withTempDir<T>(prefix: string, use: (directory: string) => Promise<T>): Promise<T> {
+  const directory = await mkdtemp(join(tmpdir(), `prep-that-doc-${prefix}-`))
+  try {
+    return await use(directory)
+  } finally {
+    await rm(directory, { force: true, recursive: true })
+  }
+}
+
+async function scanOutput(path: string): Promise<string> {
+  const child = Bun.spawn(["bun", "skills/prep-that-doc/scripts/scan.ts", path], {
+    cwd: root,
+    stdout: "pipe",
+    stderr: "pipe",
+  })
+  const [exitCode, stdout] = await Promise.all([child.exited, new Response(child.stdout).text()])
+  expect(exitCode).toBe(0)
+  return stdout
+}
+
 describe("Prep That Doc portable contract", () => {
   test("advertises its verbs to clients that support argument hints", () => {
     expect(skill).toContain('argument-hint: "[review|fix|roast] <path>"')
@@ -87,8 +131,7 @@ describe("Prep That Doc portable contract", () => {
 
 describe("Prep That Doc detector", () => {
   test("reports planted tells and stays silent on clean markdown", async () => {
-    const directory = await mkdtemp(join(tmpdir(), "prep-that-doc-scan-"))
-    try {
+    await withTempDir("scan", async (directory) => {
       const noisy = resolve(directory, "noisy.md")
       await writeFile(noisy, [
         "# Sample",
@@ -107,43 +150,171 @@ describe("Prep That Doc detector", () => {
       const clean = resolve(directory, "clean.md")
       await writeFile(clean, "# Sample\n\nThe parser reads tokens from headers.\n", "utf8")
 
-      const run = async (path: string) => {
-        const child = Bun.spawn(["bun", "skills/prep-that-doc/scripts/scan.ts", path], {
-          cwd: root,
-          stdout: "pipe",
-          stderr: "pipe",
-        })
-        const [exitCode, stdout] = await Promise.all([child.exited, new Response(child.stdout).text()])
-        return { exitCode, stdout }
-      }
-
-      const noisyResult = await run(noisy)
-      expect(noisyResult.exitCode).toBe(0)
+      const noisyOutput = await scanOutput(noisy)
       for (const rule of ["tell-notxbuty", "tell-significance", "tell-history", "heading-skip", "fence-nolang"]) {
-        expect(noisyResult.stdout).toContain(rule)
+        expect(noisyOutput).toContain(rule)
       }
 
-      expect(noisyResult.stdout).toContain("Provisional score:")
-      expect(noisyResult.stdout).toContain("Density withheld below 300 words")
+      expect(noisyOutput).toContain("Provisional score:")
+      expect(noisyOutput).toContain("Density withheld below 300 words")
 
-      const cleanResult = await run(clean)
-      expect(cleanResult.stdout).toContain("0 candidates")
+      expect(await scanOutput(clean)).toContain("0 candidates")
 
       const long = resolve(directory, "long.md")
       await writeFile(long, `# Long\n\n${"The parser reads tokens from headers. ".repeat(60)}\n\nIt is not just a tool, but a crucial shift.\n`, "utf8")
-      const longResult = await run(long)
-      expect(longResult.stdout).toMatch(/points per 1000 words, band (clean|light|rough|heavy|severe)/)
-    } finally {
-      await rm(directory, { force: true, recursive: true })
-    }
+      expect(await scanOutput(long)).toMatch(/points per 1000 words, band (clean|light|rough|heavy|severe)/)
+    })
   })
 
-  test("documents every rule it detects", () => {
-    for (const rule of ["tell-notxbuty", "tell-significance", "tell-history", "tell-emdash", "tell-curly"]) {
-      expect(tells).toContain(`\`${rule}\``)
+  test("keeps a protected region open only until its own closing marker", async () => {
+    await withTempDir("fence", async (directory) => {
+      const nested = resolve(directory, "nested.md")
+      await writeFile(nested, [
+        "# Sample",
+        "",
+        "````text",
+        "~~~",
+        "It is not just prose, but a crucial shift in the landscape.",
+        "~~~",
+        "````",
+        "",
+        "```sh",
+        "$ echo hi",
+        "```",
+        "",
+        "```console",
+        "$ echo ok",
+        "```",
+        "",
+      ].join("\n"), "utf8")
+
+      const nestedOutput = await scanOutput(nested)
+      expect(nestedOutput).toContain("0 HIGH")
+      expect(nestedOutput).not.toContain("tell-significance")
+      expect(nestedOutput).toContain("fence-prompt")
+      expect(nestedOutput.match(/fence-prompt/g)).toHaveLength(1)
+
+      const unclosed = resolve(directory, "unclosed.md")
+      await writeFile(unclosed, "# Sample\n\n```text\nswallows the rest\n", "utf8")
+      expect(await scanOutput(unclosed)).toContain("fence-unclosed")
+
+      const frontmatter = resolve(directory, "frontmatter.md")
+      await writeFile(frontmatter, "---\nname: sample\n\nswallowed\n", "utf8")
+      expect(await scanOutput(frontmatter)).toContain("frontmatter-unclosed")
+    })
+  })
+
+  test("catches a hierarchy that starts below the root and a second root", async () => {
+    await withTempDir("heading", async (directory) => {
+      const orphan = resolve(directory, "orphan.md")
+      await writeFile(orphan, "#### Orphan\n\nText.\n", "utf8")
+      expect(await scanOutput(orphan)).toContain("heading-skip")
+
+      const twoRoots = resolve(directory, "two-roots.md")
+      await writeFile(twoRoots, "# First\n\nText.\n\n# Second\n\nText.\n", "utf8")
+      expect(await scanOutput(twoRoots)).toContain("heading-one")
+    })
+  })
+
+  test("runs under Node so the published compatibility claim holds", async () => {
+    const node = await nodeVersion()
+    if (!node) {
+      console.log("Skipping the Node claim: node is not on PATH. Bun alone runs the rest of the suite.")
+      return
     }
-    for (const rule of ["heading-skip", "element-table"]) {
-      expect(elements).toContain(`\`${rule}\``)
+    if (!runsTypeScript(node)) {
+      console.log(`Skipping the Node claim: node ${node.join(".")} predates direct TypeScript execution, which the README already excludes.`)
+      return
+    }
+
+    const child = Bun.spawn(["node", "skills/prep-that-doc/scripts/scan.ts", "README.md"], {
+      cwd: root,
+      stdout: "pipe",
+      stderr: "pipe",
+    })
+    const [exitCode, stdout] = await Promise.all([child.exited, new Response(child.stdout).text()])
+    expect(exitCode).toBe(0)
+    expect(stdout).toContain("candidates")
+  })
+
+  test("names the file it could not read instead of throwing a stack trace", async () => {
+    const child = Bun.spawn(["bun", "skills/prep-that-doc/scripts/scan.ts", "does-not-exist.md"], {
+      cwd: root,
+      stdout: "pipe",
+      stderr: "pipe",
+    })
+    const [exitCode, stderr] = await Promise.all([child.exited, new Response(child.stderr).text()])
+    expect(exitCode).toBe(2)
+    expect(stderr).toContain("Cannot read does-not-exist.md")
+  })
+
+  test("resolves relative links against the file that contains them", async () => {
+    await withTempDir("links", async (directory) => {
+      const doc = resolve(directory, "doc.md")
+      await writeFile(resolve(directory, "plan.md"), "# Plan\n", "utf8")
+      await writeFile(doc, [
+        "# Links",
+        "",
+        "Reaches [the plan](./plan.md) and misses [the rollback](rollback.md).",
+        "",
+        "Leaves [a site](https://example.com), [an anchor](#top), and [mail](mailto:a@b.c) alone.",
+        "",
+        "![missing](img/none.png)",
+        "",
+      ].join("\n"), "utf8")
+
+      const output = await scanOutput(doc)
+      expect(output).toContain("rollback.md")
+      expect(output).toContain("img/none.png")
+      expect(output).not.toContain("plan.md")
+      expect(output).not.toContain("example.com")
+      expect(output.match(/link-dead/g)).toHaveLength(2)
+    })
+  })
+
+  test("judges a table as a block instead of scoring every row", async () => {
+    await withTempDir("table", async (directory) => {
+      const oneColumn = resolve(directory, "one-column.md")
+      await writeFile(oneColumn, "# T\n\n| One |\n| --- |\n| a |\n| b |\n| c |\n", "utf8")
+      const oneColumnOutput = await scanOutput(oneColumn)
+      expect(oneColumnOutput.match(/element-table/g)).toHaveLength(1)
+
+      const tooFewRows = resolve(directory, "too-few-rows.md")
+      await writeFile(tooFewRows, "# T\n\n| A | B |\n| --- | --- |\n", "utf8")
+      expect(await scanOutput(tooFewRows)).toContain("element-table")
+
+      const valid = resolve(directory, "valid.md")
+      await writeFile(valid, "# T\n\n| A | B |\n| --- | --- |\n| 1 | 2 |\n", "utf8")
+      expect(await scanOutput(valid)).not.toContain("element-table")
+    })
+  })
+
+  test("detects every alternative its reference publishes", async () => {
+    await withTempDir("terms", async (directory) => {
+      const terms: Array<[string, string]> = [
+        ["key", "tell-significance"],
+        ["critical", "tell-significance"],
+        ["it is widely understood", "tell-weasel"],
+        ["some argue", "tell-weasel"],
+        ["fairly", "tell-hedge"],
+        ["ultimately", "tell-conclusion"],
+        ["Overall, ", "tell-conclusion"],
+      ]
+      for (const [term, rule] of terms) {
+        const path = resolve(directory, `${rule}-${term.replace(/\W+/g, "-")}.md`)
+        await writeFile(path, `# Sample\n\nThe parser ${term} reads tokens.\n`, "utf8")
+        expect(await scanOutput(path)).toContain(rule)
+      }
+    })
+  })
+
+  test("documents every rule it detects", async () => {
+    const source = await readFile(resolve(root, "skills/prep-that-doc/scripts/scan.ts"), "utf8")
+    const documented = `${elements}\n${tells}`
+    const detected = [...source.matchAll(/"((?:tell|heading|fence|element|link|frontmatter)(?:-[a-z]+)+)"/g)].map(([, id]) => id)
+    expect(detected.length).toBeGreaterThanOrEqual(15)
+    for (const rule of new Set(detected)) {
+      expect(documented).toContain(`\`${rule}\``)
     }
   })
 })
