@@ -1,6 +1,6 @@
 {
   "name": "dennexequiel-skills",
-  "description": "Skills that have to prove they work.",
+  "description": "Agent skills that come with receipts.",
   "private": true,
   "version": "0.2.0",
   "type": "module",

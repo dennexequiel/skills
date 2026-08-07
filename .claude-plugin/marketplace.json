@@ -4,12 +4,12 @@
     "name": "Denn Exequiel",
     "url": "https://github.com/dennexequiel"
   },
-  "description": "Skills that have to prove they work. Behavior evaluations, routing fixtures for both sides of every activation boundary, and a build that fails when a skill drifts from its contract.",
+  "description": "Agent skills that come with receipts. Evals prove what a skill does when it runs, routing fixtures prove it knows when to stay out of the way, and the build fails the moment one stops matching what it promised.",
   "plugins": [
     {
       "name": "dennexequiel-skills",
       "source": "./",
-      "description": "Skills that have to prove they work. Each one states when it should not activate, and none can claim success without evidence.",
+      "description": "Agent skills that come with receipts. Evals prove what a skill does when it runs, routing fixtures prove it knows when to stay out of the way, and the build fails the moment one stops matching what it promised.",
       "category": "engineering",
       "keywords": [
         "agent-skills",
