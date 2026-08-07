@@ -1,10 +1,6 @@
 # Prep That Doc
 
-> can i pet that dawg
->
-> It was a bear.
-
-Prep That Doc reads engineering markdown and catches the same mistake: content that names its own structure wrong. A comparison written as three paragraphs is a table. A sequence where order matters is not a bullet list. An h4 under an h2 is a broken hierarchy claiming to be a heading.
+Prep That Doc reads engineering markdown and catches content that names its own structure wrong. A comparison written as three paragraphs is a table. A sequence where order matters is not a bullet list. An h4 under an h2 is a broken hierarchy claiming to be a heading.
 
 It fixes the AI writing tells too, the em dash pileups and the sentences that survive deletion. That part is table stakes and other skills do it. The structural half is the reason this one exists.
 

@@ -13,14 +13,12 @@ metadata:
 
 # Prep That Doc
 
-A kid points out the car window and asks to pet that dawg. It was a bear.
-
-Documents do this constantly. A comparison names itself a paragraph. A sequence of steps names itself a bullet list. A heading claims to be level four with no level three above it. Naming the thing correctly is most of the work, and it is the part generated prose gets wrong first.
+Documents name their own structure wrong constantly. A comparison names itself a paragraph. A sequence of steps names itself a bullet list. A heading claims to be level four with no level three above it. Naming the thing correctly is most of the work, and it is the part generated prose gets wrong first.
 
 - **IS:** structural and stylistic correctness of engineering markdown. Which element the content actually is, whether the hierarchy holds, whether each sentence carries information.
 - **IS NOT:** deciding what the document should argue, inventing facts it lacks, marketing and landing-page copy, fiction, or refactoring the code the document describes.
 
-## Spot The Bear
+## The Workflow
 
 Run five phases in order. Skip none.
 
