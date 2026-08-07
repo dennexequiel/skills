@@ -3,6 +3,7 @@ import { access, mkdtemp, readFile, rm, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join, resolve } from "node:path"
 import { requireReleaseVersion } from "../scripts/release-version"
+import { hasCompletedAceStatusInvocation } from "../scripts/smoke-opencode"
 
 const root = resolve(import.meta.dir, "..")
 const skill = await readFile(resolve(root, "skills/ace/SKILL.md"), "utf8")
@@ -21,6 +22,170 @@ const aceCatalogEntry = catalog.skills.find(({ name }) => name === "ace")
 const compatibility = await readFile(resolve(root, "docs/compatibility.md"), "utf8")
 const repositoryReadme = await readFile(resolve(root, "README.md"), "utf8")
 const aceReadme = await readFile(resolve(root, "skills/ace/README.md"), "utf8")
+
+const WHITESPACE_SCENARIO = String.raw`
+import { AcePlugin } from "./adapters/opencode/plugin/ace.ts"
+
+const hooks = await AcePlugin({ client: {}, project: { id: "project" }, directory: process.cwd() })
+const tools = hooks.tool
+if (!tools) throw new Error("Ace plugin did not register tools")
+const context = { sessionID: "whitespace-session" }
+const validStart = {
+  objective: "Ship the change",
+  acceptanceCriteria: ["The check passes"],
+  constraints: ["Keep scope narrow"],
+  verificationPlan: ["Run the check"],
+}
+const errorMessage = async (operation) => {
+  try {
+    await operation()
+    return "NO_ERROR"
+  } catch (error) {
+    return error instanceof Error ? error.message : String(error)
+  }
+}
+
+const objective = await errorMessage(() => tools.ace_start.execute({ ...validStart, objective: "  " }, context))
+const acceptanceCriteria = await errorMessage(() => tools.ace_start.execute({ ...validStart, acceptanceCriteria: ["\t"] }, context))
+const constraints = await errorMessage(() => tools.ace_start.execute({ ...validStart, constraints: ["\n"] }, context))
+const verificationPlan = await errorMessage(() => tools.ace_start.execute({ ...validStart, verificationPlan: ["  "] }, context))
+const statusAfterInvalidStarts = await tools.ace_status.execute({}, context)
+
+await tools.ace_start.execute(validStart, context)
+const criterionEvidence = await errorMessage(() => tools.ace_complete.execute({
+  criterionEvidence: ["  "],
+  finalVerification: "The full check passes",
+}, context))
+const finalVerification = await errorMessage(() => tools.ace_complete.execute({
+  criterionEvidence: ["The full check passes"],
+  finalVerification: "\t",
+}, context))
+const statusAfterInvalidCompletion = await tools.ace_status.execute({}, context)
+
+console.log(JSON.stringify({
+  objective,
+  acceptanceCriteria,
+  constraints,
+  verificationPlan,
+  statusAfterInvalidStarts,
+  criterionEvidence,
+  finalVerification,
+  statusAfterInvalidCompletion,
+}))
+`
+
+const CLEAR_COLLISION_SCENARIO = String.raw`
+import { AcePlugin } from "./adapters/opencode/plugin/ace.ts"
+
+const firstHooks = await AcePlugin({ client: {}, project: { id: "a/b" }, directory: process.cwd() })
+const secondHooks = await AcePlugin({ client: {}, project: { id: "a?b" }, directory: process.cwd() })
+if (!firstHooks.tool || !secondHooks.tool) throw new Error("Ace plugin did not register tools")
+const context = { sessionID: "shared-session" }
+await firstHooks.tool.ace_start.execute({
+  objective: "Preserve this mission",
+  acceptanceCriteria: ["State remains readable"],
+  verificationPlan: ["Read status after the rejected clear"],
+}, context)
+
+let clearError = "NO_ERROR"
+try {
+  await secondHooks.tool.ace_clear.execute({}, context)
+} catch (error) {
+  clearError = error instanceof Error ? error.message : String(error)
+}
+const originalStatus = await firstHooks.tool.ace_status.execute({}, context)
+
+console.log(JSON.stringify({ clearError, originalStatus }))
+`
+
+const MALFORMED_STATE_SCENARIO = String.raw`
+import { mkdir, writeFile } from "node:fs/promises"
+import { join } from "node:path"
+import { AcePlugin } from "./adapters/opencode/plugin/ace.ts"
+
+const stateDirectory = join(process.env.XDG_STATE_HOME, "opencode", "ace")
+await mkdir(stateDirectory, { recursive: true })
+const hooks = await AcePlugin({ client: {}, project: { id: "project" }, directory: process.cwd() })
+if (!hooks.tool) throw new Error("Ace plugin did not register tools")
+const timestamp = "2026-08-07T00:00:00.000Z"
+const validState = {
+  version: 1,
+  projectID: "project",
+  sessionID: "fixture",
+  mode: "deliver",
+  objective: "Validate state",
+  acceptanceCriteria: ["Invalid state is rejected"],
+  constraints: [],
+  verificationPlan: ["Read the state"],
+  status: "active",
+  continuationCount: 0,
+  maxContinuations: 20,
+  stallCount: 0,
+  maxStalls: 3,
+  maxMinutes: 60,
+  revision: 1,
+  evidence: [],
+  createdAt: timestamp,
+  budgetStartedAt: timestamp,
+  updatedAt: timestamp,
+}
+const errorMessage = async (sessionID, mutate) => {
+  const state = structuredClone(validState)
+  state.sessionID = sessionID
+  mutate(state)
+  await writeFile(join(stateDirectory, "project--" + sessionID + ".json"), JSON.stringify(state))
+  try {
+    await hooks.tool.ace_status.execute({}, { sessionID })
+    return "NO_ERROR"
+  } catch (error) {
+    return error instanceof Error ? error.message : String(error)
+  }
+}
+
+const missingArray = await errorMessage("missing-array", (state) => { delete state.evidence })
+const invalidStatus = await errorMessage("invalid-status", (state) => { state.status = "running" })
+const invalidCounter = await errorMessage("invalid-counter", (state) => { state.continuationCount = "zero" })
+console.log(JSON.stringify({ missingArray, invalidStatus, invalidCounter }))
+`
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value)
+}
+
+function requireResult(value: unknown): Record<string, unknown> {
+  if (!isRecord(value)) {
+    throw new Error("Ace plugin scenario must return a JSON object")
+  }
+  return value
+}
+
+function resultString(result: Record<string, unknown>, field: string): string {
+  const value = result[field]
+  if (typeof value !== "string") throw new Error(`Ace plugin scenario field ${field} must be a string`)
+  return value
+}
+
+async function runAcePluginScenario(source: string): Promise<Record<string, unknown>> {
+  const stateRoot = await mkdtemp(join(tmpdir(), "ace-plugin-state-"))
+  try {
+    const child = Bun.spawn(["bun", "--eval", source], {
+      cwd: root,
+      env: { ...Bun.env, XDG_STATE_HOME: stateRoot },
+      stdout: "pipe",
+      stderr: "pipe",
+    })
+    const [exitCode, stdout, stderr] = await Promise.all([
+      child.exited,
+      new Response(child.stdout).text(),
+      new Response(child.stderr).text(),
+    ])
+    if (exitCode !== 0) throw new Error(`Ace plugin scenario exited with ${exitCode}: ${stderr}`)
+    const result: unknown = JSON.parse(stdout)
+    return requireResult(result)
+  } finally {
+    await rm(stateRoot, { force: true, recursive: true })
+  }
+}
 
 describe("Ace portable contract", () => {
   test("advertises optional modes to clients that support argument hints", () => {
@@ -69,6 +234,31 @@ describe("Ace distribution", () => {
     expect(compatibility).toContain("Automation adapter")
     expect(compatibility).toContain("| [Ace](../skills/ace/) | OpenCode | Yes | Yes (`bun run smoke:opencode`) | Yes |")
     expect(compatibility).toContain("| [Ace](../skills/ace/) | Claude Code | Yes | Not yet | No |")
+  })
+
+  test("limits the integration gate to automated coverage the repository provides", () => {
+    expect(compatibility).toContain("The host discovery and invocation path has a reproducible smoke command")
+    expect(compatibility).toContain("forced-upgrade regression tests when present")
+    expect(compatibility).not.toContain("stopping, and upgrade behavior have automated smoke tests")
+  })
+
+  test("requires a completed structured ace_status tool event for smoke verification", () => {
+    const completedToolEvent = JSON.stringify({
+      type: "tool_use",
+      part: {
+        type: "tool",
+        tool: "ace_status",
+        state: { status: "completed", output: "No Ace mission exists for this session." },
+      },
+    })
+    const echoedTextEvent = JSON.stringify({
+      type: "text",
+      part: { text: "ace_status: No Ace mission exists for this session." },
+    })
+
+    expect(hasCompletedAceStatusInvocation(completedToolEvent)).toBe(true)
+    expect(hasCompletedAceStatusInvocation(echoedTextEvent)).toBe(false)
+    expect(hasCompletedAceStatusInvocation("ace_status: No Ace mission exists for this session.")).toBe(false)
   })
 
   test("keeps repository and skill installation guidance at the right scope", () => {
@@ -123,9 +313,50 @@ describe("Ace distribution", () => {
       const second = await runInstaller()
       expect(second.exitCode).not.toBe(0)
       expect(second.stderr).toContain("would overwrite")
+
+      const obsolete = resolve(configRoot, "skills/ace/references/obsolete.md")
+      await writeFile(obsolete, "obsolete\n", "utf8")
+      const forced = await runInstaller("--force")
+      expect(forced.exitCode).toBe(0)
+      expect(await access(obsolete).then(() => true, () => false)).toBe(false)
+      await access(resolve(configRoot, "skills/ace/references/evidence.md"))
+      await access(resolve(configRoot, "commands/ace.md"))
+      await access(resolve(configRoot, "plugins/ace.ts"))
     } finally {
       await rm(configRoot, { force: true, recursive: true })
     }
+  })
+})
+
+describe("Ace OpenCode state", () => {
+  test("rejects whitespace-only start and completion fields before writing state", async () => {
+    const result = await runAcePluginScenario(WHITESPACE_SCENARIO)
+
+    expect(resultString(result, "objective")).toBe("Ace objective must not be empty")
+    expect(resultString(result, "acceptanceCriteria")).toBe("Ace acceptanceCriteria[0] must not be empty")
+    expect(resultString(result, "constraints")).toBe("Ace constraints[0] must not be empty")
+    expect(resultString(result, "verificationPlan")).toBe("Ace verificationPlan[0] must not be empty")
+    expect(resultString(result, "statusAfterInvalidStarts")).toBe("No Ace mission exists for this session.")
+    expect(resultString(result, "criterionEvidence")).toBe("Ace criterionEvidence[0] must not be empty")
+    expect(resultString(result, "finalVerification")).toBe("Ace finalVerification must not be empty")
+    expect(resultString(result, "statusAfterInvalidCompletion")).toContain("Status: active")
+  })
+
+  test("refuses to clear a colliding session state", async () => {
+    const result = await runAcePluginScenario(CLEAR_COLLISION_SCENARIO)
+
+    expect(resultString(result, "clearError")).toContain("Cannot clear Ace state for project \"a?b\"")
+    expect(resultString(result, "clearError")).toContain("field projectID must match \"a?b\"")
+    expect(resultString(result, "originalStatus")).toContain("Ace mission: Preserve this mission")
+    expect(resultString(result, "originalStatus")).toContain("Status: active")
+  })
+
+  test("rejects malformed persisted state at the file boundary", async () => {
+    const result = await runAcePluginScenario(MALFORMED_STATE_SCENARIO)
+
+    expect(resultString(result, "missingArray")).toContain("project--missing-array.json: field evidence must be an array")
+    expect(resultString(result, "invalidStatus")).toContain("project--invalid-status.json: field status must be one of")
+    expect(resultString(result, "invalidCounter")).toContain("project--invalid-counter.json: field continuationCount must be an integer")
   })
 })
 

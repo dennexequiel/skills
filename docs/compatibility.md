@@ -34,7 +34,7 @@ Add a host integration only when all conditions hold:
 1. A reproducible host limitation prevents the portable skill from completing a representative mission.
 2. The host exposes a documented lifecycle API that solves that limitation.
 3. The integration can delegate policy to the canonical skill instead of copying it.
-4. Installation, invocation, stopping, and upgrade behavior have automated smoke tests.
+4. The host discovery and invocation path has a reproducible smoke command. Adapter installers have automated installation and forced-upgrade regression tests when present.
 5. A maintainer accepts responsibility for tracking that host API.
 
 MCP can expose shared skill state tools but cannot universally resume a stopped host conversation. It is not a cross-host lifecycle control plane.
