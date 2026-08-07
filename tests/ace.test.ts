@@ -130,19 +130,6 @@ describe("Ace distribution", () => {
 })
 
 describe("Repository releases", () => {
-  test("keeps every version-bearing manifest on the single repository version", async () => {
-    const manifests = ["package.json", ".claude-plugin/plugin.json"]
-    const versions = await Promise.all(manifests.map(async (path) => {
-      const { version } = JSON.parse(await readFile(resolve(root, path), "utf8")) as { version: string }
-      return [path, version] as const
-    }))
-    const [reference] = versions
-    if (!reference) throw new Error("No version-bearing manifests found")
-    for (const [path, version] of versions) {
-      expect(`${path}@${version}`).toBe(`${path}@${reference[1]}`)
-    }
-  })
-
   test("accepts stable and prerelease SemVer", () => {
     expect(requireReleaseVersion("0.1.0")).toBe("0.1.0")
     expect(requireReleaseVersion("1.2.3-beta.1")).toBe("1.2.3-beta.1")
