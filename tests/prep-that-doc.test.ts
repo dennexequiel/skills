@@ -105,6 +105,22 @@ describe("Prep That Doc portable contract", () => {
     expect(skill).toContain("Asked to **roast**, report everything and still change nothing.")
   })
 
+  test("gives roast content review does not have instead of a sharper tone", () => {
+    expect(skill).toContain("### Roast")
+    expect(skill).toContain("**The habit, not the instance.**")
+    expect(skill).toContain("**The consequence, not the rule.**")
+    expect(skill).toContain("**The gap between what the document promises and what it delivers.**")
+    expect(skill).toContain("A roast that opens with a list has already failed")
+  })
+
+  test("opens on the verdict and closes on the next command", () => {
+    expect(skill).toContain("**Verdict: rework.**")
+    expect(skill).toContain("The verdict decides whether the author reads the rest, so it goes above the rest")
+    expect(skill).toContain("**End every report with the command that acts on it.**")
+    expect(skill).toContain("A run that found nothing ends with nothing")
+    expect(skill).toContain("When the request names no verb, run `review`")
+  })
+
   test("states both sides of its scope boundary", () => {
     expect(skill).toContain("- **IS:**")
     expect(skill).toContain("- **IS NOT:**")
@@ -188,6 +204,43 @@ describe("Prep That Doc detector", () => {
     })
   })
 
+  test("groups findings under the section that holds them and names the file once", async () => {
+    await withTempDir("layout", async (directory) => {
+      const doc = resolve(directory, "grouped.md")
+      await writeFile(doc, [
+        "# Plan",
+        "",
+        "Ultimately the rollout is fine.",
+        "",
+        "## Rollback",
+        "",
+        "The revert finishes quickly.",
+        "",
+        "## Contacts",
+        "",
+        "Page the team, it's worth noting that the rotation moves.",
+        "",
+      ].join("\n"), "utf8")
+
+      const output = await scanOutput(doc)
+      expect(output).toContain("## Rollback")
+      expect(output).toContain("## Contacts")
+      expect(output.match(/grouped\.md/g)).toHaveLength(1)
+      // The matched phrase, not the line that carried it.
+      expect(output).toContain("it's worth noting")
+      expect(output).not.toContain("Page the team")
+      expect(output.indexOf("## Rollback")).toBeLessThan(output.indexOf("## Contacts"))
+    })
+  })
+
+  test("reports a file with nothing found instead of leaving it out", async () => {
+    await withTempDir("silent", async (directory) => {
+      const clean = resolve(directory, "clean.md")
+      await writeFile(clean, "# Sample\n\nThe parser reads tokens from headers.\n", "utf8")
+      expect(await scanOutput(clean)).toContain("no candidates")
+    })
+  })
+
   test("reads key as a noun rather than a claim of importance", async () => {
     await withTempDir("key", async (directory) => {
       const literal = resolve(directory, "literal.md")
@@ -223,7 +276,7 @@ describe("Prep That Doc detector", () => {
       ].join("\n"), "utf8")
 
       const nestedOutput = await scanOutput(nested)
-      expect(nestedOutput).toContain("0 HIGH")
+      expect(nestedOutput).not.toContain("HIGH")
       expect(nestedOutput).not.toContain("tell-significance")
       expect(nestedOutput).toContain("fence-prompt")
       expect(nestedOutput.match(/fence-prompt/g)).toHaveLength(1)
@@ -364,7 +417,7 @@ describe("Prep That Doc distribution", () => {
     expect(skillCatalogEntry).toEqual(
       expect.objectContaining({ name: "prep-that-doc", status: "experimental", areas: ["documentation", "writing"] }),
     )
-    expect(compatibility).toContain("| [Prep That Doc](../skills/prep-that-doc/) | Claude Code | Yes | Not yet | No |")
+    expect(compatibility).toContain("| [Prep That Doc](../skills/prep-that-doc/) | Claude Code | Yes | Yes (`bun run smoke:claude-code`) | No |")
     expect(compatibility).toContain("| [Prep That Doc](../skills/prep-that-doc/) | OpenCode | Yes | Not yet | No |")
   })
 

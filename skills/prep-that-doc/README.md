@@ -4,6 +4,14 @@ Prep That Doc reads engineering markdown and catches content that names its own 
 
 It fixes the AI writing tells too, the em dash pileups and the sentences that survive deletion. That part is table stakes and other skills do it. The structural half is the reason this one exists.
 
+## Quickstart
+
+```text
+prep-that-doc docs/cutover.md
+```
+
+That runs a review: findings, proposed fixes, nothing edited. It ends with the command to run next, so the verbs below are something you get walked into rather than something you pick between up front.
+
 ## Install
 
 Choose the package runner already available on your machine:
@@ -26,7 +34,7 @@ npx skills add dennexequiel/skills --skill prep-that-doc --agent claude-code --g
 
 ## Use
 
-Point it at documents. Ask to review or to fix, and it does exactly that one.
+Point it at documents. Ask to review or to fix, and it does exactly that one. Name no verb and you get a review.
 
 ```text
 review docs/cutover.md with prep-that-doc
@@ -38,7 +46,7 @@ The three verbs behave differently on purpose, and each heads its report with it
 
 - **review** reports HIGH and MED findings with proposed fixes, and changes nothing.
 - **fix** asks about the gaps that block a reader, edits the file, reports what changed and what it deliberately left, and gives the verdict before and after.
-- **roast** reports every severity, worst first, unsoftened, and still changes nothing.
+- **roast** names the habit behind the findings, then reports every severity, and still changes nothing.
 
 ### Verdict
 
@@ -55,7 +63,7 @@ Only classified findings count, so a document is never marked down for quoting a
 
 `fix` asks about those gaps rather than guessing at them, in one round, worst first. Answering later is always on the table and costs nothing: the question becomes an `[ADD: ...]` placeholder in the file, the verdict stays `blocked`, and the rest of the document still gets fixed. Nothing is invented to fill a hole.
 
-`roast` is the same analysis with the softening removed. It drops the noise filter and the diplomatic framing, not the standards. It will not invent findings to pad the list, a short roast on a good document is the honest answer, and it targets the document rather than the author.
+`roast` is not review with sharper adjectives. It reports what the findings add up to: the habit behind them rather than each instance, the consequence for whoever reads the document rather than the rule that fired, and the gap between what the document promises and what its sections deliver. Then the findings, then the verdict. It will not invent findings to pad the list, a short roast on a good document is the honest answer, and it targets the document rather than the author.
 
 Documents it covers: specs, design docs, architecture decision records (ADRs), runbooks, cutover and migration plans, READMEs, CHANGELOGs, PR descriptions, incident writeups, and infrastructure or DevOps docs.
 
@@ -71,7 +79,7 @@ bun ~/.claude/skills/prep-that-doc/scripts/scan.ts docs/cutover.md
 bun .claude/skills/prep-that-doc/scripts/scan.ts docs/cutover.md
 ```
 
-It prints file, line, severity, and rule id. It never edits. Every rule it implements is also written out in [references/elements.md](references/elements.md) and [references/tells.md](references/tells.md) so the skill still works when no runtime is available.
+It groups findings under the heading that holds them, in document order, and prints line, severity, rule id, and the phrase that matched. Files it found nothing in say so rather than going missing. It never edits. Every rule it implements is also written out in [references/elements.md](references/elements.md) and [references/tells.md](references/tells.md) so the skill still works when no runtime is available.
 
 ## Compatibility
 

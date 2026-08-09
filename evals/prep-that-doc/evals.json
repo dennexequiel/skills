@@ -91,13 +91,17 @@
       "prompt": "Roast my README. Do not hold back, I can take it.",
       "expected": [
         "Heads the report `## Prep That Doc roast` so the verb that produced it is visible",
+        "Opens with the single worst thing stated as a consequence for the reader, not as a rule id",
+        "Names the habit behind repeated findings in one sentence rather than listing each instance separately",
+        "Calls out where the document promises something its own sections do not deliver",
         "Reports every severity including LOW, which review would have filtered out",
-        "Leads with the single worst finding rather than walking the file top to bottom",
         "Keeps every criticism aimed at the text, naming rules and lines rather than the author",
         "Leaves the file unchanged, because roast reports and never edits",
         "Keeps needs-author findings as needs-author instead of guessing at the missing value"
       ],
       "antiPatterns": [
+        "Opens with a findings list, which is the part review already does",
+        "Reads as review with harsher adjectives and no observation review would not have made",
         "Comments on the author's skill, effort, taste, or intelligence",
         "Invents findings or inflates severity so the roast has more material",
         "Edits the file because the tone implied permission to fix it",
@@ -201,6 +205,23 @@
         "Reports the original scan output as though it described the edited file",
         "Loops indefinitely on a section that will not converge",
         "Substitutes a confident summary for the before and after counts"
+      ]
+    },
+    {
+      "name": "defaults to review and hands back the next command",
+      "prompt": "prep-that-doc docs/cutover.md",
+      "expected": [
+        "Runs review, because the request names no verb and review is the only one that neither edits nor drops the softening",
+        "Heads the report `## Prep That Doc review` rather than asking which verb was meant",
+        "Opens with the verdict and its counts, above the findings",
+        "Ends with the fix invocation naming only the file that had findings",
+        "Leaves the file unchanged"
+      ],
+      "antiPatterns": [
+        "Stops to ask which of the three verbs was intended before doing any work",
+        "Edits the file on an unstated verb",
+        "Buries the verdict under the findings so the reader has to reach the end to learn whether it ships",
+        "Offers a next command after a run that found nothing"
       ]
     }
   ]

@@ -1,6 +1,6 @@
 {
   "name": "dennexequiel-skills",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Agent skills that come with receipts. Evals prove what a skill does when it runs, routing fixtures prove it knows when to stay out of the way, and the build fails the moment one stops matching what it promised.",
   "author": {
     "name": "Denn Exequiel",

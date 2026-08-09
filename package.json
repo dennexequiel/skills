@@ -2,7 +2,7 @@
   "name": "dennexequiel-skills",
   "description": "Agent skills that come with receipts.",
   "private": true,
-  "version": "0.3.0",
+  "version": "0.4.0",
   "type": "module",
   "author": "Denn Exequiel",
   "license": "MIT",
@@ -29,6 +29,7 @@
     "install:opencode": "bun scripts/install-opencode.ts",
     "release:version": "bun scripts/release-version.ts",
     "smoke:agy": "bun scripts/smoke-agy.ts",
+    "smoke:claude-code": "bun scripts/smoke-claude-code.ts",
     "smoke:opencode": "bun scripts/smoke-opencode.ts",
     "typecheck": "tsc --project tsconfig.json"
   },

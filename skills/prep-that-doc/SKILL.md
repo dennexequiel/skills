@@ -68,7 +68,7 @@ bun <this-skill-directory>/scripts/scan.ts <path-to-markdown>
 
 Use `node` in place of `bun` when only Node is available. If neither runs the script, say so once and apply every rule by hand from the reference files. Do not silently skip the scan.
 
-It reports file, line, rule id, severity, and the matched text. Its rules live in [references/elements.md](references/elements.md) and [references/tells.md](references/tells.md), written so every one can also be applied by hand when no runtime is available.
+It groups findings under the heading that holds them, in document order, and prints line, severity, rule id, and the phrase that matched. Document order is deliberate. The detector lays out evidence where the author will go looking for it, and the report is where triage by severity happens. It also prints a provisional verdict, which is provisional because nothing in it is classified yet: false positives are still counted, and the findings only a reader can see are still missing. Its rules live in [references/elements.md](references/elements.md) and [references/tells.md](references/tells.md), written so every one can also be applied by hand when no runtime is available.
 
 The detector owns the rules it implements. Do not substitute improvised greps for those, and do not treat its silence as a pass. The reference files carry the rest, including these three, which no regex settles and which are yours:
 
@@ -133,9 +133,21 @@ Three requests, three different jobs. Detection and classification are identical
 | --- | --- | --- | --- |
 | `review` | `## Prep That Doc review` | HIGH and MED, scoped to the files named, prioritized so structure stays visible | Nothing |
 | `fix` | `## Prep That Doc fix` | What changed, then what was left and why, with the verdict before and after | The file |
-| `roast` | `## Prep That Doc roast` | Every severity including LOW, every file in scope, worst finding first, nothing softened | Nothing |
+| `roast` | `## Prep That Doc roast` | The habit behind the findings, then every severity including LOW, every file in scope | Nothing |
 
-`roast` is the same analysis with the softening removed. It drops the LOW filter and the diplomatic framing, not the standards. Ask for it when you already know the document has problems and want them named flatly instead of proposed gently. Everything else holds:
+When the request names no verb, run `review`. It is the one verb that neither edits the file nor drops the softening, so it is what an unstated intent should get.
+
+### Roast
+
+`review` reports findings. `roast` reports what the findings add up to, which is why it is not `review` with sharper adjectives. Three things belong in a roast and nowhere else:
+
+- **The habit, not the instance.** Review lists three vague numbers on three lines. A roast names the pattern behind them: every number that matters in this plan is an adjective, and every number that does not is exact to the minute. One sentence covering ten findings beats ten sentences covering ten findings.
+- **The consequence, not the rule.** Lead with what the document does to the person reading it. "Your rollback trigger is an adjective, so two engineers roll back at different moments" lands where "`tell-vague-number` at line 55" does not.
+- **The gap between what the document promises and what it delivers.** The title says cutover plan. The rollback section is one sentence and two dead links. No rule catches that, because it is a claim about the whole document rather than any line in it.
+
+Shape it in that order: the single worst thing in one blunt sentence, then the habits, then the findings, then the verdict. A roast that opens with a list has already failed, because the list is the part `review` does.
+
+Four things bluntness does not buy:
 
 - It never invents a finding to have more to say. A short roast on a good document is the correct output, and saying so is the honest result.
 - It roasts the document, never the person who wrote it. No commentary on the author's skill, effort, or intelligence. The target is always the text.
@@ -144,7 +156,7 @@ Three requests, three different jobs. Detection and classification are identical
 
 ## Verdict
 
-Every verb ends with one word telling the author what to do next. It follows from the findings, never from impression.
+Every verb opens with one word telling the author what to do next. It follows from the findings, never from impression.
 
 | Verdict | When | Means |
 | --- | --- | --- |
@@ -180,10 +192,13 @@ Four rules keep it honest:
 
 ## Report
 
-Head the report with the verb that produced it. Group by file, order by severity, and name the rule so the author can find it:
+Head the report with the verb that produced it, then the verdict, then the findings. The verdict decides whether the author reads the rest, so it goes above the rest. Group by file, order by severity, and name the rule so the author can find it:
 
 ```markdown
 ## Prep That Doc review
+
+**Verdict: rework.** 3 confirmed (1 HIGH, 2 MED), 1 needs-author, 2 false-positive.
+Scanned 2 files, 2 verify passes. Not seen by the detector: 1 element mismatch, 1 missing rollback section, both listed below.
 
 ### docs/cutover.md
 - [HIGH] `element-table`: Lines 34-49 compare three rollback options in prose.
@@ -196,10 +211,10 @@ Head the report with the verb that produced it. Group by file, order by severity
 ### README.md
 - pass
 
-Verdict: rework. 3 confirmed (1 HIGH, 2 MED), 1 needs-author, 2 false-positive (see notes).
-Scanned 2 files, 2 verify passes.
-Not seen by the detector: 1 element mismatch, 1 missing rollback section. Both confirmed above.
+Next: `prep-that-doc fix docs/cutover.md`
 ```
+
+**End every report with the command that acts on it.** A `review` or `roast` that found something ends with the `fix` invocation naming only the files that had findings. A `fix` that left placeholders ends with the path to the file so the author knows where to fill them. A run that found nothing ends with nothing, because there is no next step to offer.
 
 List clean files explicitly so the author knows they were checked. Every finding names a rule, states the problem, and proposes a fix. A finding without a fix is not reportable.
 
