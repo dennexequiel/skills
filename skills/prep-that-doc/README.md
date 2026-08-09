@@ -34,10 +34,10 @@ prep this spec, fix what you find
 roast my README, I can take it
 ```
 
-The three verbs behave differently on purpose:
+The three verbs behave differently on purpose, and each heads its report with its own name so you can tell them apart at a glance:
 
 - **review** reports HIGH and MED findings with proposed fixes, and changes nothing.
-- **fix** edits the file and reports the score before and after.
+- **fix** edits the file, reports what changed and what it deliberately left, and gives the score before and after.
 - **roast** reports every severity, worst first, unsoftened, and still changes nothing.
 
 ### Score
@@ -51,7 +51,7 @@ density = points x 1000 / words          -> clean, light, rough, heavy, severe
 
 Only confirmed findings count, so a document is never punished for quoting a banned phrase as an example. Below 300 words the density is withheld and raw points are reported, because a handful of findings distorts a short file. The score is a severity ranking, not a target: a document can score clean and still be bad, and deleting a real caveat to shed two points makes the document worse.
 
-`roast` drops the noise filter, not the standards. It will not invent findings to pad the list, and a short roast on a good document is the honest answer. It targets the document, never the author.
+`roast` is the same analysis with the softening removed. It drops the noise filter and the diplomatic framing, not the standards. It will not invent findings to pad the list, a short roast on a good document is the honest answer, and it targets the document rather than the author.
 
 Documents it covers: specs, design docs, architecture decision records (ADRs), runbooks, cutover and migration plans, READMEs, CHANGELOGs, PR descriptions, incident writeups, and infrastructure or DevOps docs.
 

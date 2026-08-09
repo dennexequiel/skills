@@ -90,6 +90,7 @@
       "name": "roasts the document and not the author",
       "prompt": "Roast my README. Do not hold back, I can take it.",
       "expected": [
+        "Heads the report `## Prep That Doc roast` so the verb that produced it is visible",
         "Reports every severity including LOW, which review would have filtered out",
         "Leads with the single worst finding rather than walking the file top to bottom",
         "Keeps every criticism aimed at the text, naming rules and lines rather than the author",

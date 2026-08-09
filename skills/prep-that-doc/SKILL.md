@@ -109,13 +109,13 @@ A lower count does not prove the document got better. Read the whole thing once 
 
 Three requests, three different jobs. Detection and classification are identical in all three. What changes is what gets reported and who edits.
 
-| Verb | Reports | Edits |
-| --- | --- | --- |
-| `review` | HIGH and MED, scoped to the files named, prioritized so structure stays visible | Nothing |
-| `fix` | What changed, with before and after counts | The file |
-| `roast` | Every severity including LOW, every file in scope, worst finding first, nothing softened | Nothing |
+| Verb | Heading | Reports | Edits |
+| --- | --- | --- | --- |
+| `review` | `## Prep That Doc review` | HIGH and MED, scoped to the files named, prioritized so structure stays visible | Nothing |
+| `fix` | `## Prep That Doc fix` | What changed, then what was left and why, with before and after counts | The file |
+| `roast` | `## Prep That Doc roast` | Every severity including LOW, every file in scope, worst finding first, nothing softened | Nothing |
 
-`roast` exists because `review` deliberately suppresses noise, and sometimes the author wants the whole list. It drops the LOW filter and the hedging, not the standards. Everything else holds:
+`roast` is the same analysis with the softening removed. It drops the LOW filter and the diplomatic framing, not the standards. Ask for it when you already know the document has problems and want them named flatly instead of proposed gently. Everything else holds:
 
 - It never invents a finding to have more to say. A short roast on a good document is the correct output, and saying so is the honest result.
 - It roasts the document, never the person who wrote it. No commentary on the author's skill, effort, or intelligence. The target is always the text.
@@ -161,10 +161,10 @@ Four rules keep the number honest:
 
 ## Report
 
-Group by file, order by severity, and name the rule so the author can find it:
+Head the report with the verb that produced it. Group by file, order by severity, and name the rule so the author can find it:
 
 ```markdown
-## Prep That Doc findings
+## Prep That Doc review
 
 ### docs/cutover.md
 - [HIGH] `element-table`: Lines 34-49 compare three rollback options in prose.
@@ -183,6 +183,8 @@ Not counted by the detector: 1 element mismatch, 1 missing rollback section. Bot
 ```
 
 List clean files explicitly so the author knows they were checked. Every finding names a rule, states the problem, and proposes a fix. A finding without a fix is not reportable.
+
+`fix` reports a record of edits rather than a list of findings. Under its own heading it names what changed, grouped the same way, then every finding it deliberately left standing with the reason each one survived. A `needs-author` placeholder and a protected region are both results, so neither is silent.
 
 ## Gotchas
 

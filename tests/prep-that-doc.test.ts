@@ -78,6 +78,13 @@ describe("Prep That Doc portable contract", () => {
     expect(skill).toContain("**Never optimize the score.**")
   })
 
+  test("gives every verb its own report heading", () => {
+    for (const verb of ["review", "fix", "roast"]) {
+      expect(skill).toContain(`\`## Prep That Doc ${verb}\``)
+    }
+    expect(skill).toContain("`fix` reports a record of edits rather than a list of findings")
+  })
+
   test("keeps roast a reporting mode with the standards intact", () => {
     expect(skill).toContain("It roasts the document, never the person who wrote it")
     expect(skill).toContain("It never invents a finding to have more to say")
