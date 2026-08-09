@@ -135,6 +135,8 @@ Three requests, three different jobs. Detection and classification are identical
 | `fix` | `## Prep That Doc fix` | What changed, then what was left and why, with the verdict before and after | The file |
 | `roast` | `## Prep That Doc roast` | The habit behind the findings, then every severity including LOW, every file in scope | Nothing |
 
+When the request names no verb, run `review`. It is the one verb that neither edits the file nor drops the softening, so it is what an unstated intent should get.
+
 ### Roast
 
 `review` reports findings. `roast` reports what the findings add up to, which is why it is not `review` with sharper adjectives. Three things belong in a roast and nowhere else:
@@ -154,7 +156,7 @@ Four things bluntness does not buy:
 
 ## Verdict
 
-Every verb ends with one word telling the author what to do next. It follows from the findings, never from impression.
+Every verb opens with one word telling the author what to do next. It follows from the findings, never from impression.
 
 | Verdict | When | Means |
 | --- | --- | --- |
@@ -190,10 +192,13 @@ Four rules keep it honest:
 
 ## Report
 
-Head the report with the verb that produced it. Group by file, order by severity, and name the rule so the author can find it:
+Head the report with the verb that produced it, then the verdict, then the findings. The verdict decides whether the author reads the rest, so it goes above the rest. Group by file, order by severity, and name the rule so the author can find it:
 
 ```markdown
 ## Prep That Doc review
+
+**Verdict: rework.** 3 confirmed (1 HIGH, 2 MED), 1 needs-author, 2 false-positive.
+Scanned 2 files, 2 verify passes. Not seen by the detector: 1 element mismatch, 1 missing rollback section, both listed below.
 
 ### docs/cutover.md
 - [HIGH] `element-table`: Lines 34-49 compare three rollback options in prose.
@@ -206,10 +211,10 @@ Head the report with the verb that produced it. Group by file, order by severity
 ### README.md
 - pass
 
-Verdict: rework. 3 confirmed (1 HIGH, 2 MED), 1 needs-author, 2 false-positive (see notes).
-Scanned 2 files, 2 verify passes.
-Not seen by the detector: 1 element mismatch, 1 missing rollback section. Both confirmed above.
+Next: `prep-that-doc fix docs/cutover.md`
 ```
+
+**End every report with the command that acts on it.** A `review` or `roast` that found something ends with the `fix` invocation naming only the files that had findings. A `fix` that left placeholders ends with the path to the file so the author knows where to fill them. A run that found nothing ends with nothing, because there is no next step to offer.
 
 List clean files explicitly so the author knows they were checked. Every finding names a rule, states the problem, and proposes a fix. A finding without a fix is not reportable.
 

@@ -4,6 +4,14 @@ Prep That Doc reads engineering markdown and catches content that names its own 
 
 It fixes the AI writing tells too, the em dash pileups and the sentences that survive deletion. That part is table stakes and other skills do it. The structural half is the reason this one exists.
 
+## Quickstart
+
+```text
+prep-that-doc docs/cutover.md
+```
+
+That runs a review: findings, proposed fixes, nothing edited. It ends with the command to run next, so the verbs below are something you get walked into rather than something you pick between up front.
+
 ## Install
 
 Choose the package runner already available on your machine:
@@ -26,7 +34,7 @@ npx skills add dennexequiel/skills --skill prep-that-doc --agent claude-code --g
 
 ## Use
 
-Point it at documents. Ask to review or to fix, and it does exactly that one.
+Point it at documents. Ask to review or to fix, and it does exactly that one. Name no verb and you get a review.
 
 ```text
 review docs/cutover.md with prep-that-doc

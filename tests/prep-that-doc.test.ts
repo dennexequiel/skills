@@ -113,6 +113,14 @@ describe("Prep That Doc portable contract", () => {
     expect(skill).toContain("A roast that opens with a list has already failed")
   })
 
+  test("opens on the verdict and closes on the next command", () => {
+    expect(skill).toContain("**Verdict: rework.**")
+    expect(skill).toContain("The verdict decides whether the author reads the rest, so it goes above the rest")
+    expect(skill).toContain("**End every report with the command that acts on it.**")
+    expect(skill).toContain("A run that found nothing ends with nothing")
+    expect(skill).toContain("When the request names no verb, run `review`")
+  })
+
   test("states both sides of its scope boundary", () => {
     expect(skill).toContain("- **IS:**")
     expect(skill).toContain("- **IS NOT:**")
