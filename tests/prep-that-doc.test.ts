@@ -188,6 +188,43 @@ describe("Prep That Doc detector", () => {
     })
   })
 
+  test("groups findings under the section that holds them and names the file once", async () => {
+    await withTempDir("layout", async (directory) => {
+      const doc = resolve(directory, "grouped.md")
+      await writeFile(doc, [
+        "# Plan",
+        "",
+        "Ultimately the rollout is fine.",
+        "",
+        "## Rollback",
+        "",
+        "The revert finishes quickly.",
+        "",
+        "## Contacts",
+        "",
+        "Page the team, it's worth noting that the rotation moves.",
+        "",
+      ].join("\n"), "utf8")
+
+      const output = await scanOutput(doc)
+      expect(output).toContain("## Rollback")
+      expect(output).toContain("## Contacts")
+      expect(output.match(/grouped\.md/g)).toHaveLength(1)
+      // The matched phrase, not the line that carried it.
+      expect(output).toContain("it's worth noting")
+      expect(output).not.toContain("Page the team")
+      expect(output.indexOf("## Rollback")).toBeLessThan(output.indexOf("## Contacts"))
+    })
+  })
+
+  test("reports a file with nothing found instead of leaving it out", async () => {
+    await withTempDir("silent", async (directory) => {
+      const clean = resolve(directory, "clean.md")
+      await writeFile(clean, "# Sample\n\nThe parser reads tokens from headers.\n", "utf8")
+      expect(await scanOutput(clean)).toContain("no candidates")
+    })
+  })
+
   test("reads key as a noun rather than a claim of importance", async () => {
     await withTempDir("key", async (directory) => {
       const literal = resolve(directory, "literal.md")
@@ -223,7 +260,7 @@ describe("Prep That Doc detector", () => {
       ].join("\n"), "utf8")
 
       const nestedOutput = await scanOutput(nested)
-      expect(nestedOutput).toContain("0 HIGH")
+      expect(nestedOutput).not.toContain("HIGH")
       expect(nestedOutput).not.toContain("tell-significance")
       expect(nestedOutput).toContain("fence-prompt")
       expect(nestedOutput.match(/fence-prompt/g)).toHaveLength(1)

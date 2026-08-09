@@ -68,7 +68,7 @@ bun <this-skill-directory>/scripts/scan.ts <path-to-markdown>
 
 Use `node` in place of `bun` when only Node is available. If neither runs the script, say so once and apply every rule by hand from the reference files. Do not silently skip the scan.
 
-It reports file, line, rule id, severity, and the matched text. Its rules live in [references/elements.md](references/elements.md) and [references/tells.md](references/tells.md), written so every one can also be applied by hand when no runtime is available.
+It groups findings under the heading that holds them, in document order, and prints line, severity, rule id, and the phrase that matched. Document order is deliberate. The detector lays out evidence where the author will go looking for it, and the report is where triage by severity happens. It also prints a provisional verdict, which is provisional because nothing in it is classified yet: false positives are still counted, and the findings only a reader can see are still missing. Its rules live in [references/elements.md](references/elements.md) and [references/tells.md](references/tells.md), written so every one can also be applied by hand when no runtime is available.
 
 The detector owns the rules it implements. Do not substitute improvised greps for those, and do not treat its silence as a pass. The reference files carry the rest, including these three, which no regex settles and which are yours:
 

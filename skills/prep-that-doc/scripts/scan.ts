@@ -1,6 +1,6 @@
 import { existsSync } from "node:fs"
 import { readFile } from "node:fs/promises"
-import { dirname, resolve } from "node:path"
+import { dirname, relative, resolve } from "node:path"
 
 type Severity = "HIGH" | "MED" | "LOW"
 
@@ -10,12 +10,18 @@ type LineRule = {
   pattern: RegExp
 }
 
+type Section = {
+  index: number
+  heading: string
+}
+
 type Finding = {
   file: string
   line: number
   id: string
   severity: Severity
   text: string
+  section: Section
 }
 
 const LINE_RULES: LineRule[] = [
@@ -48,10 +54,8 @@ const PASTEABLE_FENCE = /^(?:console|text|output)\b/i
 const ROOT_HEADING_DEPTH = 1
 const MINIMUM_TABLE_COLUMNS = 2
 const MINIMUM_TABLE_ROWS = 2
-const EXCERPT_LENGTH = 100
-const EXCERPT_CONTEXT = 20
-
-const ORDER: Record<Severity, number> = { HIGH: 0, MED: 1, LOW: 2 }
+const EXCERPT_LENGTH = 56
+const PREAMBLE = { index: 0, heading: "(before the first heading)" } as const
 
 // Local targets only. Resolving a URL would mean network access the skill never promises.
 function unresolvedTarget(rawTarget: string, directory: string): string | undefined {
@@ -72,6 +76,7 @@ type OpenTable = {
   text: string
   columns: number
   rows: number
+  section: Section
 }
 
 type OpenFence = {
@@ -79,30 +84,26 @@ type OpenFence = {
   marker: string
   length: number
   pasteable: boolean
+  section: Section
 }
 
-// Windows a long line around the match so the excerpt carries the evidence, not just the first
-// hundred characters of an unrelated sentence.
-function excerpt(text: string, matchIndex: number): string {
+function clip(text: string): string {
   const trimmed = text.trim()
-  if (trimmed.length <= EXCERPT_LENGTH) return trimmed
-  const lead = text.length - text.trimStart().length
-  const start = Math.min(Math.max(matchIndex - lead - EXCERPT_CONTEXT, 0), trimmed.length - EXCERPT_LENGTH)
-  const windowed = trimmed.slice(start, start + EXCERPT_LENGTH)
-  return start ? `...${windowed}` : windowed
+  return trimmed.length <= EXCERPT_LENGTH ? trimmed : `${trimmed.slice(0, EXCERPT_LENGTH)}...`
 }
 
 function scan(file: string, source: string): Finding[] {
   const directory = dirname(file)
   const lines = source.split(/\r?\n/)
   const findings: Finding[] = []
+  let section: Section = PREAMBLE
 
-  const add = (line: number, id: string, severity: Severity, text: string, matchIndex = 0) => {
-    findings.push({ file, line, id, severity, text: excerpt(text, matchIndex) })
+  const add = (line: number, id: string, severity: Severity, text: string, at = section) => {
+    findings.push({ file, line, id, severity, text: clip(text), section: at })
   }
   const flushTable = (table: OpenTable) => {
     if (table.columns < MINIMUM_TABLE_COLUMNS || table.rows < MINIMUM_TABLE_ROWS) {
-      add(table.line, "element-table", "MED", table.text)
+      add(table.line, "element-table", "MED", table.text, table.section)
     }
   }
 
@@ -141,6 +142,7 @@ function scan(file: string, source: string): Finding[] {
           marker: marker.charAt(0),
           length: marker.length,
           pasteable: !PASTEABLE_FENCE.test(info),
+          section,
         }
         continue
       }
@@ -153,6 +155,9 @@ function scan(file: string, source: string): Finding[] {
     const heading = line.match(HEADING)
     if (heading?.[1]) {
       const depth = heading[1].length
+      // Open the section before the heading's own checks run, so a flagged heading is reported
+      // under itself rather than under the section it ends.
+      section = { index: section.index + 1, heading: clip(line) }
       if (previousDepth && depth > previousDepth + 1) add(number, "heading-skip", "MED", line)
       if (!previousDepth && depth > ROOT_HEADING_DEPTH) add(number, "heading-skip", "MED", line)
       if (depth === ROOT_HEADING_DEPTH) {
@@ -168,7 +173,7 @@ function scan(file: string, source: string): Finding[] {
       const contentRows = isDivider ? 0 : 1
       openTable = openTable
         ? { ...openTable, columns: Math.max(openTable.columns, columns), rows: openTable.rows + contentRows }
-        : { line: number, text: line, columns, rows: contentRows }
+        : { line: number, text: line, columns, rows: contentRows, section }
     } else if (openTable) {
       flushTable(openTable)
       openTable = undefined
@@ -176,19 +181,19 @@ function scan(file: string, source: string): Finding[] {
 
     for (const rule of LINE_RULES) {
       const match = rule.pattern.exec(line)
-      if (match) add(number, rule.id, rule.severity, line, match.index)
+      if (match?.[0]) add(number, rule.id, rule.severity, match[0])
     }
 
     for (const link of line.matchAll(MARKDOWN_LINK)) {
       const target = unresolvedTarget(link[1] ?? "", directory)
-      if (target) add(number, "link-dead", "HIGH", `${target} (from ${link[0]})`)
+      if (target) add(number, "link-dead", "HIGH", target)
     }
   }
 
   // An unterminated region hides every line after it, so a silent scan would read as a clean one.
   if (openTable) flushTable(openTable)
-  if (openFence) add(openFence.line, "fence-unclosed", "HIGH", lines[openFence.line - 1] ?? "")
-  if (!frontmatterClosed) add(1, "frontmatter-unclosed", "HIGH", lines[0] ?? "")
+  if (openFence) add(openFence.line, "fence-unclosed", "HIGH", lines[openFence.line - 1] ?? "", openFence.section)
+  if (!frontmatterClosed) add(1, "frontmatter-unclosed", "HIGH", lines[0] ?? "", PREAMBLE)
 
   return findings
 }
@@ -218,6 +223,32 @@ function verdict(findings: Finding[]): string {
   return findings.length ? "minor" : "clean"
 }
 
+// Relative when the file sits under the working directory, so a repository path prints as the
+// author types it rather than as a home-directory prefix repeated on every row.
+function label(path: string): string {
+  const short = relative(process.cwd(), path)
+  return short && !short.startsWith("..") ? short : path
+}
+
+// Document order, not severity order. The author navigates by section, and the report the agent
+// writes from this output is where triage happens.
+function report(file: string, found: Finding[]): void {
+  console.log(`\n${label(file)}`)
+  if (!found.length) {
+    console.log("  no candidates")
+    return
+  }
+  const width = Math.max(...found.map(({ id }) => id.length))
+  const sections = [...new Map(found.map((finding) => [finding.section.index, finding.section])).values()]
+    .sort((left, right) => left.index - right.index)
+  for (const { index, heading } of sections) {
+    console.log(`  ${heading}`)
+    for (const finding of found.filter(({ section }) => section.index === index).sort((left, right) => left.line - right.line)) {
+      console.log(`    ${String(finding.line).padStart(4)}  ${finding.severity.padEnd(4)}  ${finding.id.padEnd(width)}  ${finding.text}`)
+    }
+  }
+}
+
 const findings: Finding[] = []
 for (const path of paths) {
   let source: string
@@ -227,19 +258,13 @@ for (const path of paths) {
     console.error(`Cannot read ${path}: ${error instanceof Error ? error.message : String(error)}`)
     process.exit(2)
   }
-  // Sort per file so a multi-file scan never interleaves lines from different files.
   const found = scan(path, source)
-    .sort((left, right) => ORDER[left.severity] - ORDER[right.severity] || left.line - right.line)
+  report(path, found)
   findings.push(...found)
 }
 
-for (const finding of findings) {
-  console.log(`${finding.file}:${finding.line} [${finding.severity}] ${finding.id}  ${finding.text}`)
-}
-
 const counts = tally(findings)
-const breakdown = SEVERITIES.map((severity) => `${counts[severity]} ${severity}`).join(", ")
+const breakdown = SEVERITIES.filter((severity) => counts[severity]).map((severity) => `${counts[severity]} ${severity}`)
 
-console.log(`\nScanned ${plural(paths.length, "file")}. ${plural(findings.length, "candidate")}: ${breakdown}.`)
-console.log(`Provisional verdict: ${verdict(findings)}.`)
-console.log("Provisional because every candidate here is unclassified. Some are false positives, and only a reader can tell which findings need a fact the author has. Decide the verdict after classifying, not from this line.")
+console.log(`\n${plural(paths.length, "file")}, ${plural(findings.length, "candidate")}${breakdown.length ? `: ${breakdown.join(", ")}` : ""}.`)
+console.log(`Provisional verdict: ${verdict(findings)}. Classify first: false positives count here, and the findings only a reader can see do not.`)

@@ -71,7 +71,7 @@ bun ~/.claude/skills/prep-that-doc/scripts/scan.ts docs/cutover.md
 bun .claude/skills/prep-that-doc/scripts/scan.ts docs/cutover.md
 ```
 
-It prints file, line, severity, and rule id. It never edits. Every rule it implements is also written out in [references/elements.md](references/elements.md) and [references/tells.md](references/tells.md) so the skill still works when no runtime is available.
+It groups findings under the heading that holds them, in document order, and prints line, severity, rule id, and the phrase that matched. Files it found nothing in say so rather than going missing. It never edits. Every rule it implements is also written out in [references/elements.md](references/elements.md) and [references/tells.md](references/tells.md) so the skill still works when no runtime is available.
 
 ## Compatibility
 
