@@ -20,7 +20,9 @@ type Finding = {
 
 const LINE_RULES: LineRule[] = [
   { id: "tell-notxbuty", severity: "HIGH", pattern: /\b(?:is not|isn't|are not|aren't|not just|not only|it's not)\b[^.!?]{2,60}?\b(?:but|rather|it's|it is)\b/i },
-  { id: "tell-significance", severity: "HIGH", pattern: /\b(?:crucial|vital|essential|pivotal|key|critical|robust|seamless|powerful|comprehensive|cutting-edge|revolutioniz\w*|game.?chang\w*|landscape|testament|delve)\b/i },
+  // "key" only in its importance sense. Bare `key` matches SSH keys, API keys, primary keys, and
+  // keyboard keys, which are the common nouns of the documents this skill is pointed at.
+  { id: "tell-significance", severity: "HIGH", pattern: /\b(?:crucial|vital|essential|pivotal|critical|robust|seamless|powerful|comprehensive|cutting-edge|revolutioniz\w*|game.?chang\w*|landscape|testament|delve|key (?:insight|benefit|takeaway|point|factor|advantage|difference|challenge|step))\b/i },
   { id: "tell-vague-number", severity: "HIGH", pattern: /\b(?:quickly|slowly|significantly|substantially|dramatically)\b/i },
   { id: "tell-weasel", severity: "MED", pattern: /\b(?:studies show|research suggests|experts (?:say|agree)|it is (?:widely )?(?:known|believed|understood)|generally considered|some argue)\b/i },
   { id: "tell-history", severity: "MED", pattern: /\b(?:previously|used to|no longer|now (?:does|uses|reads|returns)|we (?:removed|changed|renamed)|has been (?:updated|changed|moved))\b/i },

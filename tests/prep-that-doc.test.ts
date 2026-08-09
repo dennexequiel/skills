@@ -173,6 +173,18 @@ describe("Prep That Doc detector", () => {
     })
   })
 
+  test("reads key as a noun rather than a claim of importance", async () => {
+    await withTempDir("key", async (directory) => {
+      const literal = resolve(directory, "literal.md")
+      await writeFile(literal, "# Keys\n\nThe SSH key signs commits. Press the prefix key, then a key from the map.\n", "utf8")
+      expect(await scanOutput(literal)).not.toContain("tell-significance")
+
+      const inflated = resolve(directory, "inflated.md")
+      await writeFile(inflated, "# Keys\n\nThat is the key takeaway, and the key benefit of the rewrite.\n", "utf8")
+      expect(await scanOutput(inflated)).toContain("tell-significance")
+    })
+  })
+
   test("keeps a protected region open only until its own closing marker", async () => {
     await withTempDir("fence", async (directory) => {
       const nested = resolve(directory, "nested.md")
@@ -299,7 +311,7 @@ describe("Prep That Doc detector", () => {
   test("detects every alternative its reference publishes", async () => {
     await withTempDir("terms", async (directory) => {
       const terms: Array<[string, string]> = [
-        ["key", "tell-significance"],
+        ["key insight", "tell-significance"],
         ["critical", "tell-significance"],
         ["it is widely understood", "tell-weasel"],
         ["some argue", "tell-weasel"],
