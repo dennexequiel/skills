@@ -97,13 +97,15 @@ Structure first, because structure changes delete style problems for free. Three
 
 Rewriting reintroduces the exact patterns being removed, because the same habits produce the fix. Expect it. This is why phase 5 is not optional.
 
-**Overcorrection is its own failure.** Em dashes are not banned. Tables are not always right. Bullets are not slop. A document stripped to bare declaratives is worse than the one you started with. The target is a document that says what it means in the form that means it, not a document that scores zero on a checklist.
+**Overcorrection is its own failure.** Em dashes are not banned. Tables are not always right. Bullets are not slop. A document stripped to bare declaratives is worse than the one you started with. The target is a document that says what it means in the form that means it, not a document with an empty findings list.
+
+**A document that is already good gets left alone.** When classification leaves nothing confirmed, `fix` edits nothing, reports `clean`, and says so in one line. Detector output is not a work order. Editing a finding labelled `false-positive`, `intentional`, or `protected` is the failure the classify step exists to prevent, and it is the likelier failure on a good document, because the raw count still looks like something to answer for.
 
 ### 5. Re-scan
 
 Re-run the detector on the rewritten file. Re-check the three reader-judgment items on your own output. Repeat until a pass produces no confirmed findings, capped at four passes. If a finding survives four passes, rewrite that section from scratch starting from one question: what is this section for?
 
-A lower count does not prove the document got better. Read the whole thing once more for continuity before reporting.
+Expect the rewrite to introduce the patterns it removed. A lower count does not prove the document got better. Read the whole thing once more for continuity before reporting.
 
 ## Verbs
 
@@ -112,7 +114,7 @@ Three requests, three different jobs. Detection and classification are identical
 | Verb | Heading | Reports | Edits |
 | --- | --- | --- | --- |
 | `review` | `## Prep That Doc review` | HIGH and MED, scoped to the files named, prioritized so structure stays visible | Nothing |
-| `fix` | `## Prep That Doc fix` | What changed, then what was left and why, with before and after counts | The file |
+| `fix` | `## Prep That Doc fix` | What changed, then what was left and why, with the verdict before and after | The file |
 | `roast` | `## Prep That Doc roast` | Every severity including LOW, every file in scope, worst finding first, nothing softened | Nothing |
 
 `roast` is the same analysis with the softening removed. It drops the LOW filter and the diplomatic framing, not the standards. Ask for it when you already know the document has problems and want them named flatly instead of proposed gently. Everything else holds:
@@ -122,33 +124,31 @@ Three requests, three different jobs. Detection and classification are identical
 - It never edits, exactly like `review`.
 - `needs-author` findings stay `needs-author`. Being blunt is not license to guess at a missing number.
 
-## Score
+## Verdict
 
-`review` and `roast` both end with a score. It is computed, never estimated. An invented number is the defect this skill exists to catch.
+Every verb ends with one word telling the author what to do next. It follows from the findings, never from impression.
 
-Weight every **confirmed** finding, then normalize by length:
+| Verdict | When | Means |
+| --- | --- | --- |
+| `clean` | Nothing confirmed, nothing `needs-author` | Ship it |
+| `minor` | Confirmed findings, none HIGH | Cleanup is optional |
+| `blocked` | `needs-author` findings, none HIGH | The form is right, the facts are missing |
+| `rework` | Any HIGH confirmed finding | Fix it before anyone relies on it |
+
+Take the last verdict that applies: `rework` outranks `blocked`, which outranks `minor`. Report the counts beside it so the word is auditable:
 
 ```text
-points  = 5 x HIGH + 2 x MED + 1 x LOW
-density = points x 1000 / words
+Verdict: rework. 10 confirmed (4 HIGH, 5 MED, 1 LOW), 5 needs-author, 12 false-positive.
 ```
 
-| Density | Band |
-| --- | --- |
-| 0 | clean |
-| up to 10 | light |
-| up to 25 | rough |
-| up to 50 | heavy |
-| above 50 | severe |
+Four rules keep it honest:
 
-Four rules keep the number honest:
+- **Classify before deciding the verdict.** Raw detector output includes false positives. A style guide that quotes a banned phrase as its own example reads `rework` on raw hits while being entirely correct.
+- **`needs-author` is never `clean`.** A runbook whose rollback trigger has no threshold has nothing confirmed and is not a shippable document. That gap is the verdict, which is why `blocked` exists.
+- **Say what the detector cannot see.** It implements the mechanical rules only. Element mismatch, empty sentences, and a runbook missing its rollback are reader judgment, and all three are HIGH. Leave them out and the worst problems never reach the verdict.
+- **Never optimize the verdict.** `minor` is a fine resting state. Deleting a real caveat to move from `minor` to `clean` makes the document worse and the word better.
 
-- **Score confirmed findings only.** The detector's raw output includes false positives, so scoring it punishes documents for quoting a banned phrase as an example. A rules file scored on raw hits lands in `severe` while being correct.
-- **Below 300 words, report points and no density.** A short document with three findings computes to `heavy` on arithmetic alone. The detector withholds density under that floor; do the same.
-- **Say what the score cannot see.** The detector implements the mechanical rules only. Element mismatch, empty sentences, and a runbook missing its rollback are reader judgment. Add those to the count as confirmed findings, or the worst problems never reach the number.
-- **Never optimize the score.** A document can be `clean` and still bad, and `light` is a fine resting state. Deleting a real caveat to drop two points makes the document worse and the number better. Bands rank severity; they are not a target.
-
-`fix` reports the score before and after, which is the evidence that the edit worked.
+`fix` reports the verdict before and after, which is the evidence that the edit worked.
 
 ## Preserve Author Authority
 
@@ -177,9 +177,9 @@ Head the report with the verb that produced it. Group by file, order by severity
 ### README.md
 - pass
 
-Scanned 2 files, 1840 words. 3 confirmed, 1 needs-author, 2 false-positive (see notes).
-Score: 9.2 per 1000 words, band light (17 points). Verify passes: 2.
-Not counted by the detector: 1 element mismatch, 1 missing rollback section. Both confirmed above.
+Verdict: rework. 3 confirmed (1 HIGH, 2 MED), 1 needs-author, 2 false-positive (see notes).
+Scanned 2 files, 2 verify passes.
+Not seen by the detector: 1 element mismatch, 1 missing rollback section. Both confirmed above.
 ```
 
 List clean files explicitly so the author knows they were checked. Every finding names a rule, states the problem, and proposes a fix. A finding without a fix is not reportable.

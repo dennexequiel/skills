@@ -41,7 +41,6 @@ const FENCE = /^\s*(`{3,}|~{3,})(.*)$/
 const TABLE_ROW = /^\s*\|.*\|\s*$/
 const TABLE_DIVIDER = /^\s*\|[\s:|-]*\|\s*$/
 const SHELL_PROMPT = /^\s*\$\s+\S/
-const WORD = /[A-Za-z0-9][A-Za-z0-9'-]*/g
 const MARKDOWN_LINK = /!?\[[^\]]*\]\(([^)\s]+)(?:\s[^)]*)?\)/g
 const ABSOLUTE_TARGET = /^(?:[a-z][a-z0-9+.-]*:|\/\/|#)/i
 const PASTEABLE_FENCE = /^(?:console|text|output)\b/i
@@ -53,17 +52,6 @@ const EXCERPT_LENGTH = 100
 const EXCERPT_CONTEXT = 20
 
 const ORDER: Record<Severity, number> = { HIGH: 0, MED: 1, LOW: 2 }
-const WEIGHTS: Record<Severity, number> = { HIGH: 5, MED: 2, LOW: 1 }
-const BANDS: Array<{ limit: number; label: string }> = [
-  { limit: 0, label: "clean" },
-  { limit: 10, label: "light" },
-  { limit: 25, label: "rough" },
-  { limit: 50, label: "heavy" },
-  { limit: Infinity, label: "severe" },
-]
-
-// Below this, one finding swings density far enough to read as a verdict it cannot support.
-const DENSITY_FLOOR_WORDS = 300
 
 // Local targets only. Resolving a URL would mean network access the skill never promises.
 function unresolvedTarget(rawTarget: string, directory: string): string | undefined {
@@ -93,11 +81,6 @@ type OpenFence = {
   pasteable: boolean
 }
 
-type ScanResult = {
-  findings: Finding[]
-  words: number
-}
-
 // Windows a long line around the match so the excerpt carries the evidence, not just the first
 // hundred characters of an unrelated sentence.
 function excerpt(text: string, matchIndex: number): string {
@@ -109,11 +92,10 @@ function excerpt(text: string, matchIndex: number): string {
   return start ? `...${windowed}` : windowed
 }
 
-function scan(file: string, source: string): ScanResult {
+function scan(file: string, source: string): Finding[] {
   const directory = dirname(file)
   const lines = source.split(/\r?\n/)
   const findings: Finding[] = []
-  let words = 0
 
   const add = (line: number, id: string, severity: Severity, text: string, matchIndex = 0) => {
     findings.push({ file, line, id, severity, text: excerpt(text, matchIndex) })
@@ -167,7 +149,6 @@ function scan(file: string, source: string): ScanResult {
       if (openFence.pasteable && SHELL_PROMPT.test(line)) add(number, "fence-prompt", "MED", line)
       continue
     }
-    words += line.match(WORD)?.length ?? 0
 
     const heading = line.match(HEADING)
     if (heading?.[1]) {
@@ -209,7 +190,7 @@ function scan(file: string, source: string): ScanResult {
   if (openFence) add(openFence.line, "fence-unclosed", "HIGH", lines[openFence.line - 1] ?? "")
   if (!frontmatterClosed) add(1, "frontmatter-unclosed", "HIGH", lines[0] ?? "")
 
-  return { findings, words }
+  return findings
 }
 
 const paths = process.argv.slice(2)
@@ -219,7 +200,6 @@ if (!paths.length) {
 }
 
 const SEVERITIES = ["HIGH", "MED", "LOW"] as const
-const WEIGHTING = "5/2/1 per HIGH/MED/LOW"
 
 function plural(count: number, noun: string): string {
   return `${count} ${noun}${count === 1 ? "" : "s"}`
@@ -231,21 +211,14 @@ function tally(findings: Finding[]): Record<Severity, number> {
   return counts
 }
 
-function scoreLine(findings: Finding[], words: number): string {
-  const points = findings.reduce((total, finding) => total + WEIGHTS[finding.severity], 0)
-  if (words < DENSITY_FLOOR_WORDS) {
-    return `Provisional score: ${points} points (${WEIGHTING}). `
-      + `Density withheld below ${DENSITY_FLOOR_WORDS} words, where a few findings distort it.`
-  }
-  const density = (points * 1000) / words
-  const band = BANDS.find(({ limit }) => density <= limit)
-  if (!band) throw new Error(`No band covers a density of ${density} in ${plural(words, "word")}`)
-  return `Provisional score: ${density.toFixed(1)} points per 1000 words, `
-    + `band ${band.label} (${points} points, ${WEIGHTING}).`
+// `blocked` is missing on purpose. It depends on which findings need a fact only the author holds,
+// and nothing here can tell that apart from a finding that is simply wrong.
+function verdict(findings: Finding[]): string {
+  if (findings.some(({ severity }) => severity === "HIGH")) return "rework"
+  return findings.length ? "minor" : "clean"
 }
 
 const findings: Finding[] = []
-let words = 0
 for (const path of paths) {
   let source: string
   try {
@@ -254,11 +227,10 @@ for (const path of paths) {
     console.error(`Cannot read ${path}: ${error instanceof Error ? error.message : String(error)}`)
     process.exit(2)
   }
-  const result = scan(path, source)
   // Sort per file so a multi-file scan never interleaves lines from different files.
-  result.findings.sort((left, right) => ORDER[left.severity] - ORDER[right.severity] || left.line - right.line)
-  findings.push(...result.findings)
-  words += result.words
+  const found = scan(path, source)
+    .sort((left, right) => ORDER[left.severity] - ORDER[right.severity] || left.line - right.line)
+  findings.push(...found)
 }
 
 for (const finding of findings) {
@@ -268,6 +240,6 @@ for (const finding of findings) {
 const counts = tally(findings)
 const breakdown = SEVERITIES.map((severity) => `${counts[severity]} ${severity}`).join(", ")
 
-console.log(`\nScanned ${plural(paths.length, "file")}, ${words} words. ${plural(findings.length, "candidate")}: ${breakdown}.`)
-console.log(scoreLine(findings, words))
-console.log("Provisional because it counts unclassified candidates. Score after classification, not from this number.")
+console.log(`\nScanned ${plural(paths.length, "file")}. ${plural(findings.length, "candidate")}: ${breakdown}.`)
+console.log(`Provisional verdict: ${verdict(findings)}.`)
+console.log("Provisional because every candidate here is unclassified. Some are false positives, and only a reader can tell which findings need a fact the author has. Decide the verdict after classifying, not from this line.")

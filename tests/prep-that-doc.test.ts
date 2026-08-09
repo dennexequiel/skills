@@ -71,11 +71,18 @@ describe("Prep That Doc portable contract", () => {
     expect(skill).toContain('argument-hint: "[review|fix|roast] <path>"')
   })
 
-  test("computes the score from confirmed findings and refuses to make it a target", () => {
-    expect(skill).toContain("points  = 5 x HIGH + 2 x MED + 1 x LOW")
-    expect(skill).toContain("**Score confirmed findings only.**")
-    expect(skill).toContain("**Below 300 words, report points and no density.**")
-    expect(skill).toContain("**Never optimize the score.**")
+  test("derives the verdict from classified findings and refuses to make it a target", () => {
+    for (const verdict of ["clean", "minor", "blocked", "rework"]) {
+      expect(skill).toContain(`| \`${verdict}\` |`)
+    }
+    expect(skill).toContain("**Classify before deciding the verdict.**")
+    expect(skill).toContain("**`needs-author` is never `clean`.**")
+    expect(skill).toContain("**Never optimize the verdict.**")
+  })
+
+  test("leaves a document alone once classification clears it", () => {
+    expect(skill).toContain("**A document that is already good gets left alone.**")
+    expect(skill).toContain("Detector output is not a work order")
   })
 
   test("gives every verb its own report heading", () => {
@@ -162,14 +169,15 @@ describe("Prep That Doc detector", () => {
         expect(noisyOutput).toContain(rule)
       }
 
-      expect(noisyOutput).toContain("Provisional score:")
-      expect(noisyOutput).toContain("Density withheld below 300 words")
+      expect(noisyOutput).toContain("Provisional verdict: rework")
 
-      expect(await scanOutput(clean)).toContain("0 candidates")
+      const cleanOutput = await scanOutput(clean)
+      expect(cleanOutput).toContain("0 candidates")
+      expect(cleanOutput).toContain("Provisional verdict: clean")
 
-      const long = resolve(directory, "long.md")
-      await writeFile(long, `# Long\n\n${"The parser reads tokens from headers. ".repeat(60)}\n\nIt is not just a tool, but a crucial shift.\n`, "utf8")
-      expect(await scanOutput(long)).toMatch(/points per 1000 words, band (clean|light|rough|heavy|severe)/)
+      const styleOnly = resolve(directory, "style-only.md")
+      await writeFile(styleOnly, "# Sample\n\nUltimately the parser reads tokens.\n", "utf8")
+      expect(await scanOutput(styleOnly)).toContain("Provisional verdict: minor")
     })
   })
 
