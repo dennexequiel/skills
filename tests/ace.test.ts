@@ -233,7 +233,7 @@ describe("Ace distribution", () => {
     expect(compatibility).toContain("Smoke-tested")
     expect(compatibility).toContain("Automation adapter")
     expect(compatibility).toContain("| [Ace](../skills/ace/) | OpenCode | Yes | Yes (`bun run smoke:opencode`) | Yes |")
-    expect(compatibility).toContain("| [Ace](../skills/ace/) | Claude Code | Yes | Not yet | No |")
+    expect(compatibility).toContain("| [Ace](../skills/ace/) | Claude Code | Yes | Yes (`bun run smoke:claude-code`) | No |")
   })
 
   test("limits the integration gate to automated coverage the repository provides", () => {

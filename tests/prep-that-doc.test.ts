@@ -417,7 +417,7 @@ describe("Prep That Doc distribution", () => {
     expect(skillCatalogEntry).toEqual(
       expect.objectContaining({ name: "prep-that-doc", status: "experimental", areas: ["documentation", "writing"] }),
     )
-    expect(compatibility).toContain("| [Prep That Doc](../skills/prep-that-doc/) | Claude Code | Yes | Not yet | No |")
+    expect(compatibility).toContain("| [Prep That Doc](../skills/prep-that-doc/) | Claude Code | Yes | Yes (`bun run smoke:claude-code`) | No |")
     expect(compatibility).toContain("| [Prep That Doc](../skills/prep-that-doc/) | OpenCode | Yes | Not yet | No |")
   })
 

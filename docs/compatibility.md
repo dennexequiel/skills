@@ -17,12 +17,12 @@ Compatibility is recorded per skill so unrelated skills can adopt integrations i
 | Skill | Host | Format-compatible | Smoke-tested | Automation adapter | Invocation |
 | --- | --- | --- | --- | --- | --- |
 | [Ace](../skills/ace/) | OpenCode | Yes | Yes (`bun run smoke:opencode`) | Yes | Native skill discovery; `/ace` with adapter |
-| [Ace](../skills/ace/) | Claude Code | Yes | Not yet | No | `/ace` |
+| [Ace](../skills/ace/) | Claude Code | Yes | Yes (`bun run smoke:claude-code`) | No | `/ace` |
 | [Ace](../skills/ace/) | Codex CLI | Yes | Not yet | No | `$ace` or `/skills` |
 | [Ace](../skills/ace/) | Pi | Yes | Not yet | No | `/skill:ace` |
 | [Ace](../skills/ace/) | Antigravity CLI (`agy`) | Yes | Yes (`bun run smoke:agy`) | No | Plugin skill discovery after `agy plugin install` |
 | [Prep That Doc](../skills/prep-that-doc/) | OpenCode | Yes | Not yet | No | Native skill discovery |
-| [Prep That Doc](../skills/prep-that-doc/) | Claude Code | Yes | Not yet | No | `/prep-that-doc` |
+| [Prep That Doc](../skills/prep-that-doc/) | Claude Code | Yes | Yes (`bun run smoke:claude-code`) | No | `/prep-that-doc` |
 | [Prep That Doc](../skills/prep-that-doc/) | Codex CLI | Yes | Not yet | No | `$prep-that-doc` or `/skills` |
 | [Prep That Doc](../skills/prep-that-doc/) | Pi | Yes | Not yet | No | `/skill:prep-that-doc` |
 | [Prep That Doc](../skills/prep-that-doc/) | Antigravity CLI (`agy`) | Yes | Yes (`bun run smoke:agy`) | No | Plugin skill discovery after `agy plugin install` |
