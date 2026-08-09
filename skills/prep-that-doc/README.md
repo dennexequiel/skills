@@ -37,7 +37,7 @@ roast my README, I can take it
 The three verbs behave differently on purpose, and each heads its report with its own name so you can tell them apart at a glance:
 
 - **review** reports HIGH and MED findings with proposed fixes, and changes nothing.
-- **fix** edits the file, reports what changed and what it deliberately left, and gives the verdict before and after.
+- **fix** asks about the gaps that block a reader, edits the file, reports what changed and what it deliberately left, and gives the verdict before and after.
 - **roast** reports every severity, worst first, unsoftened, and still changes nothing.
 
 ### Verdict
@@ -52,6 +52,8 @@ rework   a high finding                       fix before anyone relies on it
 ```
 
 Only classified findings count, so a document is never marked down for quoting a banned phrase as an example. `blocked` exists because a runbook whose rollback trigger reads "if the error rate rises significantly" has nothing wrong with its prose and still cannot be followed at 3am. The verdict ranks severity rather than setting a target: `minor` is a fine resting state, and deleting a real caveat to reach `clean` makes the document worse.
+
+`fix` asks about those gaps rather than guessing at them, in one round, worst first. Answering later is always on the table and costs nothing: the question becomes an `[ADD: ...]` placeholder in the file, the verdict stays `blocked`, and the rest of the document still gets fixed. Nothing is invented to fill a hole.
 
 `roast` is the same analysis with the softening removed. It drops the noise filter and the diplomatic framing, not the standards. It will not invent findings to pad the list, a short roast on a good document is the honest answer, and it targets the document rather than the author.
 

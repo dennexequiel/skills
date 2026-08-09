@@ -20,13 +20,14 @@ Documents name their own structure wrong constantly. A comparison names itself a
 
 ## The Workflow
 
-Run five phases in order. Skip none.
+Run six phases in order. Skip none.
 
 1. **Scope.** Establish the document type and the reader.
 2. **Scan.** Detect mechanically, never by impression.
 3. **Classify.** Judge every finding before touching it.
-4. **Fix.** Rewrite by meaning, not by pattern.
-5. **Re-scan.** Prove the fix with a second detection pass.
+4. **Ask.** Put the blocking gaps to the author, with deferral always available.
+5. **Fix.** Rewrite by meaning, not by pattern.
+6. **Re-scan.** Prove the fix with a second detection pass.
 
 ### 1. Scope
 
@@ -89,19 +90,36 @@ Every finding gets exactly one label before any edit:
 
 A `needs-author` finding never gets an invented fix. Leave a marked placeholder such as `[ADD: which timeout?]` and report it.
 
-### 4. Fix
+Sort the `needs-author` findings into two piles, because they are not equally urgent:
+
+- **Blocking.** The answer changes what a reader does. A rollback threshold, a timeout, a precondition, the owner to page, what a verification step actually checks.
+- **Deferrable.** Everything else. A missing citation, an unnamed duration in background prose, a number nobody acts on.
+
+### 4. Ask
+
+`fix` asks about blocking findings before it edits. `review` and `roast` never ask, because they change nothing and an answer would have nowhere to land. They report the same questions and leave them with the author.
+
+Ask in one round, worst first, each question naming its line and why the gap blocks a reader. Never drip questions across turns, and never ask about a deferrable finding. If more than five findings block, ask about the five that gate execution and leave the rest as placeholders.
+
+**Answering later is a real answer.** Every question carries that option standing, and taking it costs nothing: write the `[ADD: ...]` placeholder, keep the label `needs-author`, move to the next question. Do not re-ask inside a run, do not press for a number twice, and do not stop editing the rest of the document because one answer is outstanding.
+
+Record answers as given. Write the author's number without rounding it, do not derive a second fact from it, and do not harden a hedged answer into a certainty.
+
+When the runtime cannot put a question to a human, or the author defers every one, `fix` completes the confirmed findings, leaves the placeholders standing, and reports `blocked`. That is a finished run, not a failed one.
+
+### 5. Fix
 
 Work finding by finding. The rule that governs every rewrite: **decide what the content actually is, then give it that form.** Do not paraphrase around a pattern.
 
 Structure first, because structure changes delete style problems for free. Three paragraphs comparing options become a table, and the em dashes inside them stop existing. Style passes over prose that survives.
 
-Rewriting reintroduces the exact patterns being removed, because the same habits produce the fix. Expect it. This is why phase 5 is not optional.
+Rewriting reintroduces the exact patterns being removed, because the same habits produce the fix. Expect it. This is why phase 6 is not optional.
 
 **Overcorrection is its own failure.** Em dashes are not banned. Tables are not always right. Bullets are not slop. A document stripped to bare declaratives is worse than the one you started with. The target is a document that says what it means in the form that means it, not a document with an empty findings list.
 
 **A document that is already good gets left alone.** When classification leaves nothing confirmed, `fix` edits nothing, reports `clean`, and says so in one line. Detector output is not a work order. Editing a finding labelled `false-positive`, `intentional`, or `protected` is the failure the classify step exists to prevent, and it is the likelier failure on a good document, because the raw count still looks like something to answer for.
 
-### 5. Re-scan
+### 6. Re-scan
 
 Re-run the detector on the rewritten file. Re-check the three reader-judgment items on your own output. Repeat until a pass produces no confirmed findings, capped at four passes. If a finding survives four passes, rewrite that section from scratch starting from one question: what is this section for?
 
@@ -109,7 +127,7 @@ Expect the rewrite to introduce the patterns it removed. A lower count does not 
 
 ## Verbs
 
-Three requests, three different jobs. Detection and classification are identical in all three. What changes is what gets reported and who edits.
+Three requests, three different jobs. Detection and classification are identical in all three. What changes is what gets reported, who edits, and whether the author gets asked.
 
 | Verb | Heading | Reports | Edits |
 | --- | --- | --- | --- |
@@ -155,6 +173,7 @@ Four rules keep it honest:
 - Asked to **review**, report findings and propose fixes. Do not rewrite the file.
 - Asked to **fix** or **improve**, edit the file and report what changed.
 - Asked to **roast**, report everything and still change nothing.
+- Only **fix** questions the author. Deferring an answer is always available and never costs the rest of the run.
 - Never change meaning, claims, or facts. This is a form pass.
 - Never delete a section because it seems redundant. Redundancy in a runbook is often deliberate.
 - Scope to the files named or changed. Unscoped findings bury the real ones.

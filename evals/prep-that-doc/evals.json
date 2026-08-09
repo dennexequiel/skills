@@ -153,6 +153,24 @@
       ]
     },
     {
+      "name": "asks about a blocking gap and accepts a deferral",
+      "prompt": "Fix our failover runbook. Step 3 says to roll back 'if latency degrades', step 8 cites a config value I never wrote down, and the contacts section just says to page the platform team.",
+      "expected": [
+        "Asks about the rollback trigger and the paging contact, because both change what someone does under pressure",
+        "Leaves the uncited config value as a placeholder without asking, because no reader acts on it",
+        "Batches the questions into one round rather than asking across several turns",
+        "Offers answering later on every question and writes the placeholder when that is taken",
+        "Fixes the confirmed findings and reports blocked when any placeholder is still standing"
+      ],
+      "antiPatterns": [
+        "Fills a deferred answer with a plausible threshold so the run looks complete",
+        "Stops editing the rest of the document because one question went unanswered",
+        "Re-asks a question the author already deferred",
+        "Interrogates the author about every needs-author finding including the ones nobody acts on",
+        "Hardens a hedged answer such as roughly two minutes into an exact figure"
+      ]
+    },
+    {
       "name": "calls a good document good instead of editing it",
       "prompt": "Fix docs/yubikey.md. It is our hardware key guide, mostly command blocks and a definition list where each term is followed by an em dash.",
       "expected": [

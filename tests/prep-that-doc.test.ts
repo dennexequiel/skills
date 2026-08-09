@@ -80,6 +80,13 @@ describe("Prep That Doc portable contract", () => {
     expect(skill).toContain("**Never optimize the verdict.**")
   })
 
+  test("asks about blocking gaps and keeps deferral free", () => {
+    expect(skill).toContain("### 4. Ask")
+    expect(skill).toContain("**Answering later is a real answer.**")
+    expect(skill).toContain("`review` and `roast` never ask")
+    expect(skill).toContain("Record answers as given")
+  })
+
   test("leaves a document alone once classification clears it", () => {
     expect(skill).toContain("**A document that is already good gets left alone.**")
     expect(skill).toContain("Detector output is not a work order")
