@@ -133,9 +133,19 @@ Three requests, three different jobs. Detection and classification are identical
 | --- | --- | --- | --- |
 | `review` | `## Prep That Doc review` | HIGH and MED, scoped to the files named, prioritized so structure stays visible | Nothing |
 | `fix` | `## Prep That Doc fix` | What changed, then what was left and why, with the verdict before and after | The file |
-| `roast` | `## Prep That Doc roast` | Every severity including LOW, every file in scope, worst finding first, nothing softened | Nothing |
+| `roast` | `## Prep That Doc roast` | The habit behind the findings, then every severity including LOW, every file in scope | Nothing |
 
-`roast` is the same analysis with the softening removed. It drops the LOW filter and the diplomatic framing, not the standards. Ask for it when you already know the document has problems and want them named flatly instead of proposed gently. Everything else holds:
+### Roast
+
+`review` reports findings. `roast` reports what the findings add up to, which is why it is not `review` with sharper adjectives. Three things belong in a roast and nowhere else:
+
+- **The habit, not the instance.** Review lists three vague numbers on three lines. A roast names the pattern behind them: every number that matters in this plan is an adjective, and every number that does not is exact to the minute. One sentence covering ten findings beats ten sentences covering ten findings.
+- **The consequence, not the rule.** Lead with what the document does to the person reading it. "Your rollback trigger is an adjective, so two engineers roll back at different moments" lands where "`tell-vague-number` at line 55" does not.
+- **The gap between what the document promises and what it delivers.** The title says cutover plan. The rollback section is one sentence and two dead links. No rule catches that, because it is a claim about the whole document rather than any line in it.
+
+Shape it in that order: the single worst thing in one blunt sentence, then the habits, then the findings, then the verdict. A roast that opens with a list has already failed, because the list is the part `review` does.
+
+Four things bluntness does not buy:
 
 - It never invents a finding to have more to say. A short roast on a good document is the correct output, and saying so is the honest result.
 - It roasts the document, never the person who wrote it. No commentary on the author's skill, effort, or intelligence. The target is always the text.

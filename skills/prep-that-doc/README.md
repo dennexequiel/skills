@@ -38,7 +38,7 @@ The three verbs behave differently on purpose, and each heads its report with it
 
 - **review** reports HIGH and MED findings with proposed fixes, and changes nothing.
 - **fix** asks about the gaps that block a reader, edits the file, reports what changed and what it deliberately left, and gives the verdict before and after.
-- **roast** reports every severity, worst first, unsoftened, and still changes nothing.
+- **roast** names the habit behind the findings, then reports every severity, and still changes nothing.
 
 ### Verdict
 
@@ -55,7 +55,7 @@ Only classified findings count, so a document is never marked down for quoting a
 
 `fix` asks about those gaps rather than guessing at them, in one round, worst first. Answering later is always on the table and costs nothing: the question becomes an `[ADD: ...]` placeholder in the file, the verdict stays `blocked`, and the rest of the document still gets fixed. Nothing is invented to fill a hole.
 
-`roast` is the same analysis with the softening removed. It drops the noise filter and the diplomatic framing, not the standards. It will not invent findings to pad the list, a short roast on a good document is the honest answer, and it targets the document rather than the author.
+`roast` is not review with sharper adjectives. It reports what the findings add up to: the habit behind them rather than each instance, the consequence for whoever reads the document rather than the rule that fired, and the gap between what the document promises and what its sections deliver. Then the findings, then the verdict. It will not invent findings to pad the list, a short roast on a good document is the honest answer, and it targets the document rather than the author.
 
 Documents it covers: specs, design docs, architecture decision records (ADRs), runbooks, cutover and migration plans, READMEs, CHANGELOGs, PR descriptions, incident writeups, and infrastructure or DevOps docs.
 

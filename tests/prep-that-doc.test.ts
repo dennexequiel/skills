@@ -105,6 +105,14 @@ describe("Prep That Doc portable contract", () => {
     expect(skill).toContain("Asked to **roast**, report everything and still change nothing.")
   })
 
+  test("gives roast content review does not have instead of a sharper tone", () => {
+    expect(skill).toContain("### Roast")
+    expect(skill).toContain("**The habit, not the instance.**")
+    expect(skill).toContain("**The consequence, not the rule.**")
+    expect(skill).toContain("**The gap between what the document promises and what it delivers.**")
+    expect(skill).toContain("A roast that opens with a list has already failed")
+  })
+
   test("states both sides of its scope boundary", () => {
     expect(skill).toContain("- **IS:**")
     expect(skill).toContain("- **IS NOT:**")
