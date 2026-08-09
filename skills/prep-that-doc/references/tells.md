@@ -19,10 +19,12 @@ Common shapes: restating the heading, announcing what the next section will say,
 Claims of importance with no evidence attached.
 
 ```sh
-grep -nE '\b(crucial|vital|essential|pivotal|key|critical|robust|seamless|powerful|comprehensive|cutting-edge|game.?chang|revolutioniz|landscape|testament|delve)\b' FILE
+grep -nE '\b(crucial|vital|essential|pivotal|critical|robust|seamless|powerful|comprehensive|cutting-edge|game.?chang|revolutioniz|landscape|testament|delve|key (insight|benefit|takeaway|point|factor|advantage|difference|challenge|step))\b' FILE
 ```
 
 Replace with the fact the word was standing in for. "Plays a vital role in routing" becomes "routes every request". If no fact exists, delete the sentence.
+
+"Key" is matched only in front of the nouns it inflates. Engineering documents are full of SSH keys, API keys, primary keys, and keyboard keys, and a bare `key` pattern flags all of them.
 
 ### `tell-vague-number` HIGH
 

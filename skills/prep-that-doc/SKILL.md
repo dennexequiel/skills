@@ -20,13 +20,14 @@ Documents name their own structure wrong constantly. A comparison names itself a
 
 ## The Workflow
 
-Run five phases in order. Skip none.
+Run six phases in order. Skip none.
 
 1. **Scope.** Establish the document type and the reader.
 2. **Scan.** Detect mechanically, never by impression.
 3. **Classify.** Judge every finding before touching it.
-4. **Fix.** Rewrite by meaning, not by pattern.
-5. **Re-scan.** Prove the fix with a second detection pass.
+4. **Ask.** Put the blocking gaps to the author, with deferral always available.
+5. **Fix.** Rewrite by meaning, not by pattern.
+6. **Re-scan.** Prove the fix with a second detection pass.
 
 ### 1. Scope
 
@@ -89,82 +90,100 @@ Every finding gets exactly one label before any edit:
 
 A `needs-author` finding never gets an invented fix. Leave a marked placeholder such as `[ADD: which timeout?]` and report it.
 
-### 4. Fix
+Sort the `needs-author` findings into two piles, because they are not equally urgent:
+
+- **Blocking.** The answer changes what a reader does. A rollback threshold, a timeout, a precondition, the owner to page, what a verification step actually checks.
+- **Deferrable.** Everything else. A missing citation, an unnamed duration in background prose, a number nobody acts on.
+
+### 4. Ask
+
+`fix` asks about blocking findings before it edits. `review` and `roast` never ask, because they change nothing and an answer would have nowhere to land. They report the same questions and leave them with the author.
+
+Ask in one round, worst first, each question naming its line and why the gap blocks a reader. Never drip questions across turns, and never ask about a deferrable finding. If more than five findings block, ask about the five that gate execution and leave the rest as placeholders.
+
+**Answering later is a real answer.** Every question carries that option standing, and taking it costs nothing: write the `[ADD: ...]` placeholder, keep the label `needs-author`, move to the next question. Do not re-ask inside a run, do not press for a number twice, and do not stop editing the rest of the document because one answer is outstanding.
+
+Record answers as given. Write the author's number without rounding it, do not derive a second fact from it, and do not harden a hedged answer into a certainty.
+
+When the runtime cannot put a question to a human, or the author defers every one, `fix` completes the confirmed findings, leaves the placeholders standing, and reports `blocked`. That is a finished run, not a failed one.
+
+### 5. Fix
 
 Work finding by finding. The rule that governs every rewrite: **decide what the content actually is, then give it that form.** Do not paraphrase around a pattern.
 
 Structure first, because structure changes delete style problems for free. Three paragraphs comparing options become a table, and the em dashes inside them stop existing. Style passes over prose that survives.
 
-Rewriting reintroduces the exact patterns being removed, because the same habits produce the fix. Expect it. This is why phase 5 is not optional.
+Rewriting reintroduces the exact patterns being removed, because the same habits produce the fix. Expect it. This is why phase 6 is not optional.
 
-**Overcorrection is its own failure.** Em dashes are not banned. Tables are not always right. Bullets are not slop. A document stripped to bare declaratives is worse than the one you started with. The target is a document that says what it means in the form that means it, not a document that scores zero on a checklist.
+**Overcorrection is its own failure.** Em dashes are not banned. Tables are not always right. Bullets are not slop. A document stripped to bare declaratives is worse than the one you started with. The target is a document that says what it means in the form that means it, not a document with an empty findings list.
 
-### 5. Re-scan
+**A document that is already good gets left alone.** When classification leaves nothing confirmed, `fix` edits nothing, reports `clean`, and says so in one line. Detector output is not a work order. Editing a finding labelled `false-positive`, `intentional`, or `protected` is the failure the classify step exists to prevent, and it is the likelier failure on a good document, because the raw count still looks like something to answer for.
+
+### 6. Re-scan
 
 Re-run the detector on the rewritten file. Re-check the three reader-judgment items on your own output. Repeat until a pass produces no confirmed findings, capped at four passes. If a finding survives four passes, rewrite that section from scratch starting from one question: what is this section for?
 
-A lower count does not prove the document got better. Read the whole thing once more for continuity before reporting.
+Expect the rewrite to introduce the patterns it removed. A lower count does not prove the document got better. Read the whole thing once more for continuity before reporting.
 
 ## Verbs
 
-Three requests, three different jobs. Detection and classification are identical in all three. What changes is what gets reported and who edits.
+Three requests, three different jobs. Detection and classification are identical in all three. What changes is what gets reported, who edits, and whether the author gets asked.
 
-| Verb | Reports | Edits |
-| --- | --- | --- |
-| `review` | HIGH and MED, scoped to the files named, prioritized so structure stays visible | Nothing |
-| `fix` | What changed, with before and after counts | The file |
-| `roast` | Every severity including LOW, every file in scope, worst finding first, nothing softened | Nothing |
+| Verb | Heading | Reports | Edits |
+| --- | --- | --- | --- |
+| `review` | `## Prep That Doc review` | HIGH and MED, scoped to the files named, prioritized so structure stays visible | Nothing |
+| `fix` | `## Prep That Doc fix` | What changed, then what was left and why, with the verdict before and after | The file |
+| `roast` | `## Prep That Doc roast` | Every severity including LOW, every file in scope, worst finding first, nothing softened | Nothing |
 
-`roast` exists because `review` deliberately suppresses noise, and sometimes the author wants the whole list. It drops the LOW filter and the hedging, not the standards. Everything else holds:
+`roast` is the same analysis with the softening removed. It drops the LOW filter and the diplomatic framing, not the standards. Ask for it when you already know the document has problems and want them named flatly instead of proposed gently. Everything else holds:
 
 - It never invents a finding to have more to say. A short roast on a good document is the correct output, and saying so is the honest result.
 - It roasts the document, never the person who wrote it. No commentary on the author's skill, effort, or intelligence. The target is always the text.
 - It never edits, exactly like `review`.
 - `needs-author` findings stay `needs-author`. Being blunt is not license to guess at a missing number.
 
-## Score
+## Verdict
 
-`review` and `roast` both end with a score. It is computed, never estimated. An invented number is the defect this skill exists to catch.
+Every verb ends with one word telling the author what to do next. It follows from the findings, never from impression.
 
-Weight every **confirmed** finding, then normalize by length:
+| Verdict | When | Means |
+| --- | --- | --- |
+| `clean` | Nothing confirmed, nothing `needs-author` | Ship it |
+| `minor` | Confirmed findings, none HIGH | Cleanup is optional |
+| `blocked` | `needs-author` findings, none HIGH | The form is right, the facts are missing |
+| `rework` | Any HIGH confirmed finding | Fix it before anyone relies on it |
+
+Take the last verdict that applies: `rework` outranks `blocked`, which outranks `minor`. Report the counts beside it so the word is auditable:
 
 ```text
-points  = 5 x HIGH + 2 x MED + 1 x LOW
-density = points x 1000 / words
+Verdict: rework. 10 confirmed (4 HIGH, 5 MED, 1 LOW), 5 needs-author, 12 false-positive.
 ```
 
-| Density | Band |
-| --- | --- |
-| 0 | clean |
-| up to 10 | light |
-| up to 25 | rough |
-| up to 50 | heavy |
-| above 50 | severe |
+Four rules keep it honest:
 
-Four rules keep the number honest:
+- **Classify before deciding the verdict.** Raw detector output includes false positives. A style guide that quotes a banned phrase as its own example reads `rework` on raw hits while being entirely correct.
+- **`needs-author` is never `clean`.** A runbook whose rollback trigger has no threshold has nothing confirmed and is not a shippable document. That gap is the verdict, which is why `blocked` exists.
+- **Say what the detector cannot see.** It implements the mechanical rules only. Element mismatch, empty sentences, and a runbook missing its rollback are reader judgment, and all three are HIGH. Leave them out and the worst problems never reach the verdict.
+- **Never optimize the verdict.** `minor` is a fine resting state. Deleting a real caveat to move from `minor` to `clean` makes the document worse and the word better.
 
-- **Score confirmed findings only.** The detector's raw output includes false positives, so scoring it punishes documents for quoting a banned phrase as an example. A rules file scored on raw hits lands in `severe` while being correct.
-- **Below 300 words, report points and no density.** A short document with three findings computes to `heavy` on arithmetic alone. The detector withholds density under that floor; do the same.
-- **Say what the score cannot see.** The detector implements the mechanical rules only. Element mismatch, empty sentences, and a runbook missing its rollback are reader judgment. Add those to the count as confirmed findings, or the worst problems never reach the number.
-- **Never optimize the score.** A document can be `clean` and still bad, and `light` is a fine resting state. Deleting a real caveat to drop two points makes the document worse and the number better. Bands rank severity; they are not a target.
-
-`fix` reports the score before and after, which is the evidence that the edit worked.
+`fix` reports the verdict before and after, which is the evidence that the edit worked.
 
 ## Preserve Author Authority
 
 - Asked to **review**, report findings and propose fixes. Do not rewrite the file.
 - Asked to **fix** or **improve**, edit the file and report what changed.
 - Asked to **roast**, report everything and still change nothing.
+- Only **fix** questions the author. Deferring an answer is always available and never costs the rest of the run.
 - Never change meaning, claims, or facts. This is a form pass.
 - Never delete a section because it seems redundant. Redundancy in a runbook is often deliberate.
 - Scope to the files named or changed. Unscoped findings bury the real ones.
 
 ## Report
 
-Group by file, order by severity, and name the rule so the author can find it:
+Head the report with the verb that produced it. Group by file, order by severity, and name the rule so the author can find it:
 
 ```markdown
-## Prep That Doc findings
+## Prep That Doc review
 
 ### docs/cutover.md
 - [HIGH] `element-table`: Lines 34-49 compare three rollback options in prose.
@@ -177,12 +196,14 @@ Group by file, order by severity, and name the rule so the author can find it:
 ### README.md
 - pass
 
-Scanned 2 files, 1840 words. 3 confirmed, 1 needs-author, 2 false-positive (see notes).
-Score: 9.2 per 1000 words, band light (17 points). Verify passes: 2.
-Not counted by the detector: 1 element mismatch, 1 missing rollback section. Both confirmed above.
+Verdict: rework. 3 confirmed (1 HIGH, 2 MED), 1 needs-author, 2 false-positive (see notes).
+Scanned 2 files, 2 verify passes.
+Not seen by the detector: 1 element mismatch, 1 missing rollback section. Both confirmed above.
 ```
 
 List clean files explicitly so the author knows they were checked. Every finding names a rule, states the problem, and proposes a fix. A finding without a fix is not reportable.
+
+`fix` reports a record of edits rather than a list of findings. Under its own heading it names what changed, grouped the same way, then every finding it deliberately left standing with the reason each one survived. A `needs-author` placeholder and a protected region are both results, so neither is silent.
 
 ## Gotchas
 

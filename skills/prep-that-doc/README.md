@@ -34,24 +34,28 @@ prep this spec, fix what you find
 roast my README, I can take it
 ```
 
-The three verbs behave differently on purpose:
+The three verbs behave differently on purpose, and each heads its report with its own name so you can tell them apart at a glance:
 
 - **review** reports HIGH and MED findings with proposed fixes, and changes nothing.
-- **fix** edits the file and reports the score before and after.
+- **fix** asks about the gaps that block a reader, edits the file, reports what changed and what it deliberately left, and gives the verdict before and after.
 - **roast** reports every severity, worst first, unsoftened, and still changes nothing.
 
-### Score
+### Verdict
 
-`review` and `roast` both end with a number, and it is computed rather than felt:
+Every run ends with one word telling you what to do next:
 
 ```text
-points  = 5 x HIGH + 2 x MED + 1 x LOW   (confirmed findings only)
-density = points x 1000 / words          -> clean, light, rough, heavy, severe
+clean    nothing found                        ship it
+minor    findings, none high                  cleanup is optional
+blocked  the form is right, facts are missing  answer the placeholders
+rework   a high finding                       fix before anyone relies on it
 ```
 
-Only confirmed findings count, so a document is never punished for quoting a banned phrase as an example. Below 300 words the density is withheld and raw points are reported, because a handful of findings distorts a short file. The score is a severity ranking, not a target: a document can score clean and still be bad, and deleting a real caveat to shed two points makes the document worse.
+Only classified findings count, so a document is never marked down for quoting a banned phrase as an example. `blocked` exists because a runbook whose rollback trigger reads "if the error rate rises significantly" has nothing wrong with its prose and still cannot be followed at 3am. The verdict ranks severity rather than setting a target: `minor` is a fine resting state, and deleting a real caveat to reach `clean` makes the document worse.
 
-`roast` drops the noise filter, not the standards. It will not invent findings to pad the list, and a short roast on a good document is the honest answer. It targets the document, never the author.
+`fix` asks about those gaps rather than guessing at them, in one round, worst first. Answering later is always on the table and costs nothing: the question becomes an `[ADD: ...]` placeholder in the file, the verdict stays `blocked`, and the rest of the document still gets fixed. Nothing is invented to fill a hole.
+
+`roast` is the same analysis with the softening removed. It drops the noise filter and the diplomatic framing, not the standards. It will not invent findings to pad the list, a short roast on a good document is the honest answer, and it targets the document rather than the author.
 
 Documents it covers: specs, design docs, architecture decision records (ADRs), runbooks, cutover and migration plans, READMEs, CHANGELOGs, PR descriptions, incident writeups, and infrastructure or DevOps docs.
 

@@ -69,27 +69,28 @@
       ]
     },
     {
-      "name": "computes the score instead of estimating it",
+      "name": "derives the verdict instead of estimating it",
       "prompt": "Review docs/adr-0004.md and give it a score out of ten.",
       "expected": [
-        "Computes the score from confirmed findings weighted 5, 2, and 1 by severity, normalized per 1000 words",
-        "Reports the band alongside the number so the value is interpretable",
+        "Reports one of clean, minor, blocked, or rework, chosen by the worst classified finding",
+        "Reports the counts beside the verdict so the word can be audited",
         "Counts reader-judgment findings such as element mismatch that the detector cannot see, and says which were added",
-        "Excludes findings classified as false-positive or protected from the count",
-        "Explains that the requested ten-point scale is not what the skill produces, and gives the density and band instead"
+        "Excludes findings classified as false-positive or protected from the counts",
+        "Explains that the requested ten-point scale is not what the skill produces, and gives the verdict instead"
       ],
       "antiPatterns": [
-        "Assigns a number that does not follow from the findings",
-        "Scores the detector's raw candidate list without classifying it first",
-        "Reports a density for a document under 300 words instead of raw points",
-        "Presents the score as a target to drive toward zero",
-        "Omits the structural findings from the count because the detector did not produce them"
+        "Assigns a verdict that does not follow from the findings",
+        "Verdicts the detector's raw candidate list without classifying it first",
+        "Calls a document clean when needs-author findings are outstanding, rather than blocked",
+        "Presents the verdict as a target to drive toward clean",
+        "Omits the structural findings from the counts because the detector did not produce them"
       ]
     },
     {
       "name": "roasts the document and not the author",
       "prompt": "Roast my README. Do not hold back, I can take it.",
       "expected": [
+        "Heads the report `## Prep That Doc roast` so the verb that produced it is visible",
         "Reports every severity including LOW, which review would have filtered out",
         "Leads with the single worst finding rather than walking the file top to bottom",
         "Keeps every criticism aimed at the text, naming rules and lines rather than the author",
@@ -149,6 +150,41 @@
         "Converts short bullet lists into single-column tables",
         "Rewrites clean prose into clipped fragments to look de-slopped",
         "Reports success based on the detector count alone without rereading the document"
+      ]
+    },
+    {
+      "name": "asks about a blocking gap and accepts a deferral",
+      "prompt": "Fix our failover runbook. Step 3 says to roll back 'if latency degrades', step 8 cites a config value I never wrote down, and the contacts section just says to page the platform team.",
+      "expected": [
+        "Asks about the rollback trigger and the paging contact, because both change what someone does under pressure",
+        "Leaves the uncited config value as a placeholder without asking, because no reader acts on it",
+        "Batches the questions into one round rather than asking across several turns",
+        "Offers answering later on every question and writes the placeholder when that is taken",
+        "Fixes the confirmed findings and reports blocked when any placeholder is still standing"
+      ],
+      "antiPatterns": [
+        "Fills a deferred answer with a plausible threshold so the run looks complete",
+        "Stops editing the rest of the document because one question went unanswered",
+        "Re-asks a question the author already deferred",
+        "Interrogates the author about every needs-author finding including the ones nobody acts on",
+        "Hardens a hedged answer such as roughly two minutes into an exact figure"
+      ]
+    },
+    {
+      "name": "calls a good document good instead of editing it",
+      "prompt": "Fix docs/yubikey.md. It is our hardware key guide, mostly command blocks and a definition list where each term is followed by an em dash.",
+      "expected": [
+        "Classifies the literal uses of key, such as SSH key and prefix key, as false-positive rather than claims of importance",
+        "Classifies a consistent term-then-em-dash definition list as intentional house style",
+        "Leaves the file unchanged and says so plainly when classification confirms nothing",
+        "Reports the verdict as clean or minor and names what it checked, so the author knows the pass happened"
+      ],
+      "antiPatterns": [
+        "Edits findings it classified as false-positive, intentional, or protected",
+        "Rewrites the definition list to remove em dashes that carry the list structure",
+        "Treats the raw detector count as work that has to be answered for",
+        "Invents a finding so the run has something to show for itself",
+        "Reports the document as fixed when nothing needed fixing"
       ]
     },
     {
