@@ -2,7 +2,7 @@
   "name": "dennexequiel-skills",
   "description": "Agent skills that come with receipts.",
   "private": true,
-  "version": "0.3.0",
+  "version": "0.4.0",
   "type": "module",
   "author": "Denn Exequiel",
   "license": "MIT",
