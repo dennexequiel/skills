@@ -1,0 +1,1227 @@
+{
+  "version": 1,
+  "date": "2026-09-05",
+  "scope": "Exploratory paired portable missions; no general efficiency claim",
+  "configurations": [
+    {
+      "harness": "codex",
+      "model": "gpt-5.6-sol",
+      "settings": "medium reasoning; workspace-write; ephemeral session; installed host configuration; no delegation",
+      "format": "codex-jsonl",
+      "versionCommand": [
+        "codex",
+        "--version"
+      ],
+      "command": [
+        "codex",
+        "exec",
+        "--json",
+        "--ephemeral",
+        "--skip-git-repo-check",
+        "--sandbox",
+        "workspace-write",
+        "--color",
+        "never",
+        "-m",
+        "gpt-5.6-sol",
+        "-c",
+        "model_reasoning_effort=\"medium\"",
+        "-"
+      ]
+    },
+    {
+      "harness": "claude-code",
+      "model": "configured default; resolve from native events",
+      "settings": "medium effort; safe mode; fixed local tool allowlist; no delegation; USD 0.75 host estimate cap per invocation",
+      "format": "claude-jsonl",
+      "versionCommand": [
+        "/bin/zsh",
+        "-ic",
+        "[REDACTED_LOCAL_LAUNCHER] --version"
+      ],
+      "command": [
+        "/bin/zsh",
+        "-ic",
+        "[REDACTED_LOCAL_LAUNCHER] \"$@\"",
+        "ace-efficiency",
+        "--print",
+        "--safe-mode",
+        "--output-format",
+        "stream-json",
+        "--verbose",
+        "--no-session-persistence",
+        "--effort",
+        "medium",
+        "--max-budget-usd",
+        "0.75",
+        "--permission-mode",
+        "acceptEdits",
+        "--tools",
+        "Read,Edit,Write,Bash,Glob,Grep",
+        "--allowedTools",
+        "Read,Edit,Write,Glob,Grep,Bash(bun test*),Bash(pwd),Bash(ls*),Bash(cat*),Bash(date*),Bash(shasum*)"
+      ]
+    }
+  ],
+  "records": [
+    {
+      "id": "codex-run1-csv-1-without-ace",
+      "harness": "codex",
+      "harnessVersion": "codex-cli 0.153.4",
+      "requestedModel": "gpt-5.6-sol",
+      "settings": "medium reasoning; workspace-write; ephemeral session; installed host configuration; no delegation",
+      "scenario": "csv",
+      "repetition": 1,
+      "arm": "without-ace",
+      "skillHash": "8f227888916908f38a87a0840ecc9b48f26682b7c8dd928f24fdf7f6fbb523e6",
+      "fixtureHash": "f21f7577ebd8d45d50ad4bcdf9917111f5e9a25e2a5b0af44b9b6904025265d3",
+      "durationMs": 17,
+      "exitCode": 1,
+      "timedOut": false,
+      "artifactPassed": false,
+      "handoffReview": "failed",
+      "subagentPolicy": "disabled",
+      "usage": {
+        "inputTokens": null,
+        "cachedInputTokens": null,
+        "cacheWriteTokens": null,
+        "outputTokens": null,
+        "reasoningTokens": null,
+        "reportedCostUSD": null,
+        "costBasis": "unavailable",
+        "models": [],
+        "toolCalls": 0,
+        "repeatedToolCalls": 0,
+        "terminalEvent": false,
+        "hostError": false,
+        "rawProviderUsage": [],
+        "extensions": {}
+      },
+      "missionBytes": 645,
+      "stdoutHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "originalID": "csv-1-without-ace",
+      "evaluationPhase": "infrastructure-preflight",
+      "recordedBundleHash": "aa2a5d6433aa3f6c09c6543a0f0f2cfa32477165a430f7d86fe7c8c9af58151f",
+      "skillHashScope": "Operative SKILL.md and references; README.md and LICENSE excluded",
+      "harnessSucceeded": false,
+      "reviewNotes": [
+        "Sandbox prevented CLI initialization before native usage was reported."
+      ],
+      "reviewer": "parent agent, retrospective artifact and transcript review",
+      "accounting": "unavailable"
+    },
+    {
+      "id": "codex-run1-csv-1-with-ace",
+      "harness": "codex",
+      "harnessVersion": "codex-cli 0.153.4",
+      "requestedModel": "gpt-5.6-sol",
+      "settings": "medium reasoning; workspace-write; ephemeral session; installed host configuration; no delegation",
+      "scenario": "csv",
+      "repetition": 1,
+      "arm": "with-ace",
+      "skillHash": "8f227888916908f38a87a0840ecc9b48f26682b7c8dd928f24fdf7f6fbb523e6",
+      "fixtureHash": "f21f7577ebd8d45d50ad4bcdf9917111f5e9a25e2a5b0af44b9b6904025265d3",
+      "durationMs": 16,
+      "exitCode": 1,
+      "timedOut": false,
+      "artifactPassed": false,
+      "handoffReview": "failed",
+      "subagentPolicy": "disabled",
+      "usage": {
+        "inputTokens": null,
+        "cachedInputTokens": null,
+        "cacheWriteTokens": null,
+        "outputTokens": null,
+        "reasoningTokens": null,
+        "reportedCostUSD": null,
+        "costBasis": "unavailable",
+        "models": [],
+        "toolCalls": 0,
+        "repeatedToolCalls": 0,
+        "terminalEvent": false,
+        "hostError": false,
+        "rawProviderUsage": [],
+        "extensions": {}
+      },
+      "missionBytes": 645,
+      "stdoutHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "originalID": "csv-1-with-ace",
+      "evaluationPhase": "infrastructure-preflight",
+      "recordedBundleHash": "aa2a5d6433aa3f6c09c6543a0f0f2cfa32477165a430f7d86fe7c8c9af58151f",
+      "skillHashScope": "Operative SKILL.md and references; README.md and LICENSE excluded",
+      "harnessSucceeded": false,
+      "reviewNotes": [
+        "Sandbox prevented CLI initialization before native usage was reported."
+      ],
+      "reviewer": "parent agent, retrospective artifact and transcript review",
+      "accounting": "unavailable"
+    },
+    {
+      "id": "codex-run1-cache-1-without-ace",
+      "harness": "codex",
+      "harnessVersion": "codex-cli 0.153.4",
+      "requestedModel": "gpt-5.6-sol",
+      "settings": "medium reasoning; workspace-write; ephemeral session; installed host configuration; no delegation",
+      "scenario": "cache",
+      "repetition": 1,
+      "arm": "without-ace",
+      "skillHash": "8f227888916908f38a87a0840ecc9b48f26682b7c8dd928f24fdf7f6fbb523e6",
+      "fixtureHash": "54ce1bcfdab40f269a67866cf81326802b42d1da26412b97b6f0d793138e3200",
+      "durationMs": 15,
+      "exitCode": 1,
+      "timedOut": false,
+      "artifactPassed": false,
+      "handoffReview": "failed",
+      "subagentPolicy": "disabled",
+      "usage": {
+        "inputTokens": null,
+        "cachedInputTokens": null,
+        "cacheWriteTokens": null,
+        "outputTokens": null,
+        "reasoningTokens": null,
+        "reportedCostUSD": null,
+        "costBasis": "unavailable",
+        "models": [],
+        "toolCalls": 0,
+        "repeatedToolCalls": 0,
+        "terminalEvent": false,
+        "hostError": false,
+        "rawProviderUsage": [],
+        "extensions": {}
+      },
+      "missionBytes": 658,
+      "stdoutHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "originalID": "cache-1-without-ace",
+      "evaluationPhase": "infrastructure-preflight",
+      "recordedBundleHash": "aa2a5d6433aa3f6c09c6543a0f0f2cfa32477165a430f7d86fe7c8c9af58151f",
+      "skillHashScope": "Operative SKILL.md and references; README.md and LICENSE excluded",
+      "harnessSucceeded": false,
+      "reviewNotes": [
+        "Sandbox prevented CLI initialization before native usage was reported."
+      ],
+      "reviewer": "parent agent, retrospective artifact and transcript review",
+      "accounting": "unavailable"
+    },
+    {
+      "id": "codex-run1-cache-1-with-ace",
+      "harness": "codex",
+      "harnessVersion": "codex-cli 0.153.4",
+      "requestedModel": "gpt-5.6-sol",
+      "settings": "medium reasoning; workspace-write; ephemeral session; installed host configuration; no delegation",
+      "scenario": "cache",
+      "repetition": 1,
+      "arm": "with-ace",
+      "skillHash": "8f227888916908f38a87a0840ecc9b48f26682b7c8dd928f24fdf7f6fbb523e6",
+      "fixtureHash": "54ce1bcfdab40f269a67866cf81326802b42d1da26412b97b6f0d793138e3200",
+      "durationMs": 16,
+      "exitCode": 1,
+      "timedOut": false,
+      "artifactPassed": false,
+      "handoffReview": "failed",
+      "subagentPolicy": "disabled",
+      "usage": {
+        "inputTokens": null,
+        "cachedInputTokens": null,
+        "cacheWriteTokens": null,
+        "outputTokens": null,
+        "reasoningTokens": null,
+        "reportedCostUSD": null,
+        "costBasis": "unavailable",
+        "models": [],
+        "toolCalls": 0,
+        "repeatedToolCalls": 0,
+        "terminalEvent": false,
+        "hostError": false,
+        "rawProviderUsage": [],
+        "extensions": {}
+      },
+      "missionBytes": 658,
+      "stdoutHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "originalID": "cache-1-with-ace",
+      "evaluationPhase": "infrastructure-preflight",
+      "recordedBundleHash": "aa2a5d6433aa3f6c09c6543a0f0f2cfa32477165a430f7d86fe7c8c9af58151f",
+      "skillHashScope": "Operative SKILL.md and references; README.md and LICENSE excluded",
+      "harnessSucceeded": false,
+      "reviewNotes": [
+        "Sandbox prevented CLI initialization before native usage was reported."
+      ],
+      "reviewer": "parent agent, retrospective artifact and transcript review",
+      "accounting": "unavailable"
+    },
+    {
+      "id": "codex-run2-csv-1-without-ace",
+      "harness": "codex",
+      "harnessVersion": "codex-cli 0.153.4",
+      "requestedModel": "gpt-5.6-sol",
+      "settings": "medium reasoning; workspace-write; ephemeral session; installed host configuration; no delegation",
+      "scenario": "csv",
+      "repetition": 1,
+      "arm": "without-ace",
+      "skillHash": "8f227888916908f38a87a0840ecc9b48f26682b7c8dd928f24fdf7f6fbb523e6",
+      "fixtureHash": "f21f7577ebd8d45d50ad4bcdf9917111f5e9a25e2a5b0af44b9b6904025265d3",
+      "durationMs": 70496,
+      "exitCode": 0,
+      "timedOut": false,
+      "artifactPassed": true,
+      "handoffReview": "failed",
+      "subagentPolicy": "disabled",
+      "usage": {
+        "inputTokens": 153660,
+        "cachedInputTokens": 141568,
+        "cacheWriteTokens": 0,
+        "outputTokens": 2681,
+        "reasoningTokens": 313,
+        "reportedCostUSD": null,
+        "costBasis": "unavailable",
+        "models": [],
+        "toolCalls": 6,
+        "repeatedToolCalls": 0,
+        "terminalEvent": true,
+        "hostError": false,
+        "rawProviderUsage": [
+          {
+            "input_tokens": 153660,
+            "cached_input_tokens": 141568,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 2681,
+            "reasoning_output_tokens": 313
+          }
+        ],
+        "extensions": {}
+      },
+      "missionBytes": 1851,
+      "stdoutHash": "18fa02d51ec8f860bc96ae70ab23464ca301369901ae1fa66295251ad2cd1ddc",
+      "originalID": "csv-1-without-ace",
+      "evaluationPhase": "paired-mission",
+      "recordedBundleHash": "aa2a5d6433aa3f6c09c6543a0f0f2cfa32477165a430f7d86fe7c8c9af58151f",
+      "skillHashScope": "Operative SKILL.md and references; README.md and LICENSE excluded",
+      "harnessSucceeded": true,
+      "reviewNotes": [
+        "Independent artifact assertions and preserved tests pass.",
+        "Measured execution-window duration is absent."
+      ],
+      "reviewer": "parent agent, retrospective artifact and transcript review",
+      "accounting": "missing-measured-window"
+    },
+    {
+      "id": "codex-run2-csv-1-with-ace",
+      "harness": "codex",
+      "harnessVersion": "codex-cli 0.153.4",
+      "requestedModel": "gpt-5.6-sol",
+      "settings": "medium reasoning; workspace-write; ephemeral session; installed host configuration; no delegation",
+      "scenario": "csv",
+      "repetition": 1,
+      "arm": "with-ace",
+      "skillHash": "8f227888916908f38a87a0840ecc9b48f26682b7c8dd928f24fdf7f6fbb523e6",
+      "fixtureHash": "f21f7577ebd8d45d50ad4bcdf9917111f5e9a25e2a5b0af44b9b6904025265d3",
+      "durationMs": 108459,
+      "exitCode": 0,
+      "timedOut": false,
+      "artifactPassed": true,
+      "handoffReview": "passed",
+      "subagentPolicy": "disabled",
+      "usage": {
+        "inputTokens": 295616,
+        "cachedInputTokens": 259200,
+        "cacheWriteTokens": 0,
+        "outputTokens": 4504,
+        "reasoningTokens": 859,
+        "reportedCostUSD": null,
+        "costBasis": "unavailable",
+        "models": [],
+        "toolCalls": 10,
+        "repeatedToolCalls": 0,
+        "terminalEvent": true,
+        "hostError": false,
+        "rawProviderUsage": [
+          {
+            "input_tokens": 295616,
+            "cached_input_tokens": 259200,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 4504,
+            "reasoning_output_tokens": 859
+          }
+        ],
+        "extensions": {}
+      },
+      "missionBytes": 3165,
+      "stdoutHash": "2f68fdce5bbf17b2fedb9080fed15fcf48c09a85e07191d6bdc1343415545df0",
+      "originalID": "csv-1-with-ace",
+      "evaluationPhase": "paired-mission",
+      "recordedBundleHash": "aa2a5d6433aa3f6c09c6543a0f0f2cfa32477165a430f7d86fe7c8c9af58151f",
+      "skillHashScope": "Operative SKILL.md and references; README.md and LICENSE excluded",
+      "harnessSucceeded": true,
+      "reviewNotes": [
+        "Independent artifact assertions, preserved tests, and handoff review pass.",
+        "Brief labels the pre-timestamp startup interval and older timing as unknown."
+      ],
+      "reviewer": "parent agent, retrospective artifact and transcript review",
+      "accounting": "measured-with-documented-limits"
+    },
+    {
+      "id": "codex-run2-cache-1-without-ace",
+      "harness": "codex",
+      "harnessVersion": "codex-cli 0.153.4",
+      "requestedModel": "gpt-5.6-sol",
+      "settings": "medium reasoning; workspace-write; ephemeral session; installed host configuration; no delegation",
+      "scenario": "cache",
+      "repetition": 1,
+      "arm": "without-ace",
+      "skillHash": "8f227888916908f38a87a0840ecc9b48f26682b7c8dd928f24fdf7f6fbb523e6",
+      "fixtureHash": "54ce1bcfdab40f269a67866cf81326802b42d1da26412b97b6f0d793138e3200",
+      "durationMs": 71955,
+      "exitCode": 0,
+      "timedOut": false,
+      "artifactPassed": true,
+      "handoffReview": "failed",
+      "subagentPolicy": "disabled",
+      "usage": {
+        "inputTokens": 133940,
+        "cachedInputTokens": 122368,
+        "cacheWriteTokens": 0,
+        "outputTokens": 2476,
+        "reasoningTokens": 784,
+        "reportedCostUSD": null,
+        "costBasis": "unavailable",
+        "models": [],
+        "toolCalls": 6,
+        "repeatedToolCalls": 0,
+        "terminalEvent": true,
+        "hostError": false,
+        "rawProviderUsage": [
+          {
+            "input_tokens": 133940,
+            "cached_input_tokens": 122368,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 2476,
+            "reasoning_output_tokens": 784
+          }
+        ],
+        "extensions": {}
+      },
+      "missionBytes": 2061,
+      "stdoutHash": "4140985040768dcfe404041036a22ce9ce54de515314b1850bb0f0bcda5c53aa",
+      "originalID": "cache-1-without-ace",
+      "evaluationPhase": "paired-mission",
+      "recordedBundleHash": "aa2a5d6433aa3f6c09c6543a0f0f2cfa32477165a430f7d86fe7c8c9af58151f",
+      "skillHashScope": "Operative SKILL.md and references; README.md and LICENSE excluded",
+      "harnessSucceeded": true,
+      "reviewNotes": [
+        "Independent artifact assertions and preserved tests pass.",
+        "Measured execution-window duration is absent."
+      ],
+      "reviewer": "parent agent, retrospective artifact and transcript review",
+      "accounting": "missing-measured-window"
+    },
+    {
+      "id": "codex-run2-cache-1-with-ace",
+      "harness": "codex",
+      "harnessVersion": "codex-cli 0.153.4",
+      "requestedModel": "gpt-5.6-sol",
+      "settings": "medium reasoning; workspace-write; ephemeral session; installed host configuration; no delegation",
+      "scenario": "cache",
+      "repetition": 1,
+      "arm": "with-ace",
+      "skillHash": "8f227888916908f38a87a0840ecc9b48f26682b7c8dd928f24fdf7f6fbb523e6",
+      "fixtureHash": "54ce1bcfdab40f269a67866cf81326802b42d1da26412b97b6f0d793138e3200",
+      "durationMs": 105472,
+      "exitCode": 0,
+      "timedOut": false,
+      "artifactPassed": true,
+      "handoffReview": "passed",
+      "subagentPolicy": "disabled",
+      "usage": {
+        "inputTokens": 258331,
+        "cachedInputTokens": 223232,
+        "cacheWriteTokens": 0,
+        "outputTokens": 4320,
+        "reasoningTokens": 1089,
+        "reportedCostUSD": null,
+        "costBasis": "unavailable",
+        "models": [],
+        "toolCalls": 9,
+        "repeatedToolCalls": 1,
+        "terminalEvent": true,
+        "hostError": false,
+        "rawProviderUsage": [
+          {
+            "input_tokens": 258331,
+            "cached_input_tokens": 223232,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 4320,
+            "reasoning_output_tokens": 1089
+          }
+        ],
+        "extensions": {}
+      },
+      "missionBytes": 2103,
+      "stdoutHash": "5b8b5def0b9d1b59e1333cbfc1ec2d9a8ebfc282c3511d381bcb2f0c6f4aa84c",
+      "originalID": "cache-1-with-ace",
+      "evaluationPhase": "paired-mission",
+      "recordedBundleHash": "aa2a5d6433aa3f6c09c6543a0f0f2cfa32477165a430f7d86fe7c8c9af58151f",
+      "skillHashScope": "Operative SKILL.md and references; README.md and LICENSE excluded",
+      "harnessSucceeded": true,
+      "reviewNotes": [
+        "Independent artifact assertions, preserved tests, and handoff review pass."
+      ],
+      "reviewer": "parent agent, retrospective artifact and transcript review",
+      "accounting": "measured-with-documented-limits"
+    },
+    {
+      "id": "claude-code-run1-csv-1-without-ace",
+      "harness": "claude-code",
+      "harnessVersion": "2.1.236 (Claude Code)",
+      "requestedModel": "configured default; resolve from native events",
+      "settings": "medium effort; safe mode; fixed local tool allowlist; no delegation; USD 0.75 host estimate cap per invocation",
+      "scenario": "csv",
+      "repetition": 1,
+      "arm": "without-ace",
+      "skillHash": "8f227888916908f38a87a0840ecc9b48f26682b7c8dd928f24fdf7f6fbb523e6",
+      "fixtureHash": "f21f7577ebd8d45d50ad4bcdf9917111f5e9a25e2a5b0af44b9b6904025265d3",
+      "durationMs": 2913,
+      "exitCode": 1,
+      "timedOut": false,
+      "artifactPassed": false,
+      "handoffReview": "failed",
+      "subagentPolicy": "disabled",
+      "usage": {
+        "inputTokens": 0,
+        "cachedInputTokens": 0,
+        "cacheWriteTokens": 0,
+        "outputTokens": 0,
+        "reasoningTokens": 0,
+        "reportedCostUSD": 0,
+        "costBasis": "host-estimate",
+        "models": [],
+        "toolCalls": 0,
+        "repeatedToolCalls": 0,
+        "terminalEvent": true,
+        "hostError": true,
+        "rawProviderUsage": [
+          {
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "input_tokens": 0,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 0,
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard"
+          }
+        ],
+        "extensions": {
+          "primaryModelReasoningTokens": 0,
+          "modelUsage": {},
+          "usageScope": "session-result",
+          "permissionDenials": 0
+        }
+      },
+      "missionBytes": 645,
+      "stdoutHash": "b7cf300560ad4fbef3bf70e20b03c4882ef3a42a33e92abf27bc7d556859a5ce",
+      "originalID": "csv-1-without-ace",
+      "evaluationPhase": "infrastructure-preflight",
+      "recordedBundleHash": "aa2a5d6433aa3f6c09c6543a0f0f2cfa32477165a430f7d86fe7c8c9af58151f",
+      "skillHashScope": "Operative SKILL.md and references; README.md and LICENSE excluded",
+      "harnessSucceeded": false,
+      "reviewNotes": [
+        "Sandboxed Claude Code invocation reported an authentication error and zero usage."
+      ],
+      "reviewer": "parent agent, retrospective artifact and transcript review",
+      "accounting": "unavailable"
+    },
+    {
+      "id": "claude-code-run1-csv-1-with-ace",
+      "harness": "claude-code",
+      "harnessVersion": "2.1.236 (Claude Code)",
+      "requestedModel": "configured default; resolve from native events",
+      "settings": "medium effort; safe mode; fixed local tool allowlist; no delegation; USD 0.75 host estimate cap per invocation",
+      "scenario": "csv",
+      "repetition": 1,
+      "arm": "with-ace",
+      "skillHash": "8f227888916908f38a87a0840ecc9b48f26682b7c8dd928f24fdf7f6fbb523e6",
+      "fixtureHash": "f21f7577ebd8d45d50ad4bcdf9917111f5e9a25e2a5b0af44b9b6904025265d3",
+      "durationMs": 2851,
+      "exitCode": 1,
+      "timedOut": false,
+      "artifactPassed": false,
+      "handoffReview": "failed",
+      "subagentPolicy": "disabled",
+      "usage": {
+        "inputTokens": 0,
+        "cachedInputTokens": 0,
+        "cacheWriteTokens": 0,
+        "outputTokens": 0,
+        "reasoningTokens": 0,
+        "reportedCostUSD": 0,
+        "costBasis": "host-estimate",
+        "models": [],
+        "toolCalls": 0,
+        "repeatedToolCalls": 0,
+        "terminalEvent": true,
+        "hostError": true,
+        "rawProviderUsage": [
+          {
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "input_tokens": 0,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 0,
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard"
+          }
+        ],
+        "extensions": {
+          "primaryModelReasoningTokens": 0,
+          "modelUsage": {},
+          "usageScope": "session-result",
+          "permissionDenials": 0
+        }
+      },
+      "missionBytes": 645,
+      "stdoutHash": "e3059fcb8cb2848ac1244d59482fa6bbb9637537d07a3b8edab51765eb9e8d55",
+      "originalID": "csv-1-with-ace",
+      "evaluationPhase": "infrastructure-preflight",
+      "recordedBundleHash": "aa2a5d6433aa3f6c09c6543a0f0f2cfa32477165a430f7d86fe7c8c9af58151f",
+      "skillHashScope": "Operative SKILL.md and references; README.md and LICENSE excluded",
+      "harnessSucceeded": false,
+      "reviewNotes": [
+        "Sandboxed Claude Code invocation reported an authentication error and zero usage."
+      ],
+      "reviewer": "parent agent, retrospective artifact and transcript review",
+      "accounting": "unavailable"
+    },
+    {
+      "id": "claude-code-run1-cache-1-without-ace",
+      "harness": "claude-code",
+      "harnessVersion": "2.1.236 (Claude Code)",
+      "requestedModel": "configured default; resolve from native events",
+      "settings": "medium effort; safe mode; fixed local tool allowlist; no delegation; USD 0.75 host estimate cap per invocation",
+      "scenario": "cache",
+      "repetition": 1,
+      "arm": "without-ace",
+      "skillHash": "8f227888916908f38a87a0840ecc9b48f26682b7c8dd928f24fdf7f6fbb523e6",
+      "fixtureHash": "54ce1bcfdab40f269a67866cf81326802b42d1da26412b97b6f0d793138e3200",
+      "durationMs": 2855,
+      "exitCode": 1,
+      "timedOut": false,
+      "artifactPassed": false,
+      "handoffReview": "failed",
+      "subagentPolicy": "disabled",
+      "usage": {
+        "inputTokens": 0,
+        "cachedInputTokens": 0,
+        "cacheWriteTokens": 0,
+        "outputTokens": 0,
+        "reasoningTokens": 0,
+        "reportedCostUSD": 0,
+        "costBasis": "host-estimate",
+        "models": [],
+        "toolCalls": 0,
+        "repeatedToolCalls": 0,
+        "terminalEvent": true,
+        "hostError": true,
+        "rawProviderUsage": [
+          {
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "input_tokens": 0,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 0,
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard"
+          }
+        ],
+        "extensions": {
+          "primaryModelReasoningTokens": 0,
+          "modelUsage": {},
+          "usageScope": "session-result",
+          "permissionDenials": 0
+        }
+      },
+      "missionBytes": 658,
+      "stdoutHash": "f53f36533f920b66ba364561d440890a4809637ee28eeff8e21fa49f8b48392a",
+      "originalID": "cache-1-without-ace",
+      "evaluationPhase": "infrastructure-preflight",
+      "recordedBundleHash": "aa2a5d6433aa3f6c09c6543a0f0f2cfa32477165a430f7d86fe7c8c9af58151f",
+      "skillHashScope": "Operative SKILL.md and references; README.md and LICENSE excluded",
+      "harnessSucceeded": false,
+      "reviewNotes": [
+        "Sandboxed Claude Code invocation reported an authentication error and zero usage."
+      ],
+      "reviewer": "parent agent, retrospective artifact and transcript review",
+      "accounting": "unavailable"
+    },
+    {
+      "id": "claude-code-run1-cache-1-with-ace",
+      "harness": "claude-code",
+      "harnessVersion": "2.1.236 (Claude Code)",
+      "requestedModel": "configured default; resolve from native events",
+      "settings": "medium effort; safe mode; fixed local tool allowlist; no delegation; USD 0.75 host estimate cap per invocation",
+      "scenario": "cache",
+      "repetition": 1,
+      "arm": "with-ace",
+      "skillHash": "8f227888916908f38a87a0840ecc9b48f26682b7c8dd928f24fdf7f6fbb523e6",
+      "fixtureHash": "54ce1bcfdab40f269a67866cf81326802b42d1da26412b97b6f0d793138e3200",
+      "durationMs": 2854,
+      "exitCode": 1,
+      "timedOut": false,
+      "artifactPassed": false,
+      "handoffReview": "failed",
+      "subagentPolicy": "disabled",
+      "usage": {
+        "inputTokens": 0,
+        "cachedInputTokens": 0,
+        "cacheWriteTokens": 0,
+        "outputTokens": 0,
+        "reasoningTokens": 0,
+        "reportedCostUSD": 0,
+        "costBasis": "host-estimate",
+        "models": [],
+        "toolCalls": 0,
+        "repeatedToolCalls": 0,
+        "terminalEvent": true,
+        "hostError": true,
+        "rawProviderUsage": [
+          {
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "input_tokens": 0,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 0,
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard"
+          }
+        ],
+        "extensions": {
+          "primaryModelReasoningTokens": 0,
+          "modelUsage": {},
+          "usageScope": "session-result",
+          "permissionDenials": 0
+        }
+      },
+      "missionBytes": 658,
+      "stdoutHash": "8d632f5ac7d78147b636029ba6d670af8d9e255001996b5cd0315ebae923e9b8",
+      "originalID": "cache-1-with-ace",
+      "evaluationPhase": "infrastructure-preflight",
+      "recordedBundleHash": "aa2a5d6433aa3f6c09c6543a0f0f2cfa32477165a430f7d86fe7c8c9af58151f",
+      "skillHashScope": "Operative SKILL.md and references; README.md and LICENSE excluded",
+      "harnessSucceeded": false,
+      "reviewNotes": [
+        "Sandboxed Claude Code invocation reported an authentication error and zero usage."
+      ],
+      "reviewer": "parent agent, retrospective artifact and transcript review",
+      "accounting": "unavailable"
+    },
+    {
+      "id": "claude-code-run2-csv-1-without-ace",
+      "harness": "claude-code",
+      "harnessVersion": "2.1.236 (Claude Code)",
+      "requestedModel": "configured default; resolve from native events",
+      "settings": "medium effort; safe mode; fixed local tool allowlist; no delegation; USD 0.75 host estimate cap per invocation",
+      "scenario": "csv",
+      "repetition": 1,
+      "arm": "without-ace",
+      "skillHash": "8f227888916908f38a87a0840ecc9b48f26682b7c8dd928f24fdf7f6fbb523e6",
+      "fixtureHash": "f21f7577ebd8d45d50ad4bcdf9917111f5e9a25e2a5b0af44b9b6904025265d3",
+      "durationMs": 54305,
+      "exitCode": 0,
+      "timedOut": false,
+      "artifactPassed": true,
+      "handoffReview": "failed",
+      "subagentPolicy": "disabled",
+      "usage": {
+        "inputTokens": 74813,
+        "cachedInputTokens": 61903,
+        "cacheWriteTokens": 11891,
+        "outputTokens": 3844,
+        "reasoningTokens": null,
+        "reportedCostUSD": 0.24680450000000004,
+        "costBasis": "host-estimate",
+        "models": [
+          "claude-haiku-4-5-20251001",
+          "claude-opus-5",
+          "claude-opus-5[1m]"
+        ],
+        "toolCalls": 9,
+        "repeatedToolCalls": 0,
+        "terminalEvent": true,
+        "hostError": false,
+        "rawProviderUsage": [
+          {
+            "input_tokens": 16,
+            "cache_creation_input_tokens": 11891,
+            "cache_read_input_tokens": 61903,
+            "output_tokens": 3832,
+            "output_tokens_details": {
+              "thinking_tokens": 447
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 11891,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 523,
+                "cache_read_input_tokens": 10624,
+                "cache_creation_input_tokens": 1267,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 1267
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard"
+          }
+        ],
+        "extensions": {
+          "primaryModelReasoningTokens": 447,
+          "modelUsage": {
+            "claude-haiku-4-5-20251001": {
+              "inputTokens": 1003,
+              "outputTokens": 12,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.001063,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "canonicalModel": "claude-haiku-4-5",
+              "provider": "firstParty"
+            },
+            "claude-opus-5[1m]": {
+              "inputTokens": 16,
+              "outputTokens": 3832,
+              "cacheReadInputTokens": 61903,
+              "cacheCreationInputTokens": 11891,
+              "webSearchRequests": 0,
+              "costUSD": 0.2457415,
+              "contextWindow": 1000000,
+              "maxOutputTokens": 64000,
+              "canonicalModel": "claude-opus-5",
+              "provider": "firstParty"
+            }
+          },
+          "usageScope": "all-reported-models",
+          "permissionDenials": 0
+        }
+      },
+      "missionBytes": 2712,
+      "stdoutHash": "e5f408683f584b615262daa91258d10d60fbe5ff1eb244f865f4ad3c4ea8700a",
+      "originalID": "csv-1-without-ace",
+      "evaluationPhase": "paired-mission",
+      "recordedBundleHash": "aa2a5d6433aa3f6c09c6543a0f0f2cfa32477165a430f7d86fe7c8c9af58151f",
+      "skillHashScope": "Operative SKILL.md and references; README.md and LICENSE excluded",
+      "harnessSucceeded": true,
+      "reviewNotes": [
+        "Independent artifact assertions and preserved tests pass.",
+        "Measured execution-window duration is absent."
+      ],
+      "reviewer": "parent agent, retrospective artifact and transcript review",
+      "accounting": "missing-measured-window"
+    },
+    {
+      "id": "claude-code-run2-csv-1-with-ace",
+      "harness": "claude-code",
+      "harnessVersion": "2.1.236 (Claude Code)",
+      "requestedModel": "configured default; resolve from native events",
+      "settings": "medium effort; safe mode; fixed local tool allowlist; no delegation; USD 0.75 host estimate cap per invocation",
+      "scenario": "csv",
+      "repetition": 1,
+      "arm": "with-ace",
+      "skillHash": "8f227888916908f38a87a0840ecc9b48f26682b7c8dd928f24fdf7f6fbb523e6",
+      "fixtureHash": "f21f7577ebd8d45d50ad4bcdf9917111f5e9a25e2a5b0af44b9b6904025265d3",
+      "durationMs": 73627,
+      "exitCode": 0,
+      "timedOut": false,
+      "artifactPassed": true,
+      "handoffReview": "passed",
+      "subagentPolicy": "disabled",
+      "usage": {
+        "inputTokens": 177835,
+        "cachedInputTokens": 162860,
+        "cacheWriteTokens": 13944,
+        "outputTokens": 4875,
+        "reasoningTokens": null,
+        "reportedCostUSD": 0.34363200000000005,
+        "costBasis": "host-estimate",
+        "models": [
+          "claude-haiku-4-5-20251001",
+          "claude-opus-5",
+          "claude-opus-5[1m]"
+        ],
+        "toolCalls": 15,
+        "repeatedToolCalls": 0,
+        "terminalEvent": true,
+        "hostError": false,
+        "rawProviderUsage": [
+          {
+            "input_tokens": 24,
+            "cache_creation_input_tokens": 13944,
+            "cache_read_input_tokens": 162860,
+            "output_tokens": 4863,
+            "output_tokens_details": {
+              "thinking_tokens": 640
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 13944,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 615,
+                "cache_read_input_tokens": 16934,
+                "cache_creation_input_tokens": 1475,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 1475
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard"
+          }
+        ],
+        "extensions": {
+          "primaryModelReasoningTokens": 640,
+          "modelUsage": {
+            "claude-haiku-4-5-20251001": {
+              "inputTokens": 1007,
+              "outputTokens": 12,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.001067,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "canonicalModel": "claude-haiku-4-5",
+              "provider": "firstParty"
+            },
+            "claude-opus-5[1m]": {
+              "inputTokens": 24,
+              "outputTokens": 4863,
+              "cacheReadInputTokens": 162860,
+              "cacheCreationInputTokens": 13944,
+              "webSearchRequests": 0,
+              "costUSD": 0.342565,
+              "contextWindow": 1000000,
+              "maxOutputTokens": 64000,
+              "canonicalModel": "claude-opus-5",
+              "provider": "firstParty"
+            }
+          },
+          "usageScope": "all-reported-models",
+          "permissionDenials": 3
+        }
+      },
+      "missionBytes": 3000,
+      "stdoutHash": "f3bb1f5e3179466b6d92b318d563da0827ba8511afb5e22b3d0018943aad0f4f",
+      "originalID": "csv-1-with-ace",
+      "evaluationPhase": "paired-mission",
+      "recordedBundleHash": "aa2a5d6433aa3f6c09c6543a0f0f2cfa32477165a430f7d86fe7c8c9af58151f",
+      "skillHashScope": "Operative SKILL.md and references; README.md and LICENSE excluded",
+      "harnessSucceeded": true,
+      "reviewNotes": [
+        "Independent artifact assertions, preserved tests, and handoff review pass."
+      ],
+      "reviewer": "parent agent, retrospective artifact and transcript review",
+      "accounting": "measured-with-documented-limits"
+    },
+    {
+      "id": "claude-code-run2-cache-1-without-ace",
+      "harness": "claude-code",
+      "harnessVersion": "2.1.236 (Claude Code)",
+      "requestedModel": "configured default; resolve from native events",
+      "settings": "medium effort; safe mode; fixed local tool allowlist; no delegation; USD 0.75 host estimate cap per invocation",
+      "scenario": "cache",
+      "repetition": 1,
+      "arm": "without-ace",
+      "skillHash": "8f227888916908f38a87a0840ecc9b48f26682b7c8dd928f24fdf7f6fbb523e6",
+      "fixtureHash": "54ce1bcfdab40f269a67866cf81326802b42d1da26412b97b6f0d793138e3200",
+      "durationMs": 59794,
+      "exitCode": 0,
+      "timedOut": false,
+      "artifactPassed": true,
+      "handoffReview": "failed",
+      "subagentPolicy": "disabled",
+      "usage": {
+        "inputTokens": 76244,
+        "cachedInputTokens": 66966,
+        "cacheWriteTokens": 8286,
+        "outputTokens": 4709,
+        "reasoningTokens": null,
+        "reportedCostUSD": 0.234884,
+        "costBasis": "host-estimate",
+        "models": [
+          "claude-haiku-4-5-20251001",
+          "claude-opus-5",
+          "claude-opus-5[1m]"
+        ],
+        "toolCalls": 9,
+        "repeatedToolCalls": 0,
+        "terminalEvent": true,
+        "hostError": false,
+        "rawProviderUsage": [
+          {
+            "input_tokens": 16,
+            "cache_creation_input_tokens": 8286,
+            "cache_read_input_tokens": 66966,
+            "output_tokens": 4697,
+            "output_tokens_details": {
+              "thinking_tokens": 570
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 8286,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 690,
+                "cache_read_input_tokens": 10930,
+                "cache_creation_input_tokens": 1821,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 1821
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard"
+          }
+        ],
+        "extensions": {
+          "primaryModelReasoningTokens": 570,
+          "modelUsage": {
+            "claude-haiku-4-5-20251001": {
+              "inputTokens": 976,
+              "outputTokens": 12,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.001036,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "canonicalModel": "claude-haiku-4-5",
+              "provider": "firstParty"
+            },
+            "claude-opus-5[1m]": {
+              "inputTokens": 16,
+              "outputTokens": 4697,
+              "cacheReadInputTokens": 66966,
+              "cacheCreationInputTokens": 8286,
+              "webSearchRequests": 0,
+              "costUSD": 0.233848,
+              "contextWindow": 1000000,
+              "maxOutputTokens": 64000,
+              "canonicalModel": "claude-opus-5",
+              "provider": "firstParty"
+            }
+          },
+          "usageScope": "all-reported-models",
+          "permissionDenials": 0
+        }
+      },
+      "missionBytes": 3831,
+      "stdoutHash": "bbc2c73c03791c2418f7cb3e7bb3bcdfa789dacf16894b5a176a5de73be0fd58",
+      "originalID": "cache-1-without-ace",
+      "evaluationPhase": "paired-mission",
+      "recordedBundleHash": "aa2a5d6433aa3f6c09c6543a0f0f2cfa32477165a430f7d86fe7c8c9af58151f",
+      "skillHashScope": "Operative SKILL.md and references; README.md and LICENSE excluded",
+      "harnessSucceeded": true,
+      "reviewNotes": [
+        "Independent artifact assertions and preserved tests pass.",
+        "Handoff incorrectly claims NaN TTL produces misses; an independent runtime check returns the stored value.",
+        "Measured execution-window duration is absent."
+      ],
+      "reviewer": "parent agent, retrospective artifact and transcript review",
+      "accounting": "missing-measured-window"
+    },
+    {
+      "id": "claude-code-run2-cache-1-with-ace",
+      "harness": "claude-code",
+      "harnessVersion": "2.1.236 (Claude Code)",
+      "requestedModel": "configured default; resolve from native events",
+      "settings": "medium effort; safe mode; fixed local tool allowlist; no delegation; USD 0.75 host estimate cap per invocation",
+      "scenario": "cache",
+      "repetition": 1,
+      "arm": "with-ace",
+      "skillHash": "8f227888916908f38a87a0840ecc9b48f26682b7c8dd928f24fdf7f6fbb523e6",
+      "fixtureHash": "54ce1bcfdab40f269a67866cf81326802b42d1da26412b97b6f0d793138e3200",
+      "durationMs": 71549,
+      "exitCode": 0,
+      "timedOut": false,
+      "artifactPassed": true,
+      "handoffReview": "failed",
+      "subagentPolicy": "disabled",
+      "usage": {
+        "inputTokens": 127265,
+        "cachedInputTokens": 111766,
+        "cacheWriteTokens": 14501,
+        "outputTokens": 5228,
+        "reasoningTokens": null,
+        "reportedCostUSD": 0.33242299999999997,
+        "costBasis": "host-estimate",
+        "models": [
+          "claude-haiku-4-5-20251001",
+          "claude-opus-5",
+          "claude-opus-5[1m]"
+        ],
+        "toolCalls": 11,
+        "repeatedToolCalls": 0,
+        "terminalEvent": true,
+        "hostError": false,
+        "rawProviderUsage": [
+          {
+            "input_tokens": 18,
+            "cache_creation_input_tokens": 14501,
+            "cache_read_input_tokens": 111766,
+            "output_tokens": 5216,
+            "output_tokens_details": {
+              "thinking_tokens": 970
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 14501,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "not_available",
+            "iterations": [
+              {
+                "input_tokens": 2,
+                "output_tokens": 732,
+                "cache_read_input_tokens": 16964,
+                "cache_creation_input_tokens": 2002,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 0,
+                  "ephemeral_1h_input_tokens": 2002
+                },
+                "type": "message"
+              }
+            ],
+            "speed": "standard"
+          }
+        ],
+        "extensions": {
+          "primaryModelReasoningTokens": 970,
+          "modelUsage": {
+            "claude-haiku-4-5-20251001": {
+              "inputTokens": 980,
+              "outputTokens": 12,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.00104,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "canonicalModel": "claude-haiku-4-5",
+              "provider": "firstParty"
+            },
+            "claude-opus-5[1m]": {
+              "inputTokens": 18,
+              "outputTokens": 5216,
+              "cacheReadInputTokens": 111766,
+              "cacheCreationInputTokens": 14501,
+              "webSearchRequests": 0,
+              "costUSD": 0.331383,
+              "contextWindow": 1000000,
+              "maxOutputTokens": 64000,
+              "canonicalModel": "claude-opus-5",
+              "provider": "firstParty"
+            }
+          },
+          "usageScope": "all-reported-models",
+          "permissionDenials": 1
+        }
+      },
+      "missionBytes": 3983,
+      "stdoutHash": "d0970315d82b4117a27aa784edc34a4fd9f805dae73a98bba1fb0cc9a88f7cc1",
+      "originalID": "cache-1-with-ace",
+      "evaluationPhase": "paired-mission",
+      "recordedBundleHash": "aa2a5d6433aa3f6c09c6543a0f0f2cfa32477165a430f7d86fe7c8c9af58151f",
+      "skillHashScope": "Operative SKILL.md and references; README.md and LICENSE excluded",
+      "harnessSucceeded": true,
+      "reviewNotes": [
+        "Independent artifact assertions and preserved tests pass.",
+        "Handoff incorrectly claims NaN TTL produces misses; an independent runtime check returns the stored value.",
+        "Measured execution-window duration is absent."
+      ],
+      "reviewer": "parent agent, retrospective artifact and transcript review",
+      "accounting": "missing-measured-window"
+    }
+  ],
+  "redactions": [
+    "Private Claude launcher names and authentication-profile labels are omitted. Command arguments, model identities, measurements, outcomes, and transcript hashes are retained."
+  ]
+}

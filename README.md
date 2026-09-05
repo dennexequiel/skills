@@ -13,7 +13,7 @@ Every skill is independently installable and keeps its portable instructions sep
 <!-- catalog:start -->
 | Skill | Status | Areas | Purpose |
 | --- | --- | --- | --- |
-| [Ace](skills/ace/) | experimental | workflow, autonomy | Own a bounded mission through evidence-backed completion while preserving user judgment and authority. |
+| [Ace](skills/ace/) | stable | workflow, autonomy | Own a bounded mission through evidence-backed completion while preserving user judgment and authority. |
 | [Prep That Doc](skills/prep-that-doc/) | experimental | documentation, writing | Catch engineering markdown that names its own structure wrong, then fix it with evidence instead of vibes. |
 <!-- catalog:end -->
 

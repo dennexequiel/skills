@@ -1,0 +1,10 @@
+import { expect, test } from "bun:test"
+import { formatRow } from "./format.mjs"
+
+test("plain and empty CSV fields", () => {
+  expect(formatRow(["alpha", "", "beta"])).toBe("alpha,,beta")
+})
+
+test("embedded separators stay inside their field", () => {
+  expect(formatRow(["alpha,beta", "end"])).toBe('"alpha,beta",end')
+})
