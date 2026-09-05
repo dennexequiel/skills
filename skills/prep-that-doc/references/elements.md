@@ -1,72 +1,51 @@
 # Elements
 
-Which markdown element the content actually is. This is the judgment the detector cannot make for you.
+Use this reference to judge which Markdown element serves the reader. Mechanical rule metadata and profile policies come from the [generated rule reference](rules.md).
 
-## The Test
+## Choose The Container
 
-Ask what shape the content has, not what shape it currently wears.
+| Information | Useful form | Context to preserve |
+| --- | --- | --- |
+| Several options compared on the same axes | A table, one row per option | Each option's conditions, caveats, and distinct values |
+| Actions with an execution order | An ordered list | Existing order, identifiers, prerequisites, and branching |
+| Independent items | An unordered list | Any priority or grouping the author intends |
+| Terms and short definitions | A table or definition list | Exact terms and qualifications |
+| Terms requiring paragraphs | A heading and prose for each term | Context needed to interpret each definition |
+| Conditional paths | Explicit conditions beside the relevant steps | Which branch applies and where branches rejoin |
+| One developed idea | A paragraph | Connections between claims |
+| Commands or output | Fenced code with an appropriate label | Exact characters, sequence, and distinction between input and output |
+| A warning affecting action | A visible warning beside that action | Its scope, trigger, consequence, and exception |
 
-| The content is | Wrong element it usually wears | Right element | Rule id |
-| --- | --- | --- | --- |
-| Several things compared on the same axes | Paragraphs, or one bullet per thing | Table, one row per thing, one column per axis | `element-table` |
-| Steps performed in order, where order matters | Unordered bullets | Ordered list | `element-ordered` |
-| Items with no inherent order | Ordered list | Unordered bullets | `element-unordered` |
-| Terms with definitions | Bullets shaped `**Term:** meaning` | Two-column table, or a heading per term when each needs paragraphs | `element-definition` |
-| A branch the reader takes one path through | Prose describing both paths | Ordered list with an explicit condition per branch | `element-branch` |
-| Something to run or paste verbatim | Inline code, or indented prose | Fenced block with a language tag | `element-fence` |
-| A warning that changes what the reader does | A sentence starting "Note that" | Its own line, leading with the consequence | `element-warning` |
-| One idea developed across several sentences | Fragmented bullets | A paragraph | `element-paragraph` |
-| A reference the reader looks up, not reads | Prose narrative | Table or definition list | `element-lookup` |
+`element-table` names the manual observation that a comparison would benefit from a table. The scanner's `table-underfit` candidate concerns an existing table's dimensions; these are different questions.
 
-## Tables
+## Tables And Lists
 
-A table earns its markup when it has at least two columns carrying distinct information and at least two rows. Below that it is a list wearing a costume.
+A comparison table needs at least two columns carrying distinct information. A one-column table may be a layout convention; do not convert it automatically. One data row can still be useful in a stable schema or reference format. GitHub Flavored Markdown (GFM) permits body rows with different cell counts, so an uneven row is not automatically a syntax defect. See the [GFM table specification](https://github.github.com/gfm/#tables-extension-).
 
-Convert prose to a table when the same nouns repeat across sentences with different values attached. Three sentences that each say "Option X takes N minutes and risks Y" are three rows.
+A table is the wrong shape if its cells cannot faithfully hold the source. Preserve conditions in dedicated cells, notes tied to the correct option, or nearby prose. Reject the conversion when a caveat loses its scope.
 
-Do not table things that need a paragraph each to explain. A cell that wraps to five lines wanted a heading.
+Lists do not need conversion because they look informal. Use ordered steps only when the order matters. Preserve existing operational order and identifiers; a form edit does not grant permission to redesign a procedure.
 
-## Ordered Versus Unordered
+## Headings And Code
 
-Numbers promise sequence. If a reader can do item three before item one with the same result, the numbers lie. Use bullets.
+Headings should expose the information hierarchy. PR bodies and templates often begin at H2 because the host supplies a title. A parent heading may introduce several child sections without intervening prose. Questions can be useful headings when they match the reader's task.
 
-If the reader must not reorder them, numbers are mandatory. A runbook with unordered bullets is a defect, not a style preference.
+Code-fence labels help a reader distinguish runnable commands from output. The scanner can inspect fence boundaries and labels, but prose rules do not inspect the protected body. Flag an apparent command problem for review without silently changing its bytes or claiming that it was executed.
 
-## Headings
+## Document Purpose
 
-- `heading-skip` No level may be skipped. An h4 requires an h3 above it.
-- `heading-one` One h1 per document, matching what the document is.
-- `heading-empty` A heading followed immediately by another heading has no content of its own. Either write the content or drop the level.
-- `heading-question` Headings name a topic. A heading phrased as a question belongs in an FAQ and nowhere else.
-- `heading-orphan` A lone subheading with no sibling means the level is unnecessary. Fold it into the parent.
+A profile supplies useful expectations, not proof that a section is missing. Read alternate headings, prose, and linked procedures before classifying a candidate. Repository templates and explicit author choices take precedence over a generic skeleton.
 
-## Code Fences
-
-- `fence-nolang` Every fence declares a language. Use `text` for output, `sh` for shell, `console` when the prompt is included and the block must not be pasted whole.
-- `fence-prompt` Do not prefix runnable commands with `$`. It survives copy-paste and breaks.
-- `fence-mixed` Never mix a command and its output in one fence unless the language is `console`. The reader cannot tell what to paste.
-- `fence-untested` A block presented as runnable must be runnable. Placeholders are marked, such as `<region>` or `YOUR_TOKEN`, never left as plausible-looking fake values.
-- `fence-unclosed` Every fence closes with the same marker, at least as long as the one that opened it. An unclosed fence swallows the rest of the document, so a scan can come back clean because nothing after it was read.
-- `frontmatter-unclosed` Frontmatter opened with `---` closes with `---`. Unclosed frontmatter hides the whole file for the same reason.
-
-## Links
-
-- `link-here` Link text names the destination. "See [the rollback plan]", never "see [here]" or "[this doc]". The label is editable; the URL it points at is protected.
-- `link-bare` A bare URL in prose gets link text unless the URL itself is the point.
-- `link-dead` Every relative link resolves. The detector checks each one against the filesystem, relative to the file that contains it. External URLs are never fetched.
-
-## Document Shapes
-
-Each type has an expected skeleton. Missing sections are findings. Extra sections are usually not.
-
-| Type | Expected skeleton |
+| Document | Reader's question |
 | --- | --- |
-| Spec | Problem, goals, non-goals, proposed design, alternatives, open questions |
-| ADR (architecture decision record) | Context, decision, status, consequences |
-| Runbook | Preconditions, numbered steps, verification per step, rollback, escalation |
-| Cutover plan | Scope, sequence with owners and times, verification gates, rollback trigger, comms |
-| README | What it is, install, minimal working example, where to go next |
-| Incident writeup | Impact, timeline, root cause, what fixed it, follow-up actions with owners |
-| PR description | What changed, why, how the reviewer should verify |
+| Spec or design | What problem, scope, constraints, proposal, and tradeoffs does this establish? |
+| Architecture decision record (ADR) | What decision applies, in which context, with what consequences? |
+| Runbook | Can the operator identify prerequisites, execute the sequence, verify the result, and recover or escalate? |
+| Cutover or migration | Who proceeds at each gate, under which conditions, and what happens when a gate fails? |
+| README | Can the intended reader understand the purpose and find a working starting point? |
+| Incident report | What happened, what is known or uncertain, what was affected, and who owns follow-up? |
+| PR description | Can the reviewer understand the change, reason, and validation? |
+| CHANGELOG | Can a reader find relevant changes and their versions? |
+| API reference | Can a caller find the contract, inputs, outputs, errors, and applicable examples? |
 
-A runbook without a rollback section is the highest-severity structural finding in this file. Report it first.
+Do not invent a rollback procedure or infer that rollback is always possible. A documented irreversible operation may need escalation, a recovery plan, or an explicit accepted limitation. Report the specific missing decision as an author question.

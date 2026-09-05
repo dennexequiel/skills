@@ -4,6 +4,7 @@
     "lib": ["ES2024", "DOM"],
     "module": "Preserve",
     "moduleResolution": "Bundler",
+    "allowImportingTsExtensions": true,
     "moduleDetection": "force",
     "strict": true,
     "noEmit": true,

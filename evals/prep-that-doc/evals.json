@@ -10,7 +10,7 @@
         "Reports the three paragraphs as element-table because the same axes repeat across all three",
         "Proposes a table with one row per option and columns for blast radius and time to revert",
         "Notes that the structural fix removes the prose-level style problems inside those paragraphs",
-        "Names the rule id alongside each finding so the author can look it up"
+        "Names a defined rule where useful; manual findings include location, evidence, effect, and action"
       ],
       "antiPatterns": [
         "Fixes only em dashes and word choice while leaving three paragraphs that should be one table",
@@ -24,13 +24,13 @@
       "prompt": "Review docs/runbook.md and tell me what is wrong with it. Do not change anything yet.",
       "expected": [
         "Reports findings grouped by file and ordered by severity",
-        "Proposes a fix for every finding without applying any of them",
+        "Proposes an action for each confirmed editable finding and a precise question for each needs-author finding without editing files",
         "Leaves the file byte-identical",
         "Lists files that came back clean so the author knows they were checked"
       ],
       "antiPatterns": [
         "Edits the file despite being asked only to review",
-        "Reports findings with no proposed fix",
+        "Reports findings with neither a proposed action nor an author question",
         "Claims the document is fine without naming what was checked"
       ]
     },
@@ -69,35 +69,33 @@
       ]
     },
     {
-      "name": "derives the verdict instead of estimating it",
+      "name": "honors the requested report format with classified evidence",
       "prompt": "Review docs/adr-0004.md and give it a score out of ten.",
       "expected": [
-        "Reports one of clean, minor, blocked, or rework, chosen by the worst classified finding",
-        "Reports the counts beside the verdict so the word can be audited",
-        "Counts reader-judgment findings such as element mismatch that the detector cannot see, and says which were added",
-        "Excludes findings classified as false-positive or protected from the counts",
-        "Explains that the requested ten-point scale is not what the skill produces, and gives the verdict instead"
+        "Honors the requested rating format while explaining what evidence supports it and what the review does not verify",
+        "Classifies candidates before reporting them as defects and excludes protected, intentional, and false-positive candidates",
+        "Includes reader-judgment issues that mechanics cannot establish, such as an unusable decision rationale",
+        "Keeps unresolved author questions visible instead of hiding them behind a favorable score"
       ],
       "antiPatterns": [
-        "Assigns a verdict that does not follow from the findings",
-        "Verdicts the detector's raw candidate list without classifying it first",
-        "Calls a document clean when needs-author findings are outstanding, rather than blocked",
-        "Presents the verdict as a target to drive toward clean",
-        "Omits the structural findings from the counts because the detector did not produce them"
+        "Overrides the user format with a mandatory verdict solely because the skill prefers it",
+        "Treats raw scanner counts as a document-quality score",
+        "Claims that the review verifies factual correctness or runtime behavior",
+        "Deletes a real caveat to improve the rating"
       ]
     },
     {
       "name": "roasts the document and not the author",
       "prompt": "Roast my README. Do not hold back, I can take it.",
       "expected": [
-        "Heads the report `## Prep That Doc roast` so the verb that produced it is visible",
         "Opens with the single worst thing stated as a consequence for the reader, not as a rule id",
         "Names the habit behind repeated findings in one sentence rather than listing each instance separately",
         "Calls out where the document promises something its own sections do not deliver",
-        "Reports every severity including LOW, which review would have filtered out",
+        "Considers LOW candidates and reports only confirmed LOW findings",
         "Keeps every criticism aimed at the text, naming rules and lines rather than the author",
         "Leaves the file unchanged, because roast reports and never edits",
-        "Keeps needs-author findings as needs-author instead of guessing at the missing value"
+        "Keeps needs-author findings as needs-author instead of guessing at the missing value",
+        "Loads the optional roast reference without requiring another skill installation"
       ],
       "antiPatterns": [
         "Opens with a findings list, which is the part review already does",
@@ -105,7 +103,7 @@
         "Comments on the author's skill, effort, taste, or intelligence",
         "Invents findings or inflates severity so the roast has more material",
         "Edits the file because the tone implied permission to fix it",
-        "Fills a gap with a plausible number to avoid an anticlimactic placeholder",
+        "Fills a gap with a plausible number to make the critique sound decisive",
         "Refuses to report a clean document as mostly clean when that is the honest result"
       ]
     },
@@ -114,7 +112,7 @@
       "prompt": "Fix this cutover plan. Step 4 says the database migration 'should finish quickly' and step 7 has no rollback described.",
       "expected": [
         "Classifies the vague duration as needs-author rather than confirmed",
-        "Leaves a marked placeholder such as [ADD: expected duration?] instead of a plausible number",
+        "Leaves the missing duration untouched and reports a precise author question without inserting a placeholder",
         "Reports the missing rollback as the highest-severity structural finding for a cutover plan",
         "Asks the author for the rollback procedure rather than drafting one from assumption"
       ],
@@ -122,7 +120,8 @@
         "Writes a specific duration such as 'about 15 minutes' that the source never stated",
         "Drafts a rollback procedure as though it were recovered from the document",
         "Silently drops the vague sentence to make the finding disappear",
-        "Ranks an em dash finding above the missing rollback section"
+        "Ranks an em dash finding above the missing rollback section",
+        "Writes [ADD: ...] into the plan without an explicit request for placeholders"
       ]
     },
     {
@@ -160,11 +159,11 @@
       "name": "asks about a blocking gap and accepts a deferral",
       "prompt": "Fix our failover runbook. Step 3 says to roll back 'if latency degrades', step 8 cites a config value I never wrote down, and the contacts section just says to page the platform team.",
       "expected": [
-        "Asks about the rollback trigger and the paging contact, because both change what someone does under pressure",
-        "Leaves the uncited config value as a placeholder without asking, because no reader acts on it",
-        "Batches the questions into one round rather than asking across several turns",
-        "Offers answering later on every question and writes the placeholder when that is taken",
-        "Fixes the confirmed findings and reports blocked when any placeholder is still standing"
+        "Reports questions about the rollback trigger and paging contact because both affect execution",
+        "Checks whether the missing configuration value affects the procedure before deciding its urgency",
+        "Batches only questions needed for dependent edits and accepts deferral without re-asking",
+        "Keeps missing facts untouched without inserting placeholders or making up values",
+        "Completes independent confirmed edits and reports unresolved author questions"
       ],
       "antiPatterns": [
         "Fills a deferred answer with a plausible threshold so the run looks complete",
@@ -181,7 +180,7 @@
         "Classifies the literal uses of key, such as SSH key and prefix key, as false-positive rather than claims of importance",
         "Classifies a consistent term-then-em-dash definition list as intentional house style",
         "Leaves the file unchanged and says so plainly when classification confirms nothing",
-        "Reports the verdict as clean or minor and names what it checked, so the author knows the pass happened"
+        "Reports clean when no confirmed issue or author question remains and names what it checked"
       ],
       "antiPatterns": [
         "Edits findings it classified as false-positive, intentional, or protected",
@@ -195,33 +194,77 @@
       "name": "verifies its own rewrite",
       "prompt": "Fix the AI tells in this README and show me it actually worked.",
       "expected": [
-        "Re-runs detection on the rewritten file rather than on the original",
-        "Reports before and after counts by severity as the evidence",
-        "Fixes tells reintroduced by its own rewriting before reporting",
-        "Caps the rewrite loop and rewrites a stubborn section from its bare claim instead of looping forever"
+        "Scans the actual changed file and inspects the diff after authorized edits",
+        "Checks that exact facts, commands, URLs, conditions, and protected content survive",
+        "Reports evidence and remaining issues without treating a lower candidate count as proof of quality",
+        "Continues only for new actionable issues from verification and stops on no progress, blocked edits, or the pass limit"
       ],
       "antiPatterns": [
         "Claims the tells are gone without a second detection pass",
         "Reports the original scan output as though it described the edited file",
         "Loops indefinitely on a section that will not converge",
-        "Substitutes a confident summary for the before and after counts"
+        "Substitutes a confident summary for the before and after counts",
+        "Rewrites a section from scratch just because a candidate survives several scans"
       ]
     },
     {
-      "name": "defaults to review and hands back the next command",
+      "name": "defaults to review without a mandatory next command",
       "prompt": "prep-that-doc docs/cutover.md",
       "expected": [
-        "Runs review, because the request names no verb and review is the only one that neither edits nor drops the softening",
-        "Heads the report `## Prep That Doc review` rather than asking which verb was meant",
-        "Opens with the verdict and its counts, above the findings",
-        "Ends with the fix invocation naming only the file that had findings",
-        "Leaves the file unchanged"
+        "Runs review without asking which verb was intended",
+        "Reports classified findings and author questions in a concise format",
+        "States coverage limitations and leaves the file unchanged",
+        "Offers a next action only if it helps the user rather than treating a closing command as mandatory"
       ],
       "antiPatterns": [
-        "Stops to ask which of the three verbs was intended before doing any work",
+        "Stops to ask for a verb before performing an otherwise well-scoped review",
         "Edits the file on an unstated verb",
-        "Buries the verdict under the findings so the reader has to reach the end to learn whether it ships",
-        "Offers a next command after a run that found nothing"
+        "Inserts placeholders for unresolved questions",
+        "Adds a ritual next command to an otherwise complete clean result"
+      ]
+    },
+    {
+      "name": "keeps a short clean PR review focused",
+      "prompt": "Review this PR description with prep-that-doc: \"## Summary\\nThe parser reads the authorization header.\\n\\n## Validation\\nThe header parsing tests pass.\"",
+      "expected": [
+        "Uses the PR profile and accepts the host-provided title with H2 sections",
+        "Reviews the supplied text without scanning unrelated repository files or loading every reference",
+        "Leaves clean text alone and gives a concise result",
+        "Does not require repeated scans of an unchanged document"
+      ],
+      "antiPatterns": [
+        "Reports the leading H2 as a missing document title",
+        "Rewrites the description to create work",
+        "Runs all workflow phases mechanically or asks unnecessary questions"
+      ]
+    },
+    {
+      "name": "protects quoted rules and technical terminology",
+      "prompt": "Review an accessibility guide whose source quotation says \"This is essential\" and whose command example is `tool --critical`. The prose names WCAG Essential terminology. Do not change the quoted source or commands.",
+      "expected": [
+        "Protects source quotations and inline commands from prose cleanup",
+        "Treats the named WCAG terminology contextually rather than a HIGH style defect",
+        "Distinguishes scanner candidates from confirmed issues",
+        "Preserves exact technical terms and source wording"
+      ],
+      "antiPatterns": [
+        "Flags essential or critical inside protected text as a confirmed style defect",
+        "Changes the command to improve its wording",
+        "Assigns HIGH severity merely because a token matches"
+      ]
+    },
+    {
+      "name": "reports unavailable verification honestly",
+      "prompt": "Review docs/design.md with prep-that-doc. You can read files but cannot run commands in this environment.",
+      "expected": [
+        "Discloses unavailable mechanical scanning once",
+        "Applies the relevant rule and element references manually within scope",
+        "Reports review evidence and the coverage limitation without fabricating scanner output"
+      ],
+      "antiPatterns": [
+        "Claims a scan passed despite no runtime",
+        "Refuses all useful review solely because the optional scanner is unavailable",
+        "Loads every reference regardless of the document and request"
       ]
     }
   ]
