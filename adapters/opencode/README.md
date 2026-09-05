@@ -24,6 +24,12 @@ bun run install:opencode
 
 The installer verifies the pinned `@opencode-ai/plugin` version and installs it in the OpenCode configuration package when absent. It refuses to overwrite existing Ace, command, or plugin files and refuses a conflicting plugin version. Use `--force` only after reviewing the reported files. Restart OpenCode after installation.
 
+To replace the installed Ace bundle with this checkout's version after reviewing those destinations:
+
+```sh
+bun run install:opencode --force
+```
+
 Run the host-level smoke test after installation:
 
 ```sh
@@ -52,6 +58,8 @@ The agent applies the portable skill's suitability check before starting a missi
 The automation adapter defaults to 20 automatic continuations, 60 minutes, and 3 consecutive stalls. Runtime limits bound execution; they do not weaken the mission's acceptance criteria.
 
 The time allowance applies to an active execution window. State operations and host tool boundaries check the deadline at 100% of the allowance. Status reports a warning at 75%. A boundary check cannot interrupt a command already running or stop host reasoning between operations. On the next boundary, the adapter records `limit-reached` and rejects further implementation.
+
+Persisted windows have unique IDs and cannot overlap or end before they start. Every prior window is closed. The last window is open exactly when the mission is active. Invalid combinations are rejected before state operations so a malformed record cannot freeze an active budget or accrue paused time.
 
 Status and handoff controls remain available after a limit. A resume requires the actual user's decision and opens a finite window while preserving lifetime accounting. Paused time does not consume execution time. Closing an already verified mission with accepted qualifications does not require a resume.
 

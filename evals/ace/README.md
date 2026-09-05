@@ -4,6 +4,8 @@
 
 `triggers.json` separates positive, negative, and ambiguous routing prompts. Repository checks enforce coverage and exact prompt uniqueness. Live host/model selection evals remain a separate, optional layer because deterministic fixture validation cannot prove model routing behavior.
 
+Dated reports in `results/` describe the source snapshots and checks recorded in those runs. A SHA-256 fingerprint identifies the exact file contents used; it is not a credential or the current release version. Keep recorded fingerprints and measurements tied to their runs. Run `bun run check` and the relevant host smoke commands for evidence about the current checkout.
+
 The cases emphasize the boundaries most likely to regress:
 
 - choosing the normal workflow for ordinary work without creating mission state,

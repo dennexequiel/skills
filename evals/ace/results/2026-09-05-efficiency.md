@@ -1,10 +1,10 @@
 # Ace Efficiency Evidence
 
-Routine OpenCode recovery is bounded by current mission complexity. The portable skill adds measurable overhead on the small fixtures in this exploratory run. Neither observation establishes general token savings.
+This report describes the source snapshots used in the recorded efficiency trials. Routine OpenCode recovery scales with current mission complexity in the evaluated adapter. The evaluated portable skill adds measurable overhead on the small fixtures. Neither observation establishes general token savings or a benchmark of every later revision.
 
 ## Recovery Payload
 
-The native adapter source has SHA-256 `9fc5094dbadb7c0260a39d478528dc65d953b8b99920fbb519b7dd1c2974a1c0`. Its current-state view contains complete constraints, current criteria and qualifications, evidence, milestones, source identity, and budget totals. Audit history remains in explicit history views.
+The adapter snapshot used for these measurements has SHA-256 `9fc5094dbadb7c0260a39d478528dc65d953b8b99920fbb519b7dd1c2974a1c0`. Its current-state view contains complete constraints, current criteria and qualifications, evidence, milestones, source identity, and budget totals. Audit history remains in explicit history views.
 
 The regression fixture preserves deliberately long current constraints and an accepted qualification while increasing historical evidence, windows, retired criteria, and audit entries.
 
@@ -14,7 +14,7 @@ The regression fixture preserves deliberately long current constraints and an ac
 | 20 | 44,240 bytes | 18,381 bytes | 18,179 bytes |
 | 100 | 149,287 bytes | 18,387 bytes | 18,185 bytes |
 
-From 1 to 100 historical cycles, the current continuation grows by 13 bytes. At 100 cycles it is about 88% smaller than the full-state equivalent. Current authorization text and qualifications survive exactly. These are deterministic byte measurements, not token or billing estimates. The native OpenCode smoke test also invokes the current adapter successfully.
+From 1 to 100 historical cycles, the current continuation grows by 13 bytes. At 100 cycles it is about 88% smaller than the full-state equivalent. Current authorization text and qualifications survive exactly. These are deterministic byte measurements, not token or billing estimates. The recorded native OpenCode smoke run also invokes this adapter snapshot successfully.
 
 ## Portable Paired Runs
 
@@ -27,7 +27,7 @@ Two local tasks run with and without Ace in each harness. The CSV task includes 
 
 The private Claude launcher name is redacted from the command records. Harness versions, invocation options, model identities, and measurements are retained.
 
-All eight staged operative instruction trees have SHA-256 `8f227888916908f38a87a0840ecc9b48f26682b7c8dd928f24fdf7f6fbb523e6`. This hash covers `SKILL.md` and references with sorted paths and contents, excluding README and license files. The runner's original bundle hashes remain in the [measurement records](2026-09-05-efficiency.json). Some staged README content differs because documentation editing overlapped these initial runs; the operative instruction hashes match. The runner uses frozen snapshots for subsequent evaluations.
+All eight staged instruction sets share the fingerprint `8f2278889169` (shortened here). The full SHA-256 value in the [measurement records](2026-09-05-efficiency.json) identifies their exact `SKILL.md` and reference contents, with sorted paths and README and license files excluded. This establishes matching instructions across the runs; it does not identify the latest skill version. The records also retain the original bundle hashes. Some staged README content differs because documentation editing overlaps these runs; the instruction fingerprints match. The [evaluation protocol](../efficiency/README.md) describes snapshot handling for the runner.
 
 The fixture test files in these runs have ordinary `.test.mjs` names. Repository fixture copies carry an additional `.fixture` suffix to prevent deliberate failures from entering the root test suite. Staging restores the original filenames and contents.
 

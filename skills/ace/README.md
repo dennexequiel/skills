@@ -22,6 +22,14 @@ To install Ace globally for Claude Code without interactive prompts:
 npx skills add dennexequiel/skills --skill ace --agent claude-code --global --yes
 ```
 
+To reinstall Ace for Codex and Claude Code from a local repository checkout, run this from the repository root:
+
+```sh
+bunx skills add . --skill ace --global --agent codex claude-code --yes
+```
+
+This installs the checked-out branch's skill. Start a fresh agent session to load it. OpenCode adapter reinstalls use `bun run install:opencode --force` from the same checkout, followed by an OpenCode restart.
+
 ## Use
 
 Use the normal workflow for ordinary edits and quick answers. Ace fits work that needs recovery across interruptions, external waits, or substantial dependent milestones. Bounded missions in any of its four modes can also fit one focused session; duration alone does not decide suitability.
@@ -38,7 +46,7 @@ Use the normal workflow for ordinary edits and quick answers. Ace fits work that
 
 If the need is unclear, start normally and adopt Ace when it appears. Explicit Ace and bounded mission requests are honored. Ace infers the mode from intent without a selection or confirmation step. An ordinary edit explicitly run with Ace gets one brief overhead notice; a short learning, exploration, or decision mission needs no such warning merely because it is short. Existing missions keep their state and limits through completion.
 
-Start Ace with a mode and a bounded mission. For hosts that expose Ace as a slash command:
+Start Ace with a bounded mission. The mode is optional and inferred from intent. For hosts that expose Ace as a slash command, these examples choose it explicitly:
 
 ```text
 /ace deliver <mission>
@@ -60,7 +68,7 @@ A mission has states between start and finish. What the host gives you depends o
 
 | Action | Portable skill | With the OpenCode adapter |
 | --- | --- | --- |
-| Start a mission | Invoke with a mode and mission | `/ace <objective>` |
+| Start a mission | Invoke with a mission and optional mode | `/ace <objective>` |
 | See current state | Ask for mission status | `/ace status` |
 | Record progress | Happens in the mission brief | Ace records it through `ace_progress`; no user command |
 | Pause for input | Ace reports `paused` and stops | `/ace pause <reason>` |
@@ -69,7 +77,7 @@ A mission has states between start and finish. What the host gives you depends o
 | Close with qualifications | Accept specific limitations in the mission brief | Ask Ace to record the decisions and close with qualifications |
 | Revise the contract | Record the approved change and affected criteria | Ask Ace to record the revision and its user decision |
 | Abandon | Ace reports `cancelled` | `/ace cancel <reason>` |
-| Discard stored state | Nothing is stored | `/ace clear` |
+| Discard stored state | Use the host's conversation or task-list controls; there is no separate Ace-managed store | `/ace clear` |
 
 Execution limits are set at start time. The portable defaults are 20 continuation cycles, 60 minutes, and 3 consecutive stalled iterations. The adapter accepts overrides:
 
@@ -81,7 +89,7 @@ Limits bound execution only. They never lower the mission's acceptance criteria,
 
 At 75% of the time allowance, Ace reports remaining work. At the agreed deadline, it stops implementation. A resume preserves the prior window and lifetime totals. The adapter checks operation boundaries; it cannot interrupt a host command already in progress.
 
-Without an adapter the same lifecycle exists as conversation. Ace still reports one terminal state and still refuses to claim completion without evidence; it just cannot survive a stopped session or continue on its own.
+Without an adapter, Ace keeps its mission brief in the conversation or host task list. Recovery depends on the host restoring that record. The skill itself provides no background execution or automatic continuation.
 
 ## Partnership
 

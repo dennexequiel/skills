@@ -2,6 +2,8 @@
 
 The [recorded exercise](2026-09-05-suitability.json) supplies the portable skill and 14 independent scenarios to GPT-5.6 Sol with medium reasoning through herdr. The agent receives no expected answers or earlier results. The record preserves the request, response, skill hash, and native usage.
 
+The results apply to that recorded skill snapshot. They do not establish model behavior for every later revision.
+
 ## Observed Routing
 
 | Scenarios | Observed workflow |
@@ -21,4 +23,4 @@ All 14 workflow choices match the intended routing. No response asks the user to
 
 This exercise tests proposed routing and first responses with the skill already supplied. It does not execute the hypothetical tasks, test automatic host discovery, or establish token savings. The decision scenario includes a future session, so it does not independently isolate the single-session decision boundary. Execution windows, evidence collection, and actual learning outcomes still need mission-level evaluation.
 
-The repository check passes 65 tests and validates the skill, evaluation fixtures, routing coverage, and generated catalog. Those checks establish contract and packaging consistency; they do not guarantee model behavior.
+The repository check recorded alongside this exercise has 65 passing tests and validates the skill, evaluation fixtures, routing coverage, and generated catalog. This is the count for that snapshot, not the current test total. Those checks establish contract and packaging consistency; they do not guarantee model behavior.
