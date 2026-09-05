@@ -1,0 +1,296 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Prep That Doc scanner output",
+  "$defs": {
+    "finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fingerprint",
+        "rule",
+        "category",
+        "severity",
+        "confidence",
+        "file",
+        "location",
+        "evidence",
+        "action",
+        "autofix",
+        "profile",
+        "section"
+      ],
+      "properties": {
+        "fingerprint": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{16}$"
+        },
+        "rule": {
+          "enum": [
+            "fence-nolang",
+            "frontmatter-unclosed",
+            "fence-unclosed",
+            "heading-skip",
+            "heading-one",
+            "table-underfit",
+            "link-dead",
+            "section-missing",
+            "tell-notxbuty",
+            "tell-significance",
+            "tell-vague-number",
+            "tell-weasel",
+            "tell-history",
+            "tell-hedge",
+            "tell-filler",
+            "tell-emdash",
+            "tell-conclusion",
+            "tell-signpost",
+            "tell-curly",
+            "link-here"
+          ]
+        },
+        "category": {
+          "enum": [
+            "structural",
+            "factualGap",
+            "stylistic"
+          ]
+        },
+        "severity": {
+          "enum": [
+            "HIGH",
+            "MED",
+            "LOW"
+          ]
+        },
+        "confidence": {
+          "enum": [
+            "certain",
+            "likely",
+            "contextual"
+          ]
+        },
+        "file": {
+          "type": "string"
+        },
+        "location": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "line",
+            "column"
+          ],
+          "properties": {
+            "line": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "column": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        },
+        "evidence": {
+          "type": "string"
+        },
+        "action": {
+          "type": "string"
+        },
+        "autofix": {
+          "enum": [
+            "safe",
+            "review",
+            "never"
+          ]
+        },
+        "profile": {
+          "enum": [
+            "generic",
+            "pr",
+            "readme",
+            "adr",
+            "runbook",
+            "cutover",
+            "spec",
+            "design",
+            "changelog",
+            "incident",
+            "api-reference",
+            "migration",
+            "security",
+            "risk-assessment"
+          ]
+        },
+        "section": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "line",
+            "heading"
+          ],
+          "properties": {
+            "line": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "heading": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  },
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "rulesetVersion",
+        "profile",
+        "documents",
+        "findings",
+        "summary"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": "1"
+        },
+        "rulesetVersion": {
+          "const": "1"
+        },
+        "profile": {
+          "enum": [
+            "generic",
+            "pr",
+            "readme",
+            "adr",
+            "runbook",
+            "cutover",
+            "spec",
+            "design",
+            "changelog",
+            "incident",
+            "api-reference",
+            "migration",
+            "security",
+            "risk-assessment",
+            "mixed"
+          ]
+        },
+        "documents": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "file",
+              "profile",
+              "findings"
+            ],
+            "properties": {
+              "file": {
+                "type": "string"
+              },
+              "profile": {
+                "enum": [
+                  "generic",
+                  "pr",
+                  "readme",
+                  "adr",
+                  "runbook",
+                  "cutover",
+                  "spec",
+                  "design",
+                  "changelog",
+                  "incident",
+                  "api-reference",
+                  "migration",
+                  "security",
+                  "risk-assessment"
+                ]
+              },
+              "findings": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/finding"
+                }
+              },
+              "skipped": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "reason"
+                ],
+                "properties": {
+                  "reason": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "findings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/finding"
+          }
+        },
+        "summary": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "structural",
+            "factualGap",
+            "stylistic"
+          ],
+          "properties": {
+            "structural": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "factualGap": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "stylistic": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "rulesetVersion",
+        "error"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": "1"
+        },
+        "rulesetVersion": {
+          "const": "1"
+        },
+        "error": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "message"
+          ],
+          "properties": {
+            "message": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  ]
+}

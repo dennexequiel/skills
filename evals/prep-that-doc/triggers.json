@@ -21,7 +21,7 @@
   "ambiguous": [
     {
       "prompt": "Make this document better.",
-      "expected": "Activate Prep That Doc only after establishing the document type and whether the request is review or fix."
+      "expected": "Use Prep That Doc when context establishes engineering Markdown. Treat an explicit improvement request as editing intent within scope; ask only if an ambiguity blocks a specific action."
     },
     {
       "prompt": "This paragraph is confusing, rewrite it.",
@@ -29,7 +29,7 @@
     },
     {
       "prompt": "Our docs are inconsistent across the whole repo.",
-      "expected": "Ask which files are in scope before scanning, because unscoped findings bury the real ones."
+      "expected": "Infer scope from named files or current changes when available. Ask only when materially different repository-wide scopes remain."
     }
   ]
 }

@@ -1,0 +1,106 @@
+{
+  "recordVersion": 1,
+  "date": "2026-09-06",
+  "purpose": "One paired preservation exercise, not a general token or latency benchmark.",
+  "baselineCommit": "55dbb7f2dd3373bdc4d231a8ce5636fd8bb10e9e",
+  "coreFootprint": {
+    "baseline": {
+      "lines": 236,
+      "words": 3048,
+      "bytes": 18618,
+      "sha256": "8b8a2158cd57796c8a9a6ecb88819b96ad81df1abae044b165b6cd418a2da5a8"
+    },
+    "candidate": {
+      "lines": 123,
+      "words": 1341,
+      "bytes": 9570,
+      "sha256": "2508e28bd4b6f089695ed11adb9e18adcdefefe984d4d81f1b60ad34241b65be"
+    }
+  },
+  "behavior": {
+    "host": "Codex CLI",
+    "hostVersion": null,
+    "model": "gpt-5.6-sol",
+    "reasoningEffort": "medium",
+    "repetitions": 1,
+    "elapsedMs": null,
+    "prompt": "Fix the Markdown structure and unnecessary prose in README.md and runbook.md. The runbook is used during incidents. I cannot supply missing operational facts today. Finish independent editorial corrections and report any questions. Do not execute the procedure or contact anyone. Keep your final report concise.",
+    "inputs": {
+      "README.md": "# Header Reader\n\nHeader Reader extracts an authorization token from an HTTP request.\n\n## Install\n\nUse the executable included in the application image.\n\n## Use\n\n```sh\nheader-reader --input ./request.json\n```\n\nThe output is one token per line. Empty input produces no output.\n",
+      "runbook.md": "# Header Reader Failover Runbook\n\n### Preconditions\n\nThe on-call engineer owns this procedure. Continue only when the replica is healthy.\n\n### Procedure\n\n1. Record the primary identifier `reader-a` and wait 30 seconds.\n2. Run the following command exactly once. It may cause stale reads for up to 45 seconds; do not repeat it while the health check is pending.\n\n```sh\nheader-reader promote --replica reader-b --timeout 30 --endpoint https://ops.example.test/promote\n```\n\n3. Verify `/health/ready` returns HTTP 200 twice, 10 seconds apart. The command should finish quickly.\n4. Notify the incident channel after verification passes. Do not send notifications before the second successful check.\n\n### Recovery\n\nIf verification fails, stop and page the on-call engineer. Automatic rollback is unavailable after new writes reach the replica. The recovery threshold for replication lag is not documented.\n\n### Escalation\n\nUse the incident channel recorded in the deployment ticket. If that ticket is unavailable, keep the service paused and contact the on-call engineer.\n"
+    },
+    "inputSha256": {
+      "README.md": "5aa9ba064dfdcc5814ca4236e6ead98f45980e25c3cadb2f6e1b13c37ec99d6f",
+      "runbook.md": "35f9df645e63ff8a2db6280b5acafbe04ad3b1efd89639a606a5d7b34e6c23cf"
+    },
+    "skillSnapshotSha256": {
+      "LICENSE": "a6bab0971871509b52730e3504f029c1fa533bde0a293ea44d465def26a357f3",
+      "README.md": "12263b1138cd301382f9a8f2d93876aab5f8c17318e1c10ae626af21cc93e6a6",
+      "SKILL.md": "0d65a29eb89ee4153b9650c267dff7be685e594837ba649f333e10dbeaf22b8a",
+      "references/config.schema.json": "845d78c6940c3ff15a47612f28b19946ae06e07a20bb47b72e5be3340037d2b8",
+      "references/elements.md": "22e442f2a830af3e41f74b54e0b95ae2e216eb3e7aefe1369264ce916ba2cb0a",
+      "references/output.schema.json": "2cc8f55838ea25a0a7d3e89f52824400b5ffd4454cc145b7339d1cd1bafae204",
+      "references/roast.md": "2790324f2b85b5db1a919f22d8981886ad726422019a4303c4c3be5ba9f7ebb4",
+      "references/rules.md": "d56cd076a313d60cf5bb1860af79fefac5317738b1775ba580bc8e0c698497ea",
+      "references/scanner.md": "6ac58eabfd9aeecf32d9ec392601322b96cde955f512457e3260bb451c21a8ad",
+      "references/tells.md": "9a9e084457f07ce8df298c2f7fc3d22d0b3cf9f065b7ef7b742c6320085ddcbf",
+      "references/workflow.md": "e292b5bb8576b272817e2e9783cd532f8c18c96adba00f66e5152fde994f9912",
+      "scripts/engine.ts": "87bbb12d8fb3c3937a7ce79687cc7cedaf504afe92e87b9572268482a16f748b",
+      "scripts/input.ts": "2c4c8362fb28037be76201607de9f1f60120e51ca524051dea06635a186c0d20",
+      "scripts/policy.ts": "8e70eecbcd446d4223a5c80972b6bfa9412191782580beaa7863018d3172d0d3",
+      "scripts/regions.ts": "d18cd5a7e90c2a6255e421ba8a4bf71cb4465fa3ba58f601f81abb1059dbc3d5",
+      "scripts/registry.ts": "ace616de8f4c18d390693f085861b1763741cf43b54ef51e3d3a6b03c6f17cd7",
+      "scripts/render.ts": "93fea38f0f71cc95fe385d5e2682caf61970b961300503048ad6d176b296bd46",
+      "scripts/scan.ts": "6074cdd6647d9cfeb489c74881fd7f83fb87ad7cb3f377f0ea1e40a056d42dbb",
+      "scripts/types.ts": "6bb745f97d55385d37db77586c789044be0fec7a2e2882906300b83a5c32a362"
+    },
+    "arms": {
+      "with-skill": {
+        "instruction": "Use the supplied Prep That Doc snapshot.",
+        "nativeUsage": {
+          "input_tokens": 169795,
+          "cached_input_tokens": 138368,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 2811,
+          "reasoning_output_tokens": 880
+        },
+        "completedShellCommands": 12,
+        "scannerInvocations": 3,
+        "outputs": {
+          "README.md": "# Header Reader\n\nHeader Reader extracts an authorization token from an HTTP request.\n\n## Install\n\nUse the executable included in the application image.\n\n## Use\n\n```sh\nheader-reader --input ./request.json\n```\n\nThe output is one token per line. Empty input produces no output.\n",
+          "runbook.md": "# Header Reader Failover Runbook\n\n## Preconditions\n\nThe on-call engineer owns this procedure. Continue only when the replica is healthy.\n\n## Procedure\n\n1. Record the primary identifier `reader-a` and wait 30 seconds.\n2. Run the following command exactly once. It may cause stale reads for up to 45 seconds; do not repeat it while the health check is pending.\n\n```sh\nheader-reader promote --replica reader-b --timeout 30 --endpoint https://ops.example.test/promote\n```\n\n3. Verify `/health/ready` returns HTTP 200 twice, 10 seconds apart. The command should finish quickly.\n4. Notify the incident channel after verification passes. Do not send notifications before the second successful check.\n\n## Recovery\n\nIf verification fails, stop and page the on-call engineer. Automatic rollback is unavailable after new writes reach the replica. The recovery threshold for replication lag is not documented.\n\n## Escalation\n\nUse the incident channel recorded in the deployment ticket. If that ticket is unavailable, keep the service paused and contact the on-call engineer.\n"
+        },
+        "outputSha256": {
+          "README.md": "5aa9ba064dfdcc5814ca4236e6ead98f45980e25c3cadb2f6e1b13c37ec99d6f",
+          "runbook.md": "df422f8784afa9bb155a2f8b5e5d02915bc282e907bf471497c327c38087f397"
+        },
+        "report": "- [runbook.md](runbook.md): Corrected H1-to-H3 heading skips. Preserved procedure order, commands, warnings, and conditions.\n- [README.md](README.md): No justified edits.\n- Verification: Strict scans pass except for the unresolved word \"quickly.\" No procedure commands were executed.\n\nQuestions:\n\n1. What check defines a \"healthy\" replica?\n2. What maximum duration defines \"quickly\" in step 3?\n3. What replication-lag threshold and observation window trigger recovery?",
+        "readmeByteIdentical": true,
+        "nonHeadingRunbookLinesIdentical": true
+      },
+      "without-skill": {
+        "instruction": "Use your ordinary editing workflow without loading any workflow skill.",
+        "nativeUsage": {
+          "input_tokens": 102772,
+          "cached_input_tokens": 79232,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 2529,
+          "reasoning_output_tokens": 1128
+        },
+        "completedShellCommands": 3,
+        "scannerInvocations": 0,
+        "outputs": {
+          "README.md": "# Header Reader\n\nHeader Reader extracts an authorization token from an HTTP request.\n\n## Installation\n\nThe application image includes the executable.\n\n## Usage\n\n```sh\nheader-reader --input ./request.json\n```\n\nThe command writes one authorization token per line. Empty input produces no output.\n",
+          "runbook.md": "# Header Reader Failover Runbook\n\n## Preconditions\n\n- The on-call engineer owns this procedure.\n- Confirm that replica `reader-b` is healthy before continuing.\n\n## Failover procedure\n\n1. Record the primary identifier: `reader-a`.\n2. Wait 30 seconds.\n3. Run the following command exactly once. It may cause stale reads for up to 45 seconds. Do not repeat the command while the health check is pending.\n\n   ```sh\n   header-reader promote --replica reader-b --timeout 30 --endpoint https://ops.example.test/promote\n   ```\n\n4. Verify that `/health/ready` returns HTTP 200 twice, 10 seconds apart.\n5. After the second successful check, notify the incident channel.\n\n## Recovery\n\nIf verification fails:\n\n1. Stop the procedure.\n2. Page the on-call engineer.\n\nAutomatic rollback is unavailable after new writes reach the replica.\n\nThe recovery threshold for replication lag is not documented.\n\n## Escalation\n\nUse the incident channel recorded in the deployment ticket. If that ticket is unavailable, keep the service paused and contact the on-call engineer.\n"
+        },
+        "outputSha256": {
+          "README.md": "b5070ab4cbf25bd9179820bbf7c0c09f812e7de99f8ab65fdf750b1c9ed0d6f7",
+          "runbook.md": "cf6a2806425faba51a785a263ab3165ed8984016c0d1c98afedbc2917a5baae7"
+        },
+        "report": "Edited [README.md](README.md) and [runbook.md](runbook.md). Headings, procedure ordering, code-block nesting, and prose are consistent and concise.\n\nOpen operational questions:\n\n- How is replica health confirmed?\n- Where is the primary identifier recorded?\n- What host, method, and tool apply to `/health/ready`?\n- What is the replication-lag recovery threshold?\n- How is the service paused, and who is contacted if the on-call engineer is already responding?\n\nNo procedure commands ran, and no one was contacted.",
+        "readmeByteIdentical": false,
+        "nonHeadingRunbookLinesIdentical": false
+      }
+    }
+  }
+}

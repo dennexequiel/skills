@@ -1,0 +1,238 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Prep That Doc configuration",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version"
+  ],
+  "properties": {
+    "version": {
+      "const": 1
+    },
+    "defaultProfile": {
+      "enum": [
+        "auto",
+        "generic",
+        "pr",
+        "readme",
+        "adr",
+        "runbook",
+        "cutover",
+        "spec",
+        "design",
+        "changelog",
+        "incident",
+        "api-reference",
+        "migration",
+        "security",
+        "risk-assessment"
+      ]
+    },
+    "acceptedTerminology": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "\\S"
+      }
+    },
+    "protectedSections": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "\\S"
+      }
+    },
+    "disabledRules": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "fence-nolang",
+          "frontmatter-unclosed",
+          "fence-unclosed",
+          "heading-skip",
+          "heading-one",
+          "table-underfit",
+          "link-dead",
+          "section-missing",
+          "tell-notxbuty",
+          "tell-significance",
+          "tell-vague-number",
+          "tell-weasel",
+          "tell-history",
+          "tell-hedge",
+          "tell-filler",
+          "tell-emdash",
+          "tell-conclusion",
+          "tell-signpost",
+          "tell-curly",
+          "link-here"
+        ]
+      }
+    },
+    "severityOverrides": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [],
+      "properties": {
+        "fence-nolang": {
+          "enum": [
+            "HIGH",
+            "MED",
+            "LOW"
+          ]
+        },
+        "frontmatter-unclosed": {
+          "enum": [
+            "HIGH",
+            "MED",
+            "LOW"
+          ]
+        },
+        "fence-unclosed": {
+          "enum": [
+            "HIGH",
+            "MED",
+            "LOW"
+          ]
+        },
+        "heading-skip": {
+          "enum": [
+            "HIGH",
+            "MED",
+            "LOW"
+          ]
+        },
+        "heading-one": {
+          "enum": [
+            "HIGH",
+            "MED",
+            "LOW"
+          ]
+        },
+        "table-underfit": {
+          "enum": [
+            "HIGH",
+            "MED",
+            "LOW"
+          ]
+        },
+        "link-dead": {
+          "enum": [
+            "HIGH",
+            "MED",
+            "LOW"
+          ]
+        },
+        "section-missing": {
+          "enum": [
+            "HIGH",
+            "MED",
+            "LOW"
+          ]
+        },
+        "tell-notxbuty": {
+          "enum": [
+            "HIGH",
+            "MED",
+            "LOW"
+          ]
+        },
+        "tell-significance": {
+          "enum": [
+            "HIGH",
+            "MED",
+            "LOW"
+          ]
+        },
+        "tell-vague-number": {
+          "enum": [
+            "HIGH",
+            "MED",
+            "LOW"
+          ]
+        },
+        "tell-weasel": {
+          "enum": [
+            "HIGH",
+            "MED",
+            "LOW"
+          ]
+        },
+        "tell-history": {
+          "enum": [
+            "HIGH",
+            "MED",
+            "LOW"
+          ]
+        },
+        "tell-hedge": {
+          "enum": [
+            "HIGH",
+            "MED",
+            "LOW"
+          ]
+        },
+        "tell-filler": {
+          "enum": [
+            "HIGH",
+            "MED",
+            "LOW"
+          ]
+        },
+        "tell-emdash": {
+          "enum": [
+            "HIGH",
+            "MED",
+            "LOW"
+          ]
+        },
+        "tell-conclusion": {
+          "enum": [
+            "HIGH",
+            "MED",
+            "LOW"
+          ]
+        },
+        "tell-signpost": {
+          "enum": [
+            "HIGH",
+            "MED",
+            "LOW"
+          ]
+        },
+        "tell-curly": {
+          "enum": [
+            "HIGH",
+            "MED",
+            "LOW"
+          ]
+        },
+        "link-here": {
+          "enum": [
+            "HIGH",
+            "MED",
+            "LOW"
+          ]
+        }
+      }
+    },
+    "houseStyle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [],
+      "properties": {
+        "allowCurlyQuotes": {
+          "type": "boolean"
+        },
+        "emDashWordsPerOccurrence": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10000
+        }
+      }
+    }
+  }
+}

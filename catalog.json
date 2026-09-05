@@ -16,9 +16,9 @@
     {
       "name": "prep-that-doc",
       "displayName": "Prep That Doc",
-      "description": "Use when writing, reviewing, or fixing engineering markdown so it uses the correct element and says something. Covers specs, design docs, ADRs, runbooks, cutover and migration plans, READMEs, CHANGELOGs, PR descriptions, incident writeups, and infrastructure or DevOps documentation. Catches structure that names itself wrong, such as prose that should be a table, bullets that should be ordered steps, skipped heading levels, and unlabeled code fences. Also catches AI writing tells, including em dash pileups, bold scattered through prose, empty significance claims, and sentences that add no information. Do not use for marketing copy, fiction, or source code refactoring.",
-      "summary": "Catch engineering markdown that names its own structure wrong, then fix it with evidence instead of vibes.",
-      "status": "experimental",
+      "description": "Write, review, or fix engineering Markdown for useful structure, clear prose, and missing operational facts. Use for specs, READMEs, PR descriptions, architecture decisions, runbooks, cutovers, migrations, incident reports, security documents, and risk assessments. Preserve meaning and author authority. Do not use for marketing copy, fiction, or source code refactoring.",
+      "summary": "Review engineering Markdown with document-aware rules, protected content, and evidence before edits.",
+      "status": "stable",
       "areas": [
         "documentation",
         "writing"

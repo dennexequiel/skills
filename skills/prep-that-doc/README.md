@@ -1,103 +1,89 @@
 # Prep That Doc
 
-Prep That Doc reads engineering markdown and catches content that names its own structure wrong. A comparison written as three paragraphs is a table. A sequence where order matters is not a bullet list. An h4 under an h2 is a broken hierarchy claiming to be a heading.
-
-It fixes the AI writing tells too, the em dash pileups and the sentences that survive deletion. That part is table stakes and other skills do it. The structural half is the reason this one exists.
-
-## Quickstart
-
-```text
-prep-that-doc docs/cutover.md
-```
-
-That runs a review: findings, proposed fixes, nothing edited. It ends with the command to run next, so the verbs below are something you get walked into rather than something you pick between up front.
+Prep That Doc reviews engineering Markdown for useful structure, clear prose, and missing operational facts. It combines a document-aware mechanical scanner with an agent's contextual judgment. It preserves exact facts, commands, citations, caveats, and operational order.
 
 ## Install
 
-Choose the package runner already available on your machine:
+Run the interactive installer to choose skills, agents, and installation scope:
 
 ```sh
-# Node.js
 npx skills add dennexequiel/skills --skill prep-that-doc
-
-# Bun
-bunx skills add dennexequiel/skills --skill prep-that-doc
 ```
 
-Run one command, not both.
-
-To install Prep That Doc globally for Claude Code without interactive prompts:
+Use `bunx` in place of `npx` if Bun is your package runner. To install globally for a specific agent:
 
 ```sh
 npx skills add dennexequiel/skills --skill prep-that-doc --agent claude-code --global --yes
 ```
 
+Use `--agent opencode` or `--agent codex` for those hosts. Prep That Doc requires no automation adapter. Re-run the install command to refresh an installation and start a fresh agent session.
+
 ## Use
 
-Point it at documents. Ask to review or to fix, and it does exactly that one. Name no verb and you get a review.
+These are requests to your agent, not standalone shell commands:
 
 ```text
-review docs/cutover.md with prep-that-doc
-prep this spec, fix what you find
-roast my README, I can take it
+Review docs/runbook.md with prep-that-doc.
+Fix the structure in README.md with prep-that-doc.
+Roast this design doc. Leave the file unchanged.
 ```
 
-The three verbs behave differently on purpose, and each heads its report with its own name so you can tell them apart at a glance:
+| Request | Result |
+| --- | --- |
+| Review, or no editing intent | Findings, proposed actions, and author questions. Files remain unchanged. |
+| Fix or improve | Authorized corrections, preservation checks, and unresolved questions. |
+| Roast | An optional blunt critique of the document, supported by evidence. Files remain unchanged. |
 
-- **review** reports HIGH and MED findings with proposed fixes, and changes nothing.
-- **fix** asks about the gaps that block a reader, edits the file, reports what changed and what it deliberately left, and gives the verdict before and after.
-- **roast** names the habit behind the findings, then reports every severity, and still changes nothing.
+A short, low-risk document gets a focused pass. Operational and risk-bearing documents get a complete review of sequence, conditions, verification, and recovery. Missing facts remain untouched and come back as questions; the skill does not insert placeholders automatically.
 
-### Verdict
+The agent can summarize classified findings as `clean`, `minor`, `blocked`, or `rework`. The scanner itself reports candidates only. A clean scanner result does not prove that the document is complete, factual, or operationally safe.
 
-Every run ends with one word telling you what to do next:
+## Scanner
 
-```text
-clean    nothing found                        ship it
-minor    findings, none high                  cleanup is optional
-blocked  the form is right, facts are missing  answer the placeholders
-rework   a high finding                       fix before anyone relies on it
-```
-
-Only classified findings count, so a document is never marked down for quoting a banned phrase as an example. `blocked` exists because a runbook whose rollback trigger reads "if the error rate rises significantly" has nothing wrong with its prose and still cannot be followed at 3am. The verdict ranks severity rather than setting a target: `minor` is a fine resting state, and deleting a real caveat to reach `clean` makes the document worse.
-
-`fix` asks about those gaps rather than guessing at them, in one round, worst first. Answering later is always on the table and costs nothing: the question becomes an `[ADD: ...]` placeholder in the file, the verdict stays `blocked`, and the rest of the document still gets fixed. Nothing is invented to fill a hole.
-
-`roast` is not review with sharper adjectives. It reports what the findings add up to: the habit behind them rather than each instance, the consequence for whoever reads the document rather than the rule that fired, and the gap between what the document promises and what its sections deliver. Then the findings, then the verdict. It will not invent findings to pad the list, a short roast on a good document is the honest answer, and it targets the document rather than the author.
-
-Documents it covers: specs, design docs, architecture decision records (ADRs), runbooks, cutover and migration plans, READMEs, CHANGELOGs, PR descriptions, incident writeups, and infrastructure or DevOps docs.
-
-### Detector
-
-The bundled detector finds the mechanical rules so findings are evidence rather than impressions. It ships at `scripts/scan.ts` inside the skill directory, so the command depends on where your client installed the skill:
+From a repository checkout:
 
 ```sh
-# installed globally for Claude Code
-bun ~/.claude/skills/prep-that-doc/scripts/scan.ts docs/cutover.md
-
-# installed into a project
-bun .claude/skills/prep-that-doc/scripts/scan.ts docs/cutover.md
+bun skills/prep-that-doc/scripts/scan.ts README.md
+bun skills/prep-that-doc/scripts/scan.ts --changed --base origin/main
+bun skills/prep-that-doc/scripts/scan.ts --stdin --type pr --format json
+bun skills/prep-that-doc/scripts/scan.ts --type runbook --strict docs/runbook.md
 ```
 
-It groups findings under the heading that holds them, in document order, and prints line, severity, rule id, and the phrase that matched. Files it found nothing in say so rather than going missing. It never edits. Every rule it implements is also written out in [references/elements.md](references/elements.md) and [references/tells.md](references/tells.md) so the skill still works when no runtime is available.
+For an installed skill, use `scripts/scan.ts` inside its installation directory. `node` can replace `bun` on a supported Node version. The stdin form reads Markdown from standard input.
+
+The scanner never edits files. Default output omits LOW findings; `--strict` includes them. Text output groups candidates by file and section. Versioned JSON supports automation, stable finding fingerprints, and per-file profiles.
+
+| Exit code | Meaning |
+| --- | --- |
+| 0 | No visible candidates |
+| 1 | Candidates found |
+| 2 | Invalid arguments, invalid configuration, or input/execution failure |
+
+Automation must handle all three codes. Read the [CLI and configuration contract](references/scanner.md) for profile selection, changed-file semantics, protected regions, output, and `.prepdocrc` settings. The [generated rule reference](references/rules.md) documents the actual registry.
 
 ## Compatibility
 
-The core skill works in Agent Skills-compatible clients with no adapter.
+The core skill works in Agent Skills-compatible clients, including OpenCode, Claude Code, and Codex, without a host adapter.
 
-The detector needs Bun, or a Node that runs TypeScript without a build step (22.18 and newer on the 22 line, 23.6 and newer otherwise), and only when the client can run commands. Older Node exits with a syntax error on the type annotations. Without either runtime, every rule applies by hand from the reference files, and the workflow is unchanged.
+The scanner uses only Node built-ins. It runs with Bun, Node 22.18 or later on the 22 line, or Node 23.6 and later. Older Node versions require a runtime with direct TypeScript support. When neither runtime is available, apply the reference rules manually and disclose that limitation.
+
+Repository checks verify scanner behavior and rule-reference consistency. Behavioral evaluations inspect agent decisions separately; passing mechanical tests does not prove every host or model follows the workflow.
 
 ## Limitations
 
-- Form only. It never changes facts, numbers, commands, paths, or citations, and never invents a missing one. Gaps come back as `[ADD: ...]` placeholders for the author.
-- Restructuring accounts for every claim before it happens. If a caveat has nowhere to live in the new shape, the restructure is rejected rather than the caveat dropped.
-- Cutover plans, runbooks, incident writeups, and risk assessments get stricter defaults. Qualified language is treated as calibrated uncertainty rather than hedging, steps are never reordered, and structural changes are proposed rather than applied.
-- Document type drives which rules apply. Given a file whose type it cannot determine, it asks rather than guessing, because a CHANGELOG and a runbook fail in opposite directions.
-- Not for marketing copy, fiction, or source code refactoring.
-- The detector over-matches by design. Findings are candidates, and every one is classified before an edit.
+- Candidate detection cannot establish factual truth, operational safety, or author intent. No command is executed and no external link is fetched.
+- The protected-region parser handles documented Markdown conventions. It is not a complete CommonMark renderer; unusual embedded formats need manual review.
+- Profiles infer document purpose and supply contextual expectations. Alternate headings or linked procedures can satisfy a requirement; the agent must judge them.
+- `safe`, `review`, and `never` describe each rule's edit boundary. The scanner has no automatic edit mode.
+- Form edits preserve every claim, condition, qualifier, command, URL, path, and operational step. A reshape that cannot do so is rejected.
+- Marketing copy, fiction, translation, and source code refactoring are outside this skill's scope.
 
 ## Reference
 
-- [SKILL.md](SKILL.md) defines the operative contract.
-- [references/elements.md](references/elements.md) decides which markdown element the content actually is.
-- [references/tells.md](references/tells.md) catalogs the style rules and their detection patterns.
+- [SKILL.md](SKILL.md) contains routing, protections, and the execution contract.
+- [Scanner contract](references/scanner.md) documents inputs, configuration, and output.
+- [Rule reference](references/rules.md) is generated from the detector registry.
+- [Elements](references/elements.md) explains contextual structure choices.
+- [Prose review](references/tells.md) explains meaning-sensitive style judgment.
+- [Workflow](references/workflow.md) covers author questions, validation, and reports.
+- [Roast](references/roast.md) is loaded only for that requested mode.
