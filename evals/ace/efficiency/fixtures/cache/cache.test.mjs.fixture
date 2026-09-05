@@ -1,0 +1,18 @@
+import { expect, test } from "bun:test"
+import { createCache } from "./cache.mjs"
+
+test("value is available before its deadline", () => {
+  let time = 0
+  const cache = createCache(10, () => time)
+  cache.set("key", "value")
+  time = 9
+  expect(cache.get("key")).toBe("value")
+})
+
+test("value expires at the deadline", () => {
+  let time = 0
+  const cache = createCache(10, () => time)
+  cache.set("key", "value")
+  time = 10
+  expect(cache.get("key")).toBeUndefined()
+})

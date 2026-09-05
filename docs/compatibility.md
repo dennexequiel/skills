@@ -5,7 +5,7 @@ Compatibility has three explicit levels. Format support does not imply that ever
 | Level | Meaning |
 | --- | --- |
 | Format-compatible | The host implements Agent Skills discovery and can load `SKILL.md` plus relative resources. |
-| Smoke-tested | The repository provides and has passed a host-level discovery and invocation test. |
+| Smoke-tested | The repository provides and has passed the host check described under Smoke Scope. |
 | Automation adapter | A maintained host adapter adds durable state, lifecycle events, or automatic continuation. |
 
 `Unverified` means the repository has not established the claimed behavior through native documentation or a host-level smoke test.
@@ -26,6 +26,16 @@ Compatibility is recorded per skill so unrelated skills can adopt integrations i
 | [Prep That Doc](../skills/prep-that-doc/) | Codex CLI | Yes | Not yet | No | `$prep-that-doc` or `/skills` |
 | [Prep That Doc](../skills/prep-that-doc/) | Pi | Yes | Not yet | No | `/skill:prep-that-doc` |
 | [Prep That Doc](../skills/prep-that-doc/) | Antigravity CLI (`agy`) | Yes | Yes (`bun run smoke:agy`) | No | Plugin skill discovery after `agy plugin install` |
+
+## Smoke Scope
+
+| Command | Evidence established |
+| --- | --- |
+| `bun run smoke:opencode` | A native, completed `ace_status` event from the current checkout's adapter, identified by its source hash, through the staged `/ace` command. |
+| `bun run smoke:claude-code` | Claude Code accepts the staged plugin and marketplace manifests. |
+| `bun run smoke:agy` | Antigravity accepts the staged plugin and reports the catalog's skill count. |
+
+Packaging validation does not prove a model follows the skill, and an empty-session status call does not prove a mission lifecycle. Adapter regression tests and recorded behavioral runs provide that separate evidence.
 
 ## Integration Gate
 

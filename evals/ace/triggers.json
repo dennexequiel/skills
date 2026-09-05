@@ -3,11 +3,15 @@
   "version": 1,
   "positive": [
     "Use Ace to own this migration until the compatibility tests and production build pass.",
-    "Take ownership of implementing account deletion and keep working until the documented acceptance criteria are verified.",
-    "Run this as a bounded mission: diagnose the flaky checkout flow, fix its cause, and prove it is stable.",
-    "Keep moving this release-readiness task forward until every agreed check passes or you hit a real authorization blocker.",
+    "Own account deletion across dependent API, background-worker, and client milestones until each milestone's acceptance criteria are verified.",
+    "Run this as a bounded mission: carry the flaky checkout investigation across nightly browser runs, fix its cause, and prove it is stable.",
+    "Keep responsibility for this release across the security team's review tomorrow and the compatibility checks that depend on their findings.",
     "Help me learn OAuth by building a PKCE client together; keep us moving until login works, but leave architecture decisions to me.",
-    "Own the investigation for the next hour and finish with a recommendation supported by measured evidence."
+    "Use Ace to own the investigation for the next hour and finish with a recommendation supported by measured evidence.",
+    "Use Ace to rename this one button and verify the rendered label. I understand it adds overhead.",
+    "Own the local migration through separately verified schema, writer, reader, and cleanup stages. Each stage depends on the previous one; all environments are ready today.",
+    "Ace explore: spend 20 minutes investigating local startup latency and finish with measurements and a recommendation. Do not change the code.",
+    "Own this decision: compare the two local queue options against our agreed reliability and maintenance criteria, recommend one, and leave the final call to me."
   ],
   "negative": [
     "Fix the typo in the page title.",
@@ -15,12 +19,15 @@
     "Brainstorm ten names for this feature.",
     "Review these two options with me, but do not implement anything.",
     "Keep improving the codebase forever.",
-    "Show me how to print the current date in JavaScript."
+    "Show me how to print the current date in JavaScript.",
+    "Fix this known parser bug in its two source files and keep going until the regression suite passes. It fits in this work session.",
+    "Run the 45-minute build command and report its exit status; it finishes in this session.",
+    "Update the Ace README's installation example."
   ],
   "ambiguous": [
     {
       "prompt": "Can you improve authentication?",
-      "expected": "Do not activate Ace until the request establishes mission ownership or a bounded finish line."
+      "expected": "Inspect and start with the normal workflow. Activate Ace if the work needs recovery, external waits, or substantial dependent milestones, or the user requests Ace or a bounded mission in any mode."
     },
     {
       "prompt": "Own this mission: make the app perfect.",
@@ -28,7 +35,11 @@
     },
     {
       "prompt": "Get the failing tests green.",
-      "expected": "Use the normal coding workflow unless context shows this is a substantial persistent mission."
+      "expected": "Use the normal coding workflow unless context establishes a need for recovery, external waits, or substantial dependent milestones. A test command alone does not justify mission state."
+    },
+    {
+      "prompt": "The local checks pass, but the remaining vendor data arrives tomorrow. Keep responsibility for verification when it arrives.",
+      "expected": "Adopt Ace to preserve the bounded verification mission across the external wait, carrying forward fresh local proof and existing authorization. Use a portable brief when no durable host integration exists."
     }
   ]
 }

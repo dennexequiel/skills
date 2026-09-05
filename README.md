@@ -13,7 +13,7 @@ Every skill is independently installable and keeps its portable instructions sep
 <!-- catalog:start -->
 | Skill | Status | Areas | Purpose |
 | --- | --- | --- | --- |
-| [Ace](skills/ace/) | experimental | workflow, autonomy | Own a bounded mission through evidence-backed completion while preserving user judgment and authority. |
+| [Ace](skills/ace/) | stable | workflow, autonomy | Own a bounded mission through evidence-backed completion while preserving user judgment and authority. |
 | [Prep That Doc](skills/prep-that-doc/) | experimental | documentation, writing | Catch engineering markdown that names its own structure wrong, then fix it with evidence instead of vibes. |
 <!-- catalog:end -->
 
@@ -57,7 +57,7 @@ bun install --frozen-lockfile
 bun run check
 ```
 
-The current skill bundles have no runtime package dependencies. Repository development uses pinned TypeScript and host API types. The full check validates TypeScript, skill metadata, bundle containment, references, routing fixtures, description collisions, generated catalog state, installer behavior, behavioral-case schemas, and the contract clauses each skill publishes. No command runs a behavioral case against a live model.
+The current skill bundles have no runtime package dependencies. Repository development uses pinned TypeScript and host API types. The full check validates TypeScript, skill metadata, bundle containment, references, routing fixtures, description collisions, generated catalog state, installer behavior, behavioral-case schemas, and the contract clauses each skill publishes. `bun run check` does not run behavioral cases against live models. Optional evaluation runners invoke the configured harness only when explicitly run.
 
 ## Structure
 
