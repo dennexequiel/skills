@@ -12,6 +12,10 @@ The OpenCode automation adapter adds capabilities that the portable Ace skill do
 
 State is stored under `${XDG_STATE_HOME:-~/.local/state}/opencode/ace/`. Automatic continuation requires the OpenCode TUI or server process to remain active; a one-shot `opencode run` process can exit before a queued continuation executes.
 
+State parsing, completion checks, current-state projection, evidence replacement, source-change invalidation, qualification-driven milestone closure, and reverse dependency invalidation live in the host-independent Ace runtime. The installer bundles its public barrel into the single discovered `plugins/ace.ts` file, so installed paths and OpenCode discovery remain unchanged. Tool schemas, storage, lifecycle events, continuation, and the remaining transitions stay in the adapter.
+
+The portable routing contract chooses `normal`, `ace-single`, `ace-portfolio`, or `bound-first` before state starts. The current adapter persists a route and frozen scope snapshot through the mission objective or constraints. Portfolio children use criterion-linked milestones, so changing the child list requires an audited `ace_revise` decision instead of a separate storage schema.
+
 ## Install
 
 This installation is an alternative to installing the core skill through the `skills` CLI. It requires Bun and includes the Ace skill, command, and plugin.
@@ -111,7 +115,7 @@ The adapter validates evidence structure and source identity. It cannot establis
 
 | Operation | Requirement |
 | --- | --- |
-| `ace_revise` | Record the actual user decision, reason, and approver for a contract change. Invalidate affected proof and exceptions. |
+| `ace_revise` | Record the actual user decision, reason, and approver for a contract change. Invalidate affected proof, exceptions, milestones, and their reverse dependents while preserving unrelated closed milestones. |
 | `ace_accept_exception` | Record the criterion, exact limitation, user decision, approver, and decision timestamp. |
 | `ace_complete` | Every criterion has fresh passing proof and all milestones are complete. |
 | `ace_close_with_qualifications` | Each criterion is proven or has a current, explicit user-accepted qualification. Preserve accepted limitations in the final state. |

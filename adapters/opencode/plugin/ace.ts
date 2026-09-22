@@ -5,193 +5,30 @@ import { homedir } from "node:os"
 import { isAbsolute, join, relative, sep } from "node:path"
 import { promisify } from "node:util"
 import { type Plugin, tool } from "@opencode-ai/plugin"
-
-type AceMode = "deliver" | "learn" | "explore" | "decide"
-type AceStatus =
-  | "active"
-  | "paused"
-  | "blocked"
-  | "limit-reached"
-  | "completed"
-  | "cancelled"
-type CriterionState =
-  | "pending"
-  | "active"
-  | "satisfied"
-  | "verification-stale"
-  | "blocked"
-  | "external"
-  | "baseline-qualified"
-  | "accepted-exception"
-type MilestoneState = "pending" | "active" | "closed"
-type SourceIdentity = {
-  kind: "git" | "manual"
-  value: string
-  freshnessPolicy: string
-  head?: string | undefined
-}
-type UserDecision = {
-  decisionReference: string
-  approver: string
-  decidedAt: string
-}
-type Criterion = {
-  id: string
-  text: string
-  state: CriterionState
-  evidenceIDs: string[]
-  verifiedSourceIdentity?: string | undefined
-  verifiedAt?: string | undefined
-  reason?: string | undefined
-  exception?:
-    | (UserDecision & {
-        limitation: string
-        sourceIdentity: string
-        criterionText: string
-      })
-    | undefined
-}
-type Evidence = {
-  id: string
-  criterionIDs: string[]
-  method: string
-  result: string
-  summary: string
-  sourceIdentity: string
-  recordedAt: string
-  supersedes: string[]
-  invalidatedAt?: string | undefined
-}
-type Audit = {
-  id: string
-  type: string
-  recordedAt: string
-  summary: string
-  decision?: UserDecision | undefined
-}
-type Milestone = {
-  id: string
-  outcome: string
-  criterionIDs: string[]
-  fileScope: string[]
-  verification: string
-  dependsOn: string[]
-  reviewUnit: string
-  branchName: string
-  authorizationState: string
-  state: MilestoneState
-  verifiedAt?: string | undefined
-}
-type Window = {
-  id: string
-  startedAt: string
-  endedAt?: string | undefined
-  elapsedMilliseconds: number
-  maxMinutes: number
-  maxContinuations: number
-  automaticContinuations: number
-  warningIssued: boolean
-  resumeDecision?: UserDecision | undefined
-}
-type State = {
-  version: 2
-  projectID: string
-  sessionID: string
-  mode: AceMode
-  objective: string
-  constraints: string[]
-  verificationPlan: string[]
-  criteria: Criterion[]
-  retiredCriteria: Criterion[]
-  milestones: Milestone[]
-  deliveryPlanRequired: boolean
-  source: SourceIdentity
-  status: AceStatus
-  executionWindows: Window[]
-  lifetimeTimingComplete: boolean
-  automaticContinuationCount: number
-  iterationCount: number
-  lastProgressSourceIdentity?: string | undefined
-  userResumptionCount: number
-  stallCount: number
-  maxStalls: number
-  revision: number
-  currentEvidence: Evidence[]
-  evidenceHistory: Evidence[]
-  audit: Audit[]
-  lastHandledMessageID?: string | undefined
-  suppressNextContinuation?: boolean | undefined
-  latestSummary?: string | undefined
-  nextAction?: string | undefined
-  stopReason?: string | undefined
-  finalVerification?: string | undefined
-  closeQualification?: UserDecision | undefined
-  createdAt: string
-  updatedAt: string
-}
-type CurrentState = {
-  version: 2
-  view: "current"
-  history: {
-    full: "Use ace_status with detail=full."
-    audit: "Use ace_status with detail=audit."
-  }
-  projectID: string
-  sessionID: string
-  mode: AceMode
-  objective: string
-  constraints: string[]
-  verificationPlan: string[]
-  criteria: Criterion[]
-  milestones: Milestone[]
-  deliveryPlanRequired: boolean
-  source: SourceIdentity
-  status: AceStatus
-  blocker: string
-  currentExecutionWindow: Window & { measuredElapsedMilliseconds: number }
-  lifetime: {
-    knownElapsedMilliseconds: number
-    timingComplete: boolean
-    executionWindowCount: number
-    automaticContinuationCount: number
-    iterationCount: number
-    userResumptionCount: number
-    stallCount: number
-    maxStalls: number
-  }
-  currentEvidence: Evidence[]
-  revision: number
-  lastProgressSourceIdentity?: string | undefined
-  latestSummary?: string | undefined
-  nextAction?: string | undefined
-  stopReason?: string | undefined
-  finalVerification?: string | undefined
-  closeQualification?: UserDecision | undefined
-  createdAt: string
-  updatedAt: string
-}
+import {
+  ACE_CRITERION_STATES as CRITERION_STATES,
+  ACE_MODES as MODES,
+  completionIssue,
+  closeQualifiedMilestones,
+  criterionHasCurrentProof,
+  currentAceState,
+  invalidateForSourceChange,
+  invalidateMilestoneDependents,
+  parseAceState,
+  parseSourceIdentity,
+  recordEvidence,
+  validateMilestoneDependencies,
+  type AceMode,
+  type AceState as State,
+  type Criterion,
+  type CriterionState,
+  type ExecutionWindow as Window,
+  type Milestone,
+  type SourceIdentity,
+  type UserDecision,
+} from "../../../skills/ace/runtime/index.ts"
 
 const execFile = promisify(execFileCallback)
-const MODES: AceMode[] = ["deliver", "learn", "explore", "decide"]
-const STATUSES: AceStatus[] = [
-  "active",
-  "paused",
-  "blocked",
-  "limit-reached",
-  "completed",
-  "cancelled",
-]
-const CRITERION_STATES: CriterionState[] = [
-  "pending",
-  "active",
-  "satisfied",
-  "verification-stale",
-  "blocked",
-  "external",
-  "baseline-qualified",
-  "accepted-exception",
-]
-const MILESTONE_STATES: MilestoneState[] = ["pending", "active", "closed"]
 const DEFAULT_MAX_CONTINUATIONS = 20
 const DEFAULT_MAX_MINUTES = 60
 const DEFAULT_MAX_STALLS = 3
@@ -230,9 +67,6 @@ function isMissing(error: unknown): boolean {
 function isRecord(value: unknown): value is Record<string, unknown> {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value)
 }
-function invalid(path: string, field: string, expected: string): never {
-  throw new Error(`Invalid Ace state at ${path}: field ${field} ${expected}`)
-}
 function id(prefix: string, number: number): string {
   return `${prefix}${number}`
 }
@@ -244,554 +78,6 @@ function required(value: string, field: string): string {
 function requiredArray(values: string[], field: string): string[] {
   return values.map((value, index) => required(value, `${field}[${index}]`))
 }
-function enumValue<T extends string>(
-  state: Record<string, unknown>,
-  field: string,
-  path: string,
-  values: readonly T[],
-): T {
-  const value = state[field]
-  const found = values.find((candidate) => candidate === value)
-  if (!found) invalid(path, field, `must be one of ${values.join(", ")}`)
-  return found
-}
-function stringValue(
-  state: Record<string, unknown>,
-  field: string,
-  path: string,
-): string {
-  const value = state[field]
-  if (typeof value !== "string" || !value)
-    invalid(path, field, "must be a non-empty string")
-  return value
-}
-function optionalString(
-  state: Record<string, unknown>,
-  field: string,
-  path: string,
-): string | undefined {
-  if (state[field] === undefined) return undefined
-  const value = state[field]
-  if (typeof value !== "string") invalid(path, field, "must be a string")
-  return value
-}
-function timestamp(
-  state: Record<string, unknown>,
-  field: string,
-  path: string,
-): string {
-  const value = stringValue(state, field, path)
-  if (!Number.isFinite(Date.parse(value)))
-    invalid(path, field, "must be a valid timestamp")
-  return value
-}
-function integer(
-  state: Record<string, unknown>,
-  field: string,
-  path: string,
-  minimum: number,
-): number {
-  const value = state[field]
-  if (typeof value !== "number" || !Number.isInteger(value) || value < minimum)
-    invalid(
-      path,
-      field,
-      `must be an integer greater than or equal to ${minimum}`,
-    )
-  return value
-}
-function bool(
-  state: Record<string, unknown>,
-  field: string,
-  path: string,
-): boolean {
-  if (typeof state[field] !== "boolean")
-    invalid(path, field, "must be a boolean")
-  return state[field]
-}
-function stringArray(
-  state: Record<string, unknown>,
-  field: string,
-  path: string,
-  empty = true,
-): string[] {
-  const value = state[field]
-  if (!Array.isArray(value)) invalid(path, field, "must be an array")
-  if (!empty && !value.length)
-    invalid(path, field, "must contain at least one item")
-  return value.map((item, index) => {
-    if (typeof item !== "string" || !item)
-      invalid(path, `${field}[${index}]`, "must be a non-empty string")
-    return item
-  })
-}
-function records(
-  state: Record<string, unknown>,
-  field: string,
-  path: string,
-): Record<string, unknown>[] {
-  const value = state[field]
-  if (!Array.isArray(value)) invalid(path, field, "must be an array")
-  return value.map((item, index) => {
-    if (!isRecord(item))
-      invalid(path, `${field}[${index}]`, "must be an object")
-    return item
-  })
-}
-function decision(value: unknown, path: string, field: string): UserDecision {
-  if (!isRecord(value)) invalid(path, field, "must be an object")
-  return {
-    decisionReference: stringValue(value, "decisionReference", path),
-    approver: stringValue(value, "approver", path),
-    decidedAt: timestamp(value, "decidedAt", path),
-  }
-}
-function source(value: unknown, path: string): SourceIdentity {
-  if (!isRecord(value)) invalid(path, "source", "must be an object")
-  const output: SourceIdentity = {
-    kind: enumValue(value, "kind", path, ["git", "manual"] as const),
-    value: stringValue(value, "value", path),
-    freshnessPolicy: stringValue(value, "freshnessPolicy", path),
-  }
-  const head = optionalString(value, "head", path)
-  if (head) output.head = head
-  return output
-}
-function criterion(value: Record<string, unknown>, path: string): Criterion {
-  const output: Criterion = {
-    id: stringValue(value, "id", path),
-    text: stringValue(value, "text", path),
-    state: enumValue(value, "state", path, CRITERION_STATES),
-    evidenceIDs: stringArray(value, "evidenceIDs", path),
-  }
-  const verifiedSourceIdentity = optionalString(
-    value,
-    "verifiedSourceIdentity",
-    path,
-  )
-  const verifiedAt =
-    value.verifiedAt === undefined
-      ? undefined
-      : timestamp(value, "verifiedAt", path)
-  const reason = optionalString(value, "reason", path)
-  if (verifiedSourceIdentity)
-    output.verifiedSourceIdentity = verifiedSourceIdentity
-  if (verifiedAt) output.verifiedAt = verifiedAt
-  if (reason) output.reason = reason
-  if (value.exception !== undefined) {
-    if (!isRecord(value.exception))
-      invalid(path, "exception", "must be an object")
-    output.exception = {
-      ...decision(value.exception, path, "exception"),
-      limitation: stringValue(value.exception, "limitation", path),
-      sourceIdentity: stringValue(value.exception, "sourceIdentity", path),
-      criterionText: stringValue(value.exception, "criterionText", path),
-    }
-  }
-  return output
-}
-function evidence(
-  value: Record<string, unknown>,
-  path: string,
-  allowUnmapped = false,
-): Evidence {
-  return {
-    id: stringValue(value, "id", path),
-    criterionIDs: stringArray(value, "criterionIDs", path, allowUnmapped),
-    method: stringValue(value, "method", path),
-    result: stringValue(value, "result", path),
-    summary: stringValue(value, "summary", path),
-    sourceIdentity: stringValue(value, "sourceIdentity", path),
-    recordedAt: timestamp(value, "recordedAt", path),
-    supersedes: stringArray(value, "supersedes", path),
-    invalidatedAt:
-      value.invalidatedAt === undefined
-        ? undefined
-        : timestamp(value, "invalidatedAt", path),
-  }
-}
-function milestone(value: Record<string, unknown>, path: string): Milestone {
-  const output: Milestone = {
-    id: stringValue(value, "id", path),
-    outcome: stringValue(value, "outcome", path),
-    criterionIDs: stringArray(value, "criterionIDs", path, false),
-    fileScope: stringArray(value, "fileScope", path, false),
-    verification: stringValue(value, "verification", path),
-    dependsOn: stringArray(value, "dependsOn", path),
-    reviewUnit: stringValue(value, "reviewUnit", path),
-    branchName: stringValue(value, "branchName", path),
-    authorizationState: stringValue(value, "authorizationState", path),
-    state: enumValue(value, "state", path, MILESTONE_STATES),
-  }
-  if (value.verifiedAt !== undefined)
-    output.verifiedAt = timestamp(value, "verifiedAt", path)
-  return output
-}
-function window(value: Record<string, unknown>, path: string): Window {
-  const output: Window = {
-    id: stringValue(value, "id", path),
-    startedAt: timestamp(value, "startedAt", path),
-    elapsedMilliseconds: integer(value, "elapsedMilliseconds", path, 0),
-    maxMinutes: integer(value, "maxMinutes", path, 1),
-    maxContinuations: integer(value, "maxContinuations", path, 1),
-    automaticContinuations: integer(value, "automaticContinuations", path, 0),
-    warningIssued: bool(value, "warningIssued", path),
-  }
-  if (value.endedAt !== undefined)
-    output.endedAt = timestamp(value, "endedAt", path)
-  if (value.resumeDecision !== undefined)
-    output.resumeDecision = decision(
-      value.resumeDecision,
-      path,
-      "resumeDecision",
-    )
-  return output
-}
-
-function validateExecutionWindows(
-  windows: Window[],
-  status: AceStatus,
-  path: string,
-): void {
-  const ids = new Set(windows.map((item) => item.id))
-  if (ids.size !== windows.length)
-    invalid(path, "executionWindows", "must have unique IDs")
-  for (const [index, item] of windows.entries()) {
-    const startedAt = Date.parse(item.startedAt)
-    const endedAt = item.endedAt ? Date.parse(item.endedAt) : undefined
-    if (endedAt !== undefined && endedAt < startedAt)
-      invalid(
-        path,
-        "executionWindows",
-        `window ${item.id} ends before it starts`,
-      )
-    if (index < windows.length - 1 && endedAt === undefined)
-      invalid(
-        path,
-        "executionWindows",
-        `prior window ${item.id} must be closed`,
-      )
-    const prior = windows[index - 1]
-    if (
-      prior?.endedAt !== undefined &&
-      startedAt < Date.parse(prior.endedAt)
-    )
-      invalid(
-        path,
-        "executionWindows",
-        `window ${item.id} starts before prior window ${prior.id} ends`,
-      )
-  }
-  const last = windows[windows.length - 1]!
-  if (status === "active" && last.endedAt !== undefined)
-    invalid(path, "executionWindows", "last window must be open when active")
-  if (status !== "active" && last.endedAt === undefined)
-    invalid(
-      path,
-      "executionWindows",
-      `last window must be closed when status is ${status}`,
-    )
-}
-
-function validateMilestoneDependencies(
-  milestones: Milestone[],
-  path: string,
-): void {
-  const byID = new Map(milestones.map((item) => [item.id, item]))
-  const visiting = new Set<string>()
-  const visited = new Set<string>()
-
-  const visit = (milestoneID: string): void => {
-    if (visiting.has(milestoneID))
-      invalid(
-        path,
-        "milestones",
-        `contains a dependency cycle at ${milestoneID}`,
-      )
-    if (visited.has(milestoneID)) return
-    visiting.add(milestoneID)
-    const item = byID.get(milestoneID)
-    if (!item)
-      invalid(path, "milestones", `references unknown milestone ${milestoneID}`)
-    for (const dependency of item.dependsOn) visit(dependency)
-    visiting.delete(milestoneID)
-    visited.add(milestoneID)
-  }
-
-  for (const item of milestones) visit(item.id)
-}
-
-function migrateV1(
-  value: Record<string, unknown>,
-  path: string,
-  projectID: string,
-  sessionID: string,
-  currentSource: SourceIdentity,
-): State {
-  if (integer(value, "version", path, 1) !== 1)
-    invalid(path, "version", "must be 1")
-  if (stringValue(value, "projectID", path) !== projectID)
-    invalid(path, "projectID", `must match ${JSON.stringify(projectID)}`)
-  if (stringValue(value, "sessionID", path) !== sessionID)
-    invalid(path, "sessionID", `must match ${JSON.stringify(sessionID)}`)
-  const oldEvidence = records(value, "evidence", path).map((entry) => ({
-    note: stringValue(entry, "note", path),
-    recordedAt: timestamp(entry, "recordedAt", path),
-  }))
-  const status = enumValue(value, "status", path, STATUSES)
-  const updatedAt = timestamp(value, "updatedAt", path)
-  const startedAt = timestamp(value, "budgetStartedAt", path)
-  const time = now()
-  const activeMigration = status === "active"
-  return {
-    version: 2,
-    projectID,
-    sessionID,
-    mode: enumValue(value, "mode", path, MODES),
-    objective: stringValue(value, "objective", path),
-    constraints: stringArray(value, "constraints", path),
-    verificationPlan: stringArray(value, "verificationPlan", path, false),
-    criteria: stringArray(value, "acceptanceCriteria", path, false).map(
-      (text, index) => ({
-        id: id("C", index + 1),
-        text,
-        state: "pending",
-        evidenceIDs: [],
-      }),
-    ),
-    retiredCriteria: [],
-    milestones: [],
-    deliveryPlanRequired: false,
-    source: currentSource,
-    status: status === "completed" ? "paused" : status,
-    executionWindows: [
-      {
-        id: "W1",
-        startedAt: activeMigration ? updatedAt : startedAt,
-        ...(status === "active" ? {} : { endedAt: updatedAt }),
-        elapsedMilliseconds: Math.max(
-          0,
-          Date.parse(updatedAt) - Date.parse(startedAt),
-        ),
-        maxMinutes: integer(value, "maxMinutes", path, 1),
-        maxContinuations: integer(value, "maxContinuations", path, 1),
-        automaticContinuations: integer(value, "continuationCount", path, 0),
-        warningIssued: false,
-      },
-    ],
-    lifetimeTimingComplete: false,
-    automaticContinuationCount: integer(value, "continuationCount", path, 0),
-    iterationCount: 0,
-    userResumptionCount: 0,
-    stallCount: integer(value, "stallCount", path, 0),
-    maxStalls: integer(value, "maxStalls", path, 1),
-    revision: integer(value, "revision", path, 1) + 1,
-    currentEvidence: [],
-    evidenceHistory: oldEvidence.map((entry, index) => ({
-      id: id("L", index + 1),
-      criterionIDs: [],
-      method: "legacy-unstructured",
-      result: "unverified",
-      summary: entry.note,
-      sourceIdentity: "legacy-unverified",
-      recordedAt: entry.recordedAt,
-      supersedes: [],
-    })),
-    audit: [
-      {
-        id: "A1",
-        type: "migration",
-        recordedAt: time,
-        summary:
-          "Migrated version-1 state. Legacy evidence is audit-only, and lifetime timing is incomplete because older execution windows were not retained.",
-      },
-    ],
-    lastHandledMessageID: optionalString(value, "lastHandledMessageID", path),
-    suppressNextContinuation:
-      value.suppressNextContinuation === undefined
-        ? undefined
-        : bool(value, "suppressNextContinuation", path),
-    latestSummary: optionalString(value, "latestSummary", path),
-    nextAction: optionalString(value, "nextAction", path),
-    stopReason:
-      optionalString(value, "stopReason", path) ??
-      (status === "completed"
-        ? "Version-1 completion requires structured proof before closing."
-        : undefined),
-    finalVerification: optionalString(value, "finalVerification", path),
-    createdAt: timestamp(value, "createdAt", path),
-    updatedAt: time,
-  }
-}
-function parseState(
-  content: string,
-  path: string,
-  projectID: string,
-  sessionID: string,
-  currentSource: SourceIdentity,
-): State {
-  let value: unknown
-  try {
-    value = JSON.parse(content)
-  } catch (error) {
-    invalid(
-      path,
-      "JSON",
-      `could not be parsed: ${error instanceof Error ? error.message : String(error)}`,
-    )
-  }
-  if (!isRecord(value)) invalid(path, "root", "must be an object")
-  if (value.version === 1)
-    return migrateV1(value, path, projectID, sessionID, currentSource)
-  if (value.version !== 2) invalid(path, "version", "must be 2")
-  if (stringValue(value, "projectID", path) !== projectID)
-    invalid(path, "projectID", `must match ${JSON.stringify(projectID)}`)
-  if (stringValue(value, "sessionID", path) !== sessionID)
-    invalid(path, "sessionID", `must match ${JSON.stringify(sessionID)}`)
-  const criteria = records(value, "criteria", path).map((entry) =>
-    criterion(entry, path),
-  )
-  const retiredCriteria =
-    value.retiredCriteria === undefined
-      ? []
-      : records(value, "retiredCriteria", path).map((entry) =>
-          criterion(entry, path),
-        )
-  const criteriaIDs = new Set(criteria.map((item) => item.id))
-  const allCriteriaIDs = new Set(
-    [...criteria, ...retiredCriteria].map((item) => item.id),
-  )
-  if (
-    criteriaIDs.size !== criteria.length ||
-    allCriteriaIDs.size !== criteria.length + retiredCriteria.length
-  )
-    invalid(path, "criteria", "must have unique IDs")
-  const milestones = records(value, "milestones", path).map((entry) =>
-    milestone(entry, path),
-  )
-  const milestoneIDs = new Set(milestones.map((item) => item.id))
-  if (milestoneIDs.size !== milestones.length)
-    invalid(path, "milestones", "must have unique IDs")
-  for (const item of milestones) {
-    for (const criterionID of item.criterionIDs)
-      if (!criteriaIDs.has(criterionID))
-        invalid(
-          path,
-          "milestones",
-          `references unknown criterion ${criterionID}`,
-        )
-    for (const dependency of item.dependsOn)
-      if (!milestoneIDs.has(dependency) || dependency === item.id)
-        invalid(path, "milestones", `has invalid dependency ${dependency}`)
-  }
-  validateMilestoneDependencies(milestones, path)
-  const currentEvidence = records(value, "currentEvidence", path).map((entry) =>
-    evidence(entry, path),
-  )
-  const evidenceHistory = records(value, "evidenceHistory", path).map((entry) =>
-    evidence(entry, path, true),
-  )
-  for (const item of [...currentEvidence, ...evidenceHistory])
-    for (const criterionID of item.criterionIDs)
-      if (!allCriteriaIDs.has(criterionID))
-        invalid(path, "evidence", `references unknown criterion ${criterionID}`)
-  const currentEvidenceIDs = new Set(currentEvidence.map((item) => item.id))
-  if (currentEvidenceIDs.size !== currentEvidence.length)
-    invalid(path, "currentEvidence", "must have unique IDs")
-  for (const item of criteria)
-    for (const evidenceID of item.evidenceIDs)
-      if (!currentEvidenceIDs.has(evidenceID))
-        invalid(
-          path,
-          "criteria",
-          `references missing current evidence ${evidenceID}`,
-        )
-  const audit = records(value, "audit", path).map((entry, index) => ({
-    id: stringValue(entry, "id", path),
-    type: stringValue(entry, "type", path),
-    recordedAt: timestamp(entry, "recordedAt", path),
-    summary: stringValue(entry, "summary", path),
-    ...(entry.decision === undefined
-      ? {}
-      : {
-          decision: decision(entry.decision, path, `audit[${index}].decision`),
-        }),
-  }))
-  const executionWindows = records(value, "executionWindows", path).map(
-    (entry) => window(entry, path),
-  )
-  if (!executionWindows.length)
-    invalid(path, "executionWindows", "must contain at least one item")
-  const status = enumValue(value, "status", path, STATUSES)
-  validateExecutionWindows(executionWindows, status, path)
-  const output: State = {
-    version: 2,
-    projectID,
-    sessionID,
-    mode: enumValue(value, "mode", path, MODES),
-    objective: stringValue(value, "objective", path),
-    constraints: stringArray(value, "constraints", path),
-    verificationPlan: stringArray(value, "verificationPlan", path, false),
-    criteria,
-    retiredCriteria,
-    milestones,
-    deliveryPlanRequired: bool(value, "deliveryPlanRequired", path),
-    source: source(value.source, path),
-    status,
-    executionWindows,
-    lifetimeTimingComplete:
-      value.lifetimeTimingComplete === undefined
-        ? true
-        : bool(value, "lifetimeTimingComplete", path),
-    automaticContinuationCount: integer(
-      value,
-      "automaticContinuationCount",
-      path,
-      0,
-    ),
-    iterationCount: integer(value, "iterationCount", path, 0),
-    userResumptionCount: integer(value, "userResumptionCount", path, 0),
-    stallCount: integer(value, "stallCount", path, 0),
-    maxStalls: integer(value, "maxStalls", path, 1),
-    revision: integer(value, "revision", path, 1),
-    currentEvidence,
-    evidenceHistory,
-    audit,
-    createdAt: timestamp(value, "createdAt", path),
-    updatedAt: timestamp(value, "updatedAt", path),
-  }
-  for (const key of [
-    "lastHandledMessageID",
-    "latestSummary",
-    "nextAction",
-    "stopReason",
-    "finalVerification",
-    "lastProgressSourceIdentity",
-  ] as const) {
-    const item = optionalString(value, key, path)
-    if (item !== undefined) output[key] = item
-  }
-  if (value.suppressNextContinuation !== undefined)
-    output.suppressNextContinuation = bool(
-      value,
-      "suppressNextContinuation",
-      path,
-    )
-  if (value.closeQualification !== undefined)
-    output.closeQualification = decision(
-      value.closeQualification,
-      path,
-      "closeQualification",
-    )
-  if (output.deliveryPlanRequired && !output.milestones.length)
-    invalid(
-      path,
-      "milestones",
-      "must be present when deliveryPlanRequired is true",
-    )
-  return output
-}
-
 async function gitSource(
   directory: string,
 ): Promise<SourceIdentity | undefined> {
@@ -924,43 +210,6 @@ function audit(
     ],
   }
 }
-function stale(state: State, nextSource: SourceIdentity): State {
-  if (state.status === "completed" || state.status === "cancelled") return state
-  const criteria = state.criteria.map((item) => {
-    const hasSourceBoundClaim =
-      item.evidenceIDs.length > 0 || item.exception !== undefined
-    return !hasSourceBoundClaim
-      ? item
-      : {
-          ...item,
-          state: "verification-stale" as const,
-          reason:
-            "Source identity changed; proof and exceptions require fresh verification or explicit reconfirmation.",
-        }
-  })
-  const staleCriteria = new Set(
-    criteria
-      .filter((item) => item.state === "verification-stale")
-      .map((item) => item.id),
-  )
-  const milestones = state.milestones.map((item) =>
-    item.criterionIDs.some((criterionID) => staleCriteria.has(criterionID))
-      ? { ...item, state: "pending" as const, verifiedAt: undefined }
-      : item,
-  )
-  return audit(
-    {
-      ...state,
-      source: nextSource,
-      criteria,
-      milestones,
-      revision: state.revision + 1,
-      updatedAt: now(),
-    },
-    "source-changed",
-    "Source identity changed. Current criterion proof requiring that source is stale.",
-  )
-}
 function enforce(state: State): State {
   if (state.status !== "active") return state
   const current = activeWindow(state)
@@ -1020,15 +269,23 @@ async function load(
     raw = undefined
   }
   const persistedSource =
-    isRecord(raw) && raw.version === 2 ? source(raw.source, path) : undefined
+    isRecord(raw) && raw.version === 2
+      ? parseSourceIdentity(raw.source, path)
+      : undefined
   const sourceIdentity = await captureSource(
     directory,
     manual ??
       (persistedSource?.kind === "manual" ? persistedSource : undefined),
   )
-  const state = parseState(content, path, projectID, sessionID, sourceIdentity)
+  const state = parseAceState(content, {
+    path,
+    projectID,
+    sessionID,
+    currentSource: sourceIdentity,
+    recordedAt: now(),
+  })
   return !sameSource(state.source, sourceIdentity)
-    ? stale(state, sourceIdentity)
+    ? invalidateForSourceChange(state, sourceIdentity, now())
     : state
 }
 async function write(state: State): Promise<void> {
@@ -1123,53 +380,6 @@ function blockerSummary(state: State): string {
   if (!blocked.length) return state.stopReason ?? "none"
   const first = blocked[0]!
   return `${blocked.length} criterion blocker(s); first ${short(first.id, 80)}: ${short(first.reason ?? first.state, 180)}`
-}
-function currentState(state: State): CurrentState {
-  const window = activeWindow(state)
-  return {
-    version: state.version,
-    view: "current",
-    history: {
-      full: "Use ace_status with detail=full.",
-      audit: "Use ace_status with detail=audit.",
-    },
-    projectID: state.projectID,
-    sessionID: state.sessionID,
-    mode: state.mode,
-    objective: state.objective,
-    constraints: state.constraints,
-    verificationPlan: state.verificationPlan,
-    criteria: state.criteria,
-    milestones: state.milestones,
-    deliveryPlanRequired: state.deliveryPlanRequired,
-    source: state.source,
-    status: state.status,
-    blocker: blockerSummary(state),
-    currentExecutionWindow: {
-      ...window,
-      measuredElapsedMilliseconds: elapsed(window),
-    },
-    lifetime: {
-      knownElapsedMilliseconds: lifetime(state),
-      timingComplete: state.lifetimeTimingComplete,
-      executionWindowCount: state.executionWindows.length,
-      automaticContinuationCount: state.automaticContinuationCount,
-      iterationCount: state.iterationCount,
-      userResumptionCount: state.userResumptionCount,
-      stallCount: state.stallCount,
-      maxStalls: state.maxStalls,
-    },
-    currentEvidence: state.currentEvidence,
-    revision: state.revision,
-    lastProgressSourceIdentity: state.lastProgressSourceIdentity,
-    latestSummary: state.latestSummary,
-    nextAction: state.nextAction,
-    stopReason: state.stopReason,
-    finalVerification: state.finalVerification,
-    closeQualification: state.closeQualification,
-    createdAt: state.createdAt,
-    updatedAt: state.updatedAt,
-  }
 }
 function summary(state: State): string {
   const window = activeWindow(state)
@@ -1318,193 +528,14 @@ function manualUpdate(state: State, sourceIdentity: string | undefined): State {
     !sourceIdentity ||
     sourceIdentity === state.source.value
     ? state
-    : stale(state, {
-        ...state.source,
-        value: required(sourceIdentity, "sourceIdentity"),
-      })
-}
-function recordEvidence(
-  state: State,
-  input: {
-    criterionIDs: string[]
-    method: string
-    result: string
-    summary: string
-  },
-): State {
-  const criterionIDs = [
-    ...new Set(requiredArray(input.criterionIDs, "evidence.criterionIDs")),
-  ].sort()
-  const valid = new Set(state.criteria.map((item) => item.id))
-  for (const criterionID of criterionIDs)
-    if (!valid.has(criterionID))
-      throw new Error(
-        `Ace evidence references unknown criterion ${criterionID}`,
+    : invalidateForSourceChange(
+        state,
+        {
+          ...state.source,
+          value: required(sourceIdentity, "sourceIdentity"),
+        },
+        now(),
       )
-  const method = required(input.method, "evidence.method")
-  const result = required(input.result, "evidence.result")
-  const evidenceSummary = required(input.summary, "evidence.summary")
-  let output = state
-  for (const criterionID of criterionIDs) {
-    const prior = output.currentEvidence.find(
-      (item) =>
-        item.method === method &&
-        item.criterionIDs.length === 1 &&
-        item.criterionIDs[0] === criterionID,
-    )
-    if (
-      prior?.result === result &&
-      prior.summary === evidenceSummary &&
-      prior.sourceIdentity === output.source.value &&
-      !prior.invalidatedAt
-    )
-      continue
-    const sequence = [...output.currentEvidence, ...output.evidenceHistory]
-      .map((item) => /^E(\d+)$/.exec(item.id)?.[1])
-      .filter((item): item is string => item !== undefined)
-      .reduce((maximum, item) => Math.max(maximum, Number(item)), 0)
-    const entry: Evidence = {
-      id: id("E", sequence + 1),
-      criterionIDs: [criterionID],
-      method,
-      result,
-      summary: evidenceSummary,
-      sourceIdentity: output.source.value,
-      recordedAt: now(),
-      supersedes: prior ? [prior.id] : [],
-    }
-    const currentEvidence = [
-      ...output.currentEvidence.filter((item) => item !== prior),
-      entry,
-    ]
-    const currentForCriterion = currentEvidence.filter((item) =>
-      item.criterionIDs.includes(criterionID),
-    )
-    const allPassed = currentForCriterion.every(
-      (item) =>
-        item.result === "passed" &&
-        item.sourceIdentity === output.source.value &&
-        !item.invalidatedAt,
-    )
-    const criterion = output.criteria.find((item) => item.id === criterionID)!
-    const nextState: CriterionState = allPassed
-      ? "satisfied"
-      : criterion.exception?.sourceIdentity === output.source.value &&
-          criterion.exception.criterionText === criterion.text
-        ? "accepted-exception"
-        : "active"
-    const criteria = output.criteria.map((item) =>
-      item.id === criterionID
-        ? {
-            ...item,
-            state: nextState,
-            evidenceIDs: currentForCriterion.map((evidence) => evidence.id),
-            verifiedSourceIdentity: entry.sourceIdentity,
-            verifiedAt: entry.recordedAt,
-            reason: allPassed ? undefined : evidenceSummary,
-          }
-        : item,
-    )
-    output = {
-      ...output,
-      criteria,
-      currentEvidence,
-      evidenceHistory: prior
-        ? [...output.evidenceHistory, prior]
-        : output.evidenceHistory,
-      revision: output.revision + 1,
-      updatedAt: now(),
-    }
-  }
-  if (output === state) return state
-  return audit(
-    output,
-    "evidence-recorded",
-    `Current evidence recorded for ${criterionIDs.join(", ")} using ${method}.`,
-  )
-}
-function criterionHasCurrentProof(state: State, item: Criterion): boolean {
-  if (item.state !== "satisfied" || item.evidenceIDs.length === 0) return false
-  const current = new Map(
-    state.currentEvidence.map((entry) => [entry.id, entry]),
-  )
-  return item.evidenceIDs.every((evidenceID) => {
-    const entry = current.get(evidenceID)
-    return (
-      entry?.result === "passed" &&
-      entry.sourceIdentity === state.source.value &&
-      !entry.invalidatedAt &&
-      entry.criterionIDs.includes(item.id)
-    )
-  })
-}
-function criterionHasCurrentException(state: State, item: Criterion): boolean {
-  return (
-    item.state === "accepted-exception" &&
-    item.exception?.sourceIdentity === state.source.value &&
-    item.exception.criterionText === item.text
-  )
-}
-function closeQualifiedMilestones(state: State): State {
-  let milestones = state.milestones
-  let changed = true
-  while (changed) {
-    changed = false
-    milestones = milestones.map((item) => {
-      if (item.state === "closed") return item
-      const dependenciesClosed = item.dependsOn.every(
-        (dependency) =>
-          milestones.find((candidate) => candidate.id === dependency)?.state ===
-          "closed",
-      )
-      const criteriaAccepted = item.criterionIDs.every((criterionID) => {
-        const criterion = state.criteria.find(
-          (candidate) => candidate.id === criterionID,
-        )
-        return (
-          criterion !== undefined &&
-          (criterionHasCurrentProof(state, criterion) ||
-            criterionHasCurrentException(state, criterion))
-        )
-      })
-      if (!dependenciesClosed || !criteriaAccepted) return item
-      changed = true
-      return { ...item, state: "closed" as const, verifiedAt: now() }
-    })
-  }
-  return milestones === state.milestones ? state : { ...state, milestones }
-}
-function completionIssue(state: State, qualified: boolean): string | undefined {
-  for (const item of state.criteria) {
-    const proof = criterionHasCurrentProof(state, item)
-    const exception = qualified && criterionHasCurrentException(state, item)
-    if (!proof && !exception)
-      return `Criterion ${item.id} is ${item.state} and lacks current proof${qualified ? " or an explicit current exception" : ""}`
-  }
-  const milestone = state.milestones.find((item) => {
-    if (item.state !== "closed" || !item.verifiedAt) return true
-    if (
-      item.dependsOn.some(
-        (dependency) =>
-          state.milestones.find((candidate) => candidate.id === dependency)
-            ?.state !== "closed",
-      )
-    )
-      return true
-    return item.criterionIDs.some((criterionID) => {
-      const criterion = state.criteria.find(
-        (candidate) => candidate.id === criterionID,
-      )
-      return (
-        criterion === undefined ||
-        (!criterionHasCurrentProof(state, criterion) &&
-          !(qualified && criterionHasCurrentException(state, criterion)))
-      )
-    })
-  })
-  return milestone
-    ? `Milestone ${milestone.id} is not closed and verified`
-    : undefined
 }
 async function claim(
   projectID: string,
@@ -1572,7 +603,7 @@ async function claim(
   })
 }
 function prompt(state: State): string {
-  return `AUTOMATIC ACE CONTINUATION\n\nCurrent Ace state:\n${JSON.stringify(currentState(state), null, 2)}\n\nLoad and obey the ace skill. Continue only safe work toward an unmet criterion. Record structured evidence with ace_progress using the displayed source identity. Completion requires current proof; qualifications require explicit user approval. Retrieve complete persisted state with ace_status detail=full or audit history with ace_status detail=audit.`
+  return `AUTOMATIC ACE CONTINUATION\n\nCurrent Ace state:\n${JSON.stringify(currentAceState(state, Date.now()), null, 2)}\n\nLoad and obey the ace skill. Continue only safe work toward an unmet criterion. Record structured evidence with ace_progress using the displayed source identity. Completion requires current proof; qualifications require explicit user approval. Retrieve complete persisted state with ace_status detail=full or audit history with ace_status detail=audit.`
 }
 
 export const AcePlugin: Plugin = async ({ client, project, directory }) => ({
@@ -1715,7 +746,7 @@ export const AcePlugin: Plugin = async ({ client, project, directory }) => ({
     ).catch(() => undefined)
     if (state && state.status !== "cancelled")
       output.context.push(
-        `## Current persistent Ace contract\n${JSON.stringify(currentState(state), null, 2)}\n\nPreserve every constraint and authorization boundary. Retrieve complete persisted state with ace_status detail=full or audit history with ace_status detail=audit.`,
+        `## Current persistent Ace contract\n${JSON.stringify(currentAceState(state, Date.now()), null, 2)}\n\nPreserve every constraint and authorization boundary. Retrieve complete persisted state with ace_status detail=full or audit history with ace_status detail=audit.`,
       )
   },
   tool: {
@@ -1931,7 +962,7 @@ export const AcePlugin: Plugin = async ({ client, project, directory }) => ({
                 args.detail === "full"
                   ? JSON.stringify(updated, null, 2)
                   : args.detail === "current"
-                    ? JSON.stringify(currentState(updated), null, 2)
+                    ? JSON.stringify(currentAceState(updated, Date.now()), null, 2)
                   : args.detail === "audit"
                     ? JSON.stringify(
                         {
@@ -2018,7 +1049,7 @@ export const AcePlugin: Plugin = async ({ client, project, directory }) => ({
               )
             let updated = state
             for (const item of args.evidence ?? [])
-              updated = recordEvidence(updated, item)
+              updated = recordEvidence(updated, item, now())
             const known = new Set(updated.criteria.map((item) => item.id))
             for (const change of args.criterionStates ?? [])
               if (!known.has(change.id))
@@ -2405,16 +1436,9 @@ export const AcePlugin: Plugin = async ({ client, project, directory }) => ({
             )
             const milestones = args.milestones
               ? normalizeMilestones(args.milestones, criteria)
-              : state.milestones.map((item) =>
-                  item.criterionIDs.some((criterionID) =>
-                    invalidatedCriteria.has(criterionID),
-                  )
-                    ? {
-                        ...item,
-                        state: "pending" as const,
-                        verifiedAt: undefined,
-                      }
-                    : item,
+              : invalidateMilestoneDependents(
+                  state.milestones,
+                  invalidatedCriteria,
                 )
             const deliveryPlanRequired =
               args.deliveryPlanRequired ?? state.deliveryPlanRequired
@@ -2588,7 +1612,7 @@ export const AcePlugin: Plugin = async ({ client, project, directory }) => ({
               throw new Error(
                 `Qualified close requires a paused or limit-reached mission, not ${state.status}`,
               )
-            const closable = closeQualifiedMilestones(state)
+            const closable = closeQualifiedMilestones(state, now())
             const issue = completionIssue(closable, true)
             if (issue)
               throw new Error(
@@ -2675,17 +1699,17 @@ export const AcePlugin: Plugin = async ({ client, project, directory }) => ({
         return serialized(async () => {
           const path = stateFile(project.id, context.sessionID)
           try {
-            parseState(
-              await readFile(path, "utf8"),
+            parseAceState(await readFile(path, "utf8"), {
               path,
-              project.id,
-              context.sessionID,
-              {
+              projectID: project.id,
+              sessionID: context.sessionID,
+              currentSource: {
                 kind: "manual",
                 value: "clear-operation",
                 freshnessPolicy: "Clear validates identity only.",
               },
-            )
+              recordedAt: now(),
+            })
             await unlink(path)
             return "Ace state cleared for this session."
           } catch (error) {

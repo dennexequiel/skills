@@ -225,3 +225,29 @@ test("separates cohorts by harness, settings, model identities, fixture, and ski
   ]
   expect(summarizeEfficiency(records).cohorts).toHaveLength(records.length)
 })
+
+test("keeps the reviewed runtime cohort machine-verifiable", async () => {
+  const source: unknown = JSON.parse(await readFile(join(
+    import.meta.dir,
+    "../evals/ace/results/2026-09-22-runtime-architecture.json",
+  ), "utf8"))
+  expect(source).toMatchObject({
+    version: 1,
+    review: {
+      method: "Manual artifact, mission-record, and action-transcript review",
+      reviewedAt: "2026-09-22",
+    },
+  })
+  if (typeof source !== "object" || source === null || !("records" in source) || !Array.isArray(source.records))
+    throw new TypeError("Reviewed runtime evidence requires a records array")
+
+  const records = source.records.map(parseEfficiencyRecord)
+  expect(records).toHaveLength(8)
+  expect(records.every((item) => item.handoffReview === "passed")).toBe(true)
+  expect(records.every((item) => item.usage.rawProviderUsage.length === 0)).toBe(true)
+
+  const summary = summarizeEfficiency(records)
+  expect(summary.cohorts).toHaveLength(2)
+  expect(summary.cohorts.find((cohort) => cohort.identity.fixture === "cache")?.totals.verifiedSuccesses).toBe(4)
+  expect(summary.cohorts.find((cohort) => cohort.identity.fixture === "csv")?.totals.verifiedSuccesses).toBe(2)
+})

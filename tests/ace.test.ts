@@ -11,6 +11,18 @@ const partnership = await readFile(
   resolve(root, "skills/ace/references/partnership.md"),
   "utf8",
 )
+const routing = await readFile(
+  resolve(root, "skills/ace/references/routing.md"),
+  "utf8",
+)
+const portfolio = await readFile(
+  resolve(root, "skills/ace/references/portfolio.md"),
+  "utf8",
+)
+const evidence = await readFile(
+  resolve(root, "skills/ace/references/evidence.md"),
+  "utf8",
+)
 const command = await readFile(
   resolve(root, "adapters/opencode/command/ace.md"),
   "utf8",
@@ -501,6 +513,45 @@ await tools.ace_progress.execute(artifactProgress, artifactContext)
 const changedArtifact = JSON.parse(await tools.ace_status.execute({ detail: "full" }, artifactContext))
 await tools.ace_progress.execute(artifactProgress, artifactContext)
 const repeatedArtifact = JSON.parse(await tools.ace_status.execute({ detail: "full" }, artifactContext))
+
+const dependencyContext = { sessionID: "dependencies" }
+const dependencyStart = {
+  ...start,
+  criteria: [
+    { id: "C1", text: "Foundation is verified" },
+    { id: "C2", text: "Independent output is verified" },
+    { id: "C3", text: "Dependent output is verified" },
+  ],
+  milestones: [
+    { id: "M1", outcome: "Foundation", criterionIDs: ["C1"], fileScope: ["foundation.ts"], verification: "foundation check", reviewUnit: "foundation", branchName: "feat/foundation", authorizationState: "proposed" },
+    { id: "M2", outcome: "Independent output", criterionIDs: ["C2"], fileScope: ["independent.ts"], verification: "independent check", reviewUnit: "independent", branchName: "feat/independent", authorizationState: "proposed" },
+    { id: "M3", outcome: "Dependent output", criterionIDs: ["C3"], fileScope: ["dependent.ts"], verification: "dependent check", dependsOn: ["M1"], reviewUnit: "dependent", branchName: "feat/dependent", authorizationState: "proposed" },
+  ],
+  deliveryPlanRequired: true,
+}
+await tools.ace_start.execute(dependencyStart, dependencyContext)
+await tools.ace_progress.execute({
+  summary: "All milestone checks passed",
+  nextAction: "Review the contract",
+  madeProgress: true,
+  sourceIdentity: "artifact-1",
+  evidence: [check("foundation", "C1"), check("independent", "C2"), check("dependent", "C3")],
+  milestoneUpdates: [
+    { id: "M1", state: "closed" },
+    { id: "M2", state: "closed" },
+    { id: "M3", state: "closed" },
+  ],
+}, dependencyContext)
+await tools.ace_revise.execute({
+  ...approval,
+  reason: "The foundation contract changed",
+  criteria: [
+    { id: "C1", text: "Foundation and compatibility are verified" },
+    dependencyStart.criteria[1],
+    dependencyStart.criteria[2],
+  ],
+}, dependencyContext)
+const dependencyRevision = JSON.parse(await tools.ace_status.execute({ detail: "full" }, dependencyContext))
 console.log(JSON.stringify({
   invalidated: revised.currentEvidence.filter((entry) => entry.invalidatedAt).length,
   exceptionCleared: revised.criteria.find((item) => item.id === "C2").exception === undefined,
@@ -515,6 +566,7 @@ console.log(JSON.stringify({
   pausedControl,
   changedArtifactStalls: changedArtifact.stallCount,
   repeatedArtifactStalls: repeatedArtifact.stallCount,
+  dependencyMilestones: dependencyRevision.milestones.map((item) => item.id + ":" + item.state).join(","),
 }))
 `
 
@@ -716,6 +768,64 @@ describe("Ace portable contract", () => {
     )
   })
 
+  test("uses closed routing without invented confidence", () => {
+    for (const route of [
+      "`normal`",
+      "`ace-single`",
+      "`ace-portfolio`",
+      "`bound-first`",
+    ]) {
+      expect(skill).toContain(route)
+      expect(routing).toContain(route)
+    }
+    expect(routing).toContain("Judge each signal independently")
+    expect(routing).toContain("Apply the first matching rule")
+    expect(routing).toContain("Routing never grants authorization")
+    expect(skill).toContain("Do not invent a probability or confidence score")
+  })
+
+  test("freezes portfolio scope and classifies later input", () => {
+    expect(skill).toContain("Freeze the initial child-item list")
+    expect(portfolio).toContain("The snapshot is the mission boundary")
+    expect(portfolio).toContain("A new child requires an explicit `mission-revision`")
+    for (const relationship of [
+      "`criterion-feedback`",
+      "`mission-revision`",
+      "`separate-work`",
+      "`status-only`",
+    ]) {
+      expect(routing).toContain(relationship)
+    }
+  })
+
+  test("keeps evidence proportional without weakening proof", () => {
+    expect(evidence).toContain("Use the least expensive authoritative check")
+    expect(evidence).toContain("Do not weaken proof merely to reduce Ace overhead")
+  })
+
+  test("uses portable-lite and conditional references within route budgets", () => {
+    expect(skill).toContain("use `portable-lite`")
+    expect(skill).toContain(
+      "does not provide durable persistence, hard transition guards",
+    )
+    expect(skill).toContain("For `ace-single`, do not load portfolio guidance")
+    expect(skill).toContain(
+      "Read [routing.md](references/routing.md) only when signals conflict",
+    )
+    expect(skill).toContain(
+      "Read [mission-state.md](references/mission-state.md) only when a state decision cannot be made",
+    )
+    expect(skill).toContain(
+      "Read [evidence.md](references/evidence.md) only when authoritative proof is unclear",
+    )
+    expect(Buffer.byteLength(skill)).toBeLessThanOrEqual(12_000)
+    expect(Buffer.byteLength(skill + routing)).toBeLessThanOrEqual(16_000)
+    expect(Buffer.byteLength(skill + portfolio)).toBeLessThanOrEqual(14_500)
+    expect(Buffer.byteLength(skill + routing + portfolio)).toBeLessThanOrEqual(
+      18_000,
+    )
+  })
+
   test("requires evidence and finite terminal states", () => {
     for (const status of [
       "completed",
@@ -813,6 +923,7 @@ describe("Ace distribution", () => {
       expect(command).toContain(tool)
       expect(plugin).toContain(`${tool}: tool({`)
     }
+    expect(plugin).toContain("../../../skills/ace/runtime/index.ts")
   })
 
   test("installs a complete OpenCode bundle and protects existing files", async () => {
@@ -857,8 +968,18 @@ describe("Ace distribution", () => {
       expect(first.exitCode).toBe(0)
       await access(resolve(configRoot, "skills/ace/LICENSE"))
       await access(resolve(configRoot, "skills/ace/references/evidence.md"))
+      await access(resolve(configRoot, "skills/ace/references/routing.md"))
+      await access(resolve(configRoot, "skills/ace/references/portfolio.md"))
       await access(resolve(configRoot, "commands/ace.md"))
       await access(resolve(configRoot, "plugins/ace.ts"))
+      const installedPlugin = await readFile(
+        resolve(configRoot, "plugins/ace.ts"),
+        "utf8",
+      )
+      expect(installedPlugin).toContain("function parseAceState")
+      expect(installedPlugin).not.toContain(
+        "../../../skills/ace/runtime/index.ts",
+      )
 
       const second = await runInstaller()
       expect(second.exitCode).not.toBe(0)
@@ -875,6 +996,8 @@ describe("Ace distribution", () => {
         ),
       ).toBe(false)
       await access(resolve(configRoot, "skills/ace/references/evidence.md"))
+      await access(resolve(configRoot, "skills/ace/references/routing.md"))
+      await access(resolve(configRoot, "skills/ace/references/portfolio.md"))
       await access(resolve(configRoot, "commands/ace.md"))
       await access(resolve(configRoot, "plugins/ace.ts"))
     } finally {
@@ -1073,6 +1196,9 @@ describe("Ace OpenCode state", () => {
     expect(resultString(result, "pausedControl")).toBe("NO_ERROR")
     expect(resultNumber(result, "changedArtifactStalls")).toBe(0)
     expect(resultNumber(result, "repeatedArtifactStalls")).toBe(1)
+    expect(resultString(result, "dependencyMilestones")).toBe(
+      "M1:pending,M2:closed,M3:pending",
+    )
   })
 
   test("repairs evidence, source, milestone, manual, and continuation boundaries", async () => {
