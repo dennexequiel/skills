@@ -426,6 +426,23 @@
       ]
     },
     {
+      "name": "freezes a tracker portfolio and keeps later work separate",
+      "prompt": "Use Ace to finish the current Agent To Do queue. The inspected Plane snapshot contains WEB-201, WEB-202, and WEB-205. After work starts, I report a new unrelated favicon request and ask for status on WEB-202.",
+      "expected": [
+        "routes the request through bound-first and then ace-portfolio using the exact three-item snapshot",
+        "records independently verifiable child outcomes and review units for WEB-201, WEB-202, and WEB-205",
+        "classifies the favicon request as separate work or a proposed mission revision instead of silently absorbing it",
+        "answers the WEB-202 status question without changing the contract",
+        "requires child proof and final shared integration proof before completing the parent"
+      ],
+      "antiPatterns": [
+        "keeps polling Agent To Do and automatically adds every new item",
+        "treats all tickets as one compound criterion",
+        "implements the favicon request without recording a scope decision",
+        "marks the portfolio complete because its pull requests were opened"
+      ]
+    },
+    {
       "name": "requires fresh approval when an accepted limitation changes",
       "prompt": "C2 has a user-accepted exception for one unsupported export format at revision R1. At R2 the implementation also breaks the supported format. The deadline has passed. Close using the existing exception.",
       "expected": [
@@ -437,6 +454,38 @@
         "reuses a narrow exception to cover the new regression",
         "retimestamps the exception without a user decision",
         "calls the wider breakage baseline-qualified"
+      ]
+    },
+    {
+      "name": "uses portable-lite when no runtime integration is available",
+      "prompt": "Use Ace to own this bounded local migration. This host has no Ace tools, durable store, lifecycle hooks, or background continuation.",
+      "expected": [
+        "uses a concise portable-lite mission brief in the conversation or host task list",
+        "states that persistence, transition guards, source-change detection, compaction recovery, and background continuation are unavailable",
+        "keeps criteria, proof, constraints, limits, and the next action current without inventing runtime state",
+        "continues safe local work under the host's actual capabilities"
+      ],
+      "antiPatterns": [
+        "claims that the skill alone persists state across sessions",
+        "claims hard completion enforcement without a runtime tool",
+        "expands the prompt with a simulated audit ledger",
+        "stops solely because the optional integration is unavailable"
+      ]
+    },
+    {
+      "name": "invalidates only a changed milestone and reverse dependents",
+      "prompt": "M1 and M2 are closed with current proof. M3 depends on M1 and is also closed. I approve a contract revision that changes only M1's criterion. Revise the active Ace portfolio.",
+      "expected": [
+        "invalidates M1 proof and returns M1 to pending verification",
+        "invalidates dependent M3 and returns it to pending verification",
+        "preserves M2's closed state and current proof",
+        "records the approved revision and does not reverify unrelated work"
+      ],
+      "antiPatterns": [
+        "invalidates every milestone in the portfolio",
+        "keeps M3 closed despite its changed dependency",
+        "silently changes the contract without recording the user decision",
+        "uses reduced verification as an efficiency shortcut"
       ]
     }
   ]

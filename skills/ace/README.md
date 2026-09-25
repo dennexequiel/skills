@@ -43,6 +43,8 @@ Use the normal workflow for ordinary edits and quick answers. Ace fits work that
 | Build an OAuth client while practicing architecture decisions | Ace, `learn` |
 | Investigate a bounded question and finish with evidence | Ace, `explore` |
 | Own a comparison against agreed criteria and recommend an option | Ace, `decide` |
+| Deliver an exact set of independently reviewable tracker items | Ace portfolio mission |
+| Drain whatever enters a changing queue | Bound and freeze the item list first |
 
 If the need is unclear, start normally and adopt Ace when it appears. Explicit Ace and bounded mission requests are honored. Ace infers the mode from intent without a selection or confirmation step. An ordinary edit explicitly run with Ace gets one brief overhead notice; a short learning, exploration, or decision mission needs no such warning merely because it is short. Existing missions keep their state and limits through completion.
 
@@ -66,7 +68,7 @@ Invocation syntax varies by host; see the live repository [compatibility matrix]
 
 A mission has states between start and finish. What the host gives you depends on whether an automation adapter is installed.
 
-| Action | Portable skill | With the OpenCode adapter |
+| Action | Portable-lite | With the OpenCode adapter |
 | --- | --- | --- |
 | Start a mission | Invoke with a mission and optional mode | `/ace <objective>` |
 | See current state | Ask for mission status | `/ace status` |
@@ -89,7 +91,7 @@ Limits bound execution only. They never lower the mission's acceptance criteria,
 
 At 75% of the time allowance, Ace reports remaining work. At the agreed deadline, it stops implementation. A resume preserves the prior window and lifetime totals. The adapter checks operation boundaries; it cannot interrupt a host command already in progress.
 
-Without an adapter, Ace keeps its mission brief in the conversation or host task list. Recovery depends on the host restoring that record. The skill itself provides no background execution or automatic continuation.
+Without an adapter, Ace uses `portable-lite`: a concise mission brief in the conversation or host task list. Recovery depends on the host restoring that record. It provides no durable persistence, hard transition guards, automatic source-change detection, compaction recovery, or background continuation.
 
 ## Partnership
 
@@ -98,7 +100,9 @@ Ace is intentionally not a generic "be autonomous" prompt. It separates responsi
 - The user owns purpose, priorities, consequential tradeoffs, and authorization.
 - The agent owns discovery, routine implementation decisions, progress tracking, verification, and transparent handoff.
 
-Before substantial work, Ace records a mission brief with the mode, objective, criterion IDs, verification, known baselines, constraints, limits, current state, and next action. Missions spanning independent review units also record milestones, dependencies, file ownership, and a proposed delivery plan. Planning a branch or commit grants no permission to create it.
+Before substantial work, Ace chooses one closed route: normal workflow, single mission, portfolio mission, or bound-first. It judges atomic signals and applies a deterministic routing table; it does not invent confidence scores. Permissions and user-owned judgments remain outside routing.
+
+An Ace mission records its route, mode, objective, frozen scope, criterion IDs, verification, known baselines, constraints, limits, current state, and next action. Portfolio missions snapshot exact child items instead of following a live queue. New input is classified as criterion feedback, an approved mission revision, separate work, or a status request. Missions spanning independent review units also record milestones, dependencies, file ownership, and a proposed delivery plan. Planning a branch or commit grants no permission to create it.
 
 Each criterion keeps its current proof separate from evidence history. Source changes invalidate affected proof in unfinished missions. Strict completion requires fresh passing evidence for every criterion. Qualified closure records explicit user acceptance for each named limitation and reports those qualifications separately from satisfied criteria. Completed and cancelled missions retain their recorded source and evidence; later work follows the suitability check without reopening the old mission.
 
@@ -106,7 +110,7 @@ Ace asks only when an answer can materially change the outcome, evidence, risk, 
 
 ## Compatibility
 
-The core skill works in Agent Skills-compatible clients. Optional runtime integrations can add durable mission state and automatic continuation.
+The core skill works in Agent Skills-compatible clients. Its host-independent deterministic runtime defines state parsing, completion checks, selected evidence and source transitions, dependency invalidation, and the current recovery projection. Optional runtime integrations can add durable mission state and automatic continuation. See the [runtime architecture](references/runtime-architecture.md) for current interfaces, target boundaries, and promotion gates.
 
 OpenCode users who need those capabilities can install the [OpenCode Automation Adapter](https://github.com/dennexequiel/skills/tree/main/adapters/opencode). The adapter installer includes the core skill. Other hosts can use Ace within their normal skill lifecycle.
 
@@ -125,4 +129,6 @@ OpenCode users who need those capabilities can install the [OpenCode Automation 
 - [partnership.md](references/partnership.md) explains decision ownership and the question policy.
 - [evidence.md](references/evidence.md) defines completion proof standards.
 - [mission-state.md](references/mission-state.md) defines criterion states, milestones, budget windows, and qualified closure.
+- [routing.md](references/routing.md) defines closed routes, atomic signals, deterministic routing, and new-input classification.
+- [portfolio.md](references/portfolio.md) defines frozen child-item scope and portfolio completion.
 - [Compatibility](https://github.com/dennexequiel/skills/blob/main/docs/compatibility.md) records compatibility claims, test status, and invocation syntax.

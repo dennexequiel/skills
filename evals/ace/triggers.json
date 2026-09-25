@@ -11,7 +11,8 @@
     "Use Ace to rename this one button and verify the rendered label. I understand it adds overhead.",
     "Own the local migration through separately verified schema, writer, reader, and cleanup stages. Each stage depends on the previous one; all environments are ready today.",
     "Ace explore: spend 20 minutes investigating local startup latency and finish with measurements and a recommendation. Do not change the code.",
-    "Own this decision: compare the two local queue options against our agreed reliability and maintenance criteria, recommend one, and leave the final call to me."
+    "Own this decision: compare the two local queue options against our agreed reliability and maintenance criteria, recommend one, and leave the final call to me.",
+    "Use Ace to deliver Plane tickets 201, 202, and 205 as separate reviewed changes, then verify the combined release."
   ],
   "negative": [
     "Fix the typo in the page title.",
@@ -40,6 +41,14 @@
     {
       "prompt": "The local checks pass, but the remaining vendor data arrives tomorrow. Keep responsibility for verification when it arrives.",
       "expected": "Adopt Ace to preserve the bounded verification mission across the external wait, carrying forward fresh local proof and existing authorization. Use a portable brief when no durable host integration exists."
+    },
+    {
+      "prompt": "Use Ace to finish everything that appears in Agent To Do.",
+      "expected": "Route to bound-first because a live queue is a moving target. Snapshot the exact included item IDs before executing, then use a portfolio mission if the frozen set contains independently reviewable outcomes."
+    },
+    {
+      "prompt": "While you finish the active Ace release mission, also add this unrelated dashboard feature.",
+      "expected": "Classify the dashboard request as separate work or a proposed mission revision. Do not silently add it to the active mission; preserve the current contract unless the user explicitly revises the scope."
     }
   ]
 }

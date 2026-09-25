@@ -15,6 +15,16 @@ Prefer the highest practical level:
 
 Lower levels can support higher levels but should not replace them when the criterion requires runtime behavior.
 
+## Proportionate Proof
+
+Use the least expensive authoritative check that could disprove the criterion. Evidence strength follows the claim and risk, not mission ceremony:
+
+- A local wording or isolated presentation change can be proven by focused inspection and its relevant rendered or automated check.
+- A behavior spanning components needs a focused integration or end-to-end check of that path.
+- A deployment, migration, access-control change, or other high-impact outcome needs direct observation in the target environment when the criterion includes that environment.
+
+Do not require broad repository checks for a narrow criterion unless project instructions require them or shared interfaces make unrelated regressions plausible. Do not weaken proof merely to reduce Ace overhead.
+
 ## Criterion Mapping
 
 Write criteria so one evidence statement can prove each one:
