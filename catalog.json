@@ -4,7 +4,7 @@
     {
       "name": "ace",
       "displayName": "Ace",
-      "description": "Use for explicit Ace requests or requests to own a bounded deliver, learn, explore, or decide mission. Also use when work needs recovery across interruptions, external waits, or substantial dependent milestones. Default to the normal workflow for ordinary work that fits one focused session. Routine tests or persistence language alone do not call for Ace. Ace may first bound an open-ended request when mission ownership is requested.",
+      "description": "Use for explicit Ace requests or requests to own a bounded deliver, learn, explore, or decide mission. Route substantial work as a single or portfolio mission when it needs recovery across interruptions, external waits, or dependent milestones. Default to the normal workflow for ordinary work that fits one focused session. Ace may first bound an open-ended request when mission ownership is requested.",
       "summary": "Own a bounded mission through evidence-backed completion while preserving user judgment and authority.",
       "status": "stable",
       "areas": [

@@ -86,7 +86,7 @@ bun scripts/ace-efficiency.ts summary reviewed-results.json
 
 Records without explicit host success and a passed handoff review cannot qualify as verified successes. Unknown-model attempts form separate cohorts; include them when reporting overall spend or incomplete collection. A cohort's cost does not establish the cost of attempts whose model or usage could not be resolved.
 
-The [recorded efficiency run](../results/2026-09-05-efficiency.md) includes native usage from Codex and Claude Code, artifact checks, and review limitations.
+The [recorded portable efficiency run](../results/2026-09-05-efficiency.md) includes native usage from Codex and Claude Code, artifact checks, and review limitations. The [runtime architecture evaluation](../results/2026-09-22-runtime-architecture.md) records the current instruction fingerprint, deterministic coverage, matched Codex outcomes, host failures, and promotion decision.
 
 ## Sources
 
