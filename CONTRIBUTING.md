@@ -22,6 +22,6 @@ Install the pinned development toolchain with `bun install --frozen-lockfile`. P
 
 Do not add dependencies, host adapters, generated instruction copies, or release tooling without demonstrating the maintenance problem they solve.
 
-Use Conventional Commit prefixes such as `feat:`, `fix:`, `docs:`, `chore:`, `refactor:`, `test:`, and `perf:`. Keep each commit focused on one concern.
+Use Conventional Commit prefixes such as `feat:`, `fix:`, `docs:`, `chore:`, `refactor:`, `test:`, and `perf:`. Keep each commit focused on one concern. Use the same form for pull request titles: `<type>(<optional-kebab-scope>): <imperative lower-case subject>`. Pull request titles have a 72-character limit, no consecutive spaces, and no trailing punctuation.
 
 See [compatibility](docs/compatibility.md), [maintenance](docs/maintenance.md), and [releases](docs/releases.md) for support and versioning policy.

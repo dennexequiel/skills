@@ -39,3 +39,10 @@ This repository contains portable agent skills and optional runtime adapters. A 
 - Keep all TypeScript within the strict root `tsconfig.json`; do not suppress errors with broad casts or disabled checks.
 - Describe the collection without naming the skills it contains, so a new skill dates nothing.
 - Run `bun run check` before review. Host smoke commands need that host installed and run separately.
+
+## Pull Requests
+
+- Format titles as `<type>(<optional-kebab-scope>): <imperative lower-case subject>`.
+- Use `feat`, `fix`, `docs`, `chore`, `refactor`, `test`, or `perf` as the type.
+- Keep titles at or below 72 characters, avoid consecutive spaces, and omit trailing punctuation.
+- Keep each pull request focused on one concern.
