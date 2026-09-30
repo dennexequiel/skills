@@ -13,7 +13,7 @@ The scanner masks fenced and indented code, frontmatter, inline code, HTML comme
 | `heading-one` | structural | MED | likely | generic, readme, adr, runbook, cutover, spec, design, changelog, incident, api-reference, migration, security, risk-assessment | review | Keep one document title, unless this file intentionally combines documents. |
 | `table-underfit` | structural | LOW | contextual | all | review | Use a list for one-dimensional content or add the missing table dimension. |
 | `link-dead` | structural | HIGH | certain | all | never | Correct the local path or add the target file. Network URLs and anchors are not fetched. |
-| `section-missing` | factualGap | MED | contextual | pr, readme, adr, runbook, cutover, spec, design, incident, api-reference, migration, security, risk-assessment | never | Confirm whether this document needs the named section, then add it only when the facts are available. |
+| `section-missing` | factualGap | MED | contextual | pr, readme, adr, runbook, cutover, spec, design, incident, api-reference, migration, security, risk-assessment | never | Look for the relevant information in prose, alternate headings, or linked material; report only a purpose-relevant gap, without requiring a section. |
 | `tell-notxbuty` | stylistic | LOW | contextual | all | review | State the concrete distinction and its consequence. |
 | `tell-significance` | stylistic | LOW | contextual | all | review | Name the affected behavior, decision, or measurable consequence. |
 | `tell-vague-number` | factualGap | MED | contextual | all | never | Check whether a value is needed; ask the author for any missing quantity or condition and leave the source untouched. |
@@ -71,7 +71,7 @@ Detection: Resolve literal local link destinations relative to the containing do
 
 ## section-missing
 
-A profile-relevant section is absent.
+No heading matches a profile's optional section aliases.
 
 Detection: Compare parsed heading titles with the selected profile heading-alias groups.
 
@@ -193,7 +193,7 @@ Detection: Match the prose pattern outside protected content and accepted termin
 
 ## Profile section candidates
 
-These are MED contextual factual-gap candidates. They are never automatic edits. Generic documents have no template demand.
+These are MED contextual factual-gap candidates, not required templates or sections. Check purpose, audience, and destination; prose, alternate headings, or linked material may suffice. Generic documents have no heading-alias candidates.
 
 | Profile | Heading aliases |
 | --- | --- |
@@ -214,4 +214,4 @@ These are MED contextual factual-gap candidates. They are never automatic edits.
 
 ## Limits
 
-The scanner does not parse every Markdown extension, fetch network links, validate anchors, infer missing facts, or determine whether a prose-to-table rewrite is appropriate. Protected sections match exact heading titles case-insensitively and include their subtree through the next peer or ancestor heading.
+The scanner does not parse every Markdown extension, check block spacing or excess trailing blank lines, fetch network links, validate anchors, verify facts or calculations, render or inspect delivered artifacts, or determine whether a prose-to-table rewrite is appropriate. These checks need separate evidence; zero findings is not proof of overall quality. Protected sections match exact heading titles case-insensitively and include their subtree through the next peer or ancestor heading.

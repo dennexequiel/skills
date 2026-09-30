@@ -7,14 +7,14 @@
       "prompt": "Here is a section of our migration doc. Three paragraphs, each describing one rollback option with its blast radius and time to revert. Clean it up with prep-that-doc.",
       "expected": [
         "Identifies the document type as a migration or cutover plan before scanning",
-        "Reports the three paragraphs as element-table because the same axes repeat across all three",
-        "Proposes a table with one row per option and columns for blast radius and time to revert",
-        "Notes that the structural fix removes the prose-level style problems inside those paragraphs",
+        "Considers a table because the same comparison axes repeat, while checking audience and destination support",
+        "Proposes a table with one row per option when it preserves meaning and serves the destination, or explains a suitable alternative",
+        "Reviews surviving prose after any justified structural edit",
         "Names a defined rule where useful; manual findings include location, evidence, effect, and action"
       ],
       "antiPatterns": [
-        "Fixes only em dashes and word choice while leaving three paragraphs that should be one table",
-        "Converts the paragraphs to bullet points instead of a table",
+        "Polishes word choice without considering whether the comparison is usable",
+        "Requires a table without considering caveats or destination compatibility",
         "Invents blast radius or timing values that the source text does not contain",
         "Reports findings without proposing a concrete fix"
       ]
@@ -113,15 +113,20 @@
       "expected": [
         "Classifies the vague duration as needs-author rather than confirmed",
         "Leaves the missing duration untouched and reports a precise author question without inserting a placeholder",
-        "Reports the missing rollback as the highest-severity structural finding for a cutover plan",
-        "Asks the author for the rollback procedure rather than drafting one from assumption"
+        "Checks prose and linked material for rollback, recovery, escalation, or an explicitly accepted irreversible limit before reporting an actionable gap",
+        "Asks the author for the missing recovery decision when needed rather than assuming rollback is possible or drafting a procedure",
+        "Preserves vague operational expectations and reports the missing facts even when the source already acknowledges the gap",
+        "Distinguishes completed independent edits from an unresolved execution or approval decision"
       ],
       "antiPatterns": [
         "Writes a specific duration such as 'about 15 minutes' that the source never stated",
         "Drafts a rollback procedure as though it were recovered from the document",
         "Silently drops the vague sentence to make the finding disappear",
-        "Ranks an em dash finding above the missing rollback section",
-        "Writes [ADD: ...] into the plan without an explicit request for placeholders"
+        "Requires a rollback heading even when the recovery decision is supplied in prose or linked material",
+        "Ranks an em dash finding above an unresolved recovery decision",
+        "Writes [ADD: ...] into the plan without an explicit request for placeholders",
+        "Dismisses an acknowledged operational gap as intentional and therefore resolved",
+        "Marks the whole editorial task blocked after completing all authorized independent edits"
       ]
     },
     {
@@ -203,7 +208,7 @@
         "Claims the tells are gone without a second detection pass",
         "Reports the original scan output as though it described the edited file",
         "Loops indefinitely on a section that will not converge",
-        "Substitutes a confident summary for the before and after counts",
+        "Substitutes scanner counts for evidence of preserved meaning and editorial review",
         "Rewrites a section from scratch just because a candidate survives several scans"
       ]
     },
@@ -225,9 +230,9 @@
     },
     {
       "name": "keeps a short clean PR review focused",
-      "prompt": "Review this PR description with prep-that-doc: \"## Summary\\nThe parser reads the authorization header.\\n\\n## Validation\\nThe header parsing tests pass.\"",
+      "prompt": "Review this PR description with prep-that-doc: \"## Summary\n\nThe parser reads the authorization header.\n\n## Validation\n\nThe header parsing tests pass.\"",
       "expected": [
-        "Uses the PR profile and accepts the host-provided title with H2 sections",
+        "Recognizes the PR context and accepts the host-provided title with H2 sections",
         "Reviews the supplied text without scanning unrelated repository files or loading every reference",
         "Leaves clean text alone and gives a concise result",
         "Does not require repeated scans of an unchanged document"
@@ -265,6 +270,150 @@
         "Claims a scan passed despite no runtime",
         "Refuses all useful review solely because the optional scanner is unavailable",
         "Loads every reference regardless of the document and request"
+      ]
+    },
+    {
+      "name": "keeps optional profiles out of a focused PR edit",
+      "prompt": "Fix one typo in this GitHub PR body for parser maintainers: 'The parser acccepts empty headers. The header parsing tests pass.' Keep it as one paragraph. Do not investigate the implementation.",
+      "expected": [
+        "Infers the purpose, specialist audience, GitHub destination, and narrow editing scope without asking unnecessary questions",
+        "Corrects acccepts to accepts and preserves the remaining meaning and single-paragraph format",
+        "Treats any missing profile headings as inapplicable because prose already supplies the relevant information",
+        "Reports scan coverage and the editorial edit separately from factual accuracy and rendering, which remain not verified without supporting checks",
+        "Treats export, upload, and calculation checks as not applicable and does not require a summary",
+        "Uses a direct original-to-edited comparison and a brief confirmation, normally one or two sentences for this localized correction",
+        "Skips scanning when it adds no relevant check and avoids runtime discovery, byte dumps, and unrelated completeness questions"
+      ],
+      "antiPatterns": [
+        "Adds Summary, Testing, or executive-summary sections to satisfy a template",
+        "Runs tests or researches parser behavior despite the stated scope",
+        "Claims the tests actually pass merely because the PR body says so",
+        "Builds or publishes an artifact for a typo edit",
+        "Writes a multi-section review or repeats discarded profile candidates for a one-character correction",
+        "Treats unavailable broader context about the PR as a blocker to the requested typo fix"
+      ]
+    },
+    {
+      "name": "recommends a summary only when the audience benefits",
+      "prompt": "Review a long engineering capacity proposal for service owners and finance reviewers. It opens with queueing formulas and ends with the requested budget decision. The inputs, assumptions, and calculations are already labeled. Leave the file unchanged.",
+      "expected": [
+        "Uses the decision purpose and mixed audience to recommend a short plain-language explanation of the request and consequences near the start",
+        "Keeps formulas and technical qualifications available for service owners",
+        "Treats the recommendation as an audience-specific improvement, without requiring an executive-summary heading or a new template",
+        "Distinguishes editorial review from factual and calculation verification actually performed"
+      ],
+      "antiPatterns": [
+        "Deletes the formulas to make the document accessible",
+        "Invents a budget amount or financial benefit for the summary",
+        "Edits the proposal despite review-only authority",
+        "Treats every engineering document as requiring the same summary"
+      ]
+    },
+    {
+      "name": "preserves valid reference links and checks the destination",
+      "prompt": "Review this Markdown for a documentation site. Its renderer supports reference-style links and fenced code but not pipe tables or definition lists. The source uses [API contract][contract], [Recovery][], and [Operations], with matching definitions, plus a two-column pipe table. Do not change the file.",
+      "expected": [
+        "Accepts full, collapsed, and shortcut reference-style links with descriptive labels and resolving definitions",
+        "Identifies the table's compatibility problem and proposes a supported structure that retains each relationship and caveat",
+        "Checks available destination configuration or preview evidence and states when rendering itself is not verified",
+        "Separates local link checks from destination rendering and artifact delivery"
+      ],
+      "antiPatterns": [
+        "Bans reference-style links or converts them to inline syntax merely as a preference",
+        "Recommends a definition list despite the supplied renderer limitation",
+        "Claims the destination preview was checked from a scanner result alone",
+        "Treats the unsupported table as factually incorrect"
+      ]
+    },
+    {
+      "name": "reviews block spacing beyond scanner coverage",
+      "prompt": "Fix spacing in docs/note.md for our repository preview. Source: '# Queue\nIntro.\n## Use\nFirst paragraph.\n\n\n\nSecond paragraph.\n- Send the request.\n- Read the response.\n| Status | Action |\n| --- | --- |\n| Ready | Send |\n```text\nkeep  these bytes\n\n\n```\n\n\n\n'. Keep the list tight and the fenced body byte-identical. The default scanner reports no candidates; no rendered preview is available.",
+      "expected": [
+        "Inspects spacing around headings, paragraphs, lists, tables, and code blocks independently of scanner output",
+        "Separates surrounding blocks for readability and compatibility, reduces unintentional repeated blank lines, and removes excess trailing blank lines while keeping a final newline",
+        "Preserves tight list items, the fenced body's spaces and blank lines, and table content",
+        "Reports mechanical scanning and editorial spacing review separately; rendering remains not verified without a preview"
+      ],
+      "antiPatterns": [
+        "Calls the document fully checked because the scanner finds nothing",
+        "Normalizes whitespace inside the protected fence",
+        "Adds blank lines between all list items regardless of the requested tight layout",
+        "Claims source inspection proves destination rendering"
+      ]
+    },
+    {
+      "name": "distinguishes evidence status without inventing support",
+      "prompt": "Review this engineering capacity note for an approval decision. Do not browse. 'The attached load test records 120 requests/s on one worker. Assuming linear scaling, four workers will handle 480 requests/s. We propose four workers. Cost is $288/month.' The supplied pricing sheet says $0.10 per worker-hour and the cost calculation assumes 720 hours. Check the arithmetic too. No four-worker test is supplied.",
+      "expected": [
+        "Distinguishes the sourced single-worker measurement, linear-scaling assumption, proposed worker count, and derived throughput and cost figures",
+        "Checks 120 times 4 equals 480 and 4 times 0.10 times 720 equals 288 using the supplied units and assumptions",
+        "Explains that correct arithmetic does not verify linear scaling, the measurements, or current pricing",
+        "Recommends wording that keeps the throughput conditional on the scaling assumption without changing author intent",
+        "Reports editorial, arithmetic or factual, mechanical, and rendering coverage separately with limits",
+        "Reads the full qualified claim before reporting it; does not call the stated scaling assumption missing",
+        "Explains unfamiliar notation when present and useful for the audience; does not require redundant summaries or named approvers"
+      ],
+      "antiPatterns": [
+        "Calls 480 requests/s a measured or guaranteed capacity",
+        "Invents a four-worker benchmark or a source confirming linear scaling",
+        "Replaces the supplied inputs with researched pricing despite the no-browse scope",
+        "Claims all facts are verified because the calculations are correct",
+        "Requires a new evidence section or citations on every sentence",
+        "Treats optional standalone explanations or duplicated source inputs as mandatory defects",
+        "Quotes only the unconditional fragment of a sentence to allege that its actual qualifier is absent"
+      ]
+    },
+    {
+      "name": "verifies the delivered artifact when tools permit",
+      "prompt": "Polish docs/recovery.md and export it to the requested PDF output path. File export and PDF inspection tools are available. The document includes a wide table, relative links, code blocks, and a warning beside an operational step. Publishing or uploading is not requested.",
+      "expected": [
+        "Preserves commands, warnings, step order, and technical meaning while making authorized edits",
+        "Opens the actual exported PDF and checks the intended revision, table clipping, page breaks, code, links, and warning placement as relevant",
+        "Distinguishes source scanning, editorial preservation checks, factual verification, and PDF rendering checks in the report",
+        "Reports any export defect or unsupported inspection rather than substituting export success for artifact quality",
+        "Stops at the requested local artifact without uploading or publishing"
+      ],
+      "antiPatterns": [
+        "Reports delivery verified after checking only the Markdown source",
+        "Treats a successful export response as proof of correct rendering",
+        "Moves or drops the operational warning to improve pagination without preserving its scope",
+        "Publishes the document without authorization"
+      ]
+    },
+    {
+      "name": "states local coverage when uploaded artifact cannot be inspected",
+      "prompt": "Prepare docs/guide.md and upload it to the already specified team documentation destination. The upload is authorized. The available tool returns a URL and a success response, but there is no read-back, browser, preview, or download capability. Local file inspection and scanning are available.",
+      "expected": [
+        "Completes authorized local editing and upload using available tools",
+        "Reports upload success without claiming the uploaded contents or rendering were verified",
+        "Names the local file and checks completed, including separate mechanical and editorial coverage",
+        "Marks destination artifact inspection and rendering not verified, and states factual verification separately",
+        "Does not install tools or repeatedly retry a successful upload solely to fill the inspection gap",
+        "Treats the success response as the tool-reported outcome rather than independent confirmation of transfer or publication",
+        "Does not infer which attachments exist at the destination from a receipt naming only one source file"
+      ],
+      "antiPatterns": [
+        "Claims the uploaded page renders correctly based on the success response",
+        "Treats a local scan as a check of remote artifact contents",
+        "Blocks all useful delivery because read-back is unavailable",
+        "Omits the coverage limitation from the final report",
+        "Claims supporting attachments are absent remotely without inspecting the destination",
+        "Uses lack of receipt metadata as proof that publication failed or supporting material was not uploaded"
+      ]
+    },
+    {
+      "name": "repairs list nesting without changing operational meaning",
+      "prompt": "Fix the Markdown structure of a deployment checklist. A fenced command sits at column zero between numbered steps 2 and 3, but the surrounding text clearly assigns it to step 2. Keep the command content, step identifiers, order, and safety notes unchanged.",
+      "expected": [
+        "May adjust container indentation to associate the command with its intended step when the destination supports that structure",
+        "Preserves command content, step identifiers and order, conditions, and warnings",
+        "Uses source inspection or a renderer when available and reports which was actually checked",
+        "Distinguishes semantic preservation from source whitespace changes; explicit byte-preservation constraints still apply"
+      ],
+      "antiPatterns": [
+        "Changes command arguments or step order while repairing list structure",
+        "Treats any indentation change as a loss of technical meaning",
+        "Claims a rendered preview passed after only inspecting source"
       ]
     }
   ]

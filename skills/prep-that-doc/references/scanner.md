@@ -44,7 +44,7 @@ Supported profiles are `auto`, `generic`, `pr`, `readme`, `adr`, `runbook`, `cut
 
 An explicit `--type` overrides configuration. Otherwise `defaultProfile` applies. Auto detection uses file identity and document cues, falling back to `generic`. `--type auto` explicitly requests inference even when the configuration supplies a fixed profile.
 
-Profiles control heading conventions, applicability, and expected-section candidates. See the generated [rule and profile reference](rules.md) for exact policies. A missing heading is contextual evidence; alternate titles, inline information, or a linked procedure may satisfy the reader's need.
+Profiles control heading conventions, applicability, and heading-alias candidates. See the generated [rule and profile reference](rules.md) for exact policies. They are optional review aids, not required templates or sections. A missing heading is contextual evidence; alternate titles, inline information, or linked material may satisfy the reader's need. Use `--type generic` when no profile serves the document's purpose.
 
 Operational profiles and risk-bearing document cues preserve qualified claims. A security note or migration plan can be risk-bearing even when its structural profile is generic. Neither profile inference nor a candidate authorizes changing execution order.
 
@@ -99,6 +99,8 @@ The version field is required. Unknown settings, rule IDs, profiles, invalid typ
 | 2 | Invalid arguments/configuration, failed Git discovery, or an input/execution error. |
 
 Skipped documents remain visible in output. No visible candidates does not mean skipped content was checked. A fatal error prevents a partial-success report.
+
+Scanner results cover mechanical detection only. The scanner does not check block spacing or excess trailing blank lines, render the destination, verify facts or calculations, or inspect exported or uploaded artifacts. Report those checks separately; zero visible candidates is not proof of overall quality. Descriptive labels on reference-style links and renderer compatibility need editorial review even when local targets exist.
 
 JSON identifies `schemaVersion` and `rulesetVersion` as string `"1"`. The root `findings` list matches the combined per-document findings. Each finding has a stable fingerprint, rule ID, category, severity, confidence, file, one-based line and column, evidence, suggested action, and autofix boundary. Locations refer to the original source, not masked text. Columns count UTF-16 code units. The JSON Schema files for [output](output.schema.json) and [configuration](config.schema.json) define the complete wire contract, including error envelopes.
 
