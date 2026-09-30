@@ -24,7 +24,7 @@ function render(): string {
     ]),
     "## Profile section candidates",
     "",
-    "These are MED contextual factual-gap candidates. They are never automatic edits. Generic documents have no template demand.",
+    "These are MED contextual factual-gap candidates, not required templates or sections. Check purpose, audience, and destination; prose, alternate headings, or linked material may suffice. Generic documents have no heading-alias candidates.",
     "",
     "| Profile | Heading aliases |",
     "| --- | --- |",
@@ -32,7 +32,7 @@ function render(): string {
     "",
     "## Limits",
     "",
-    "The scanner does not parse every Markdown extension, fetch network links, validate anchors, infer missing facts, or determine whether a prose-to-table rewrite is appropriate. Protected sections match exact heading titles case-insensitively and include their subtree through the next peer or ancestor heading.",
+    "The scanner does not parse every Markdown extension, check block spacing or excess trailing blank lines, fetch network links, validate anchors, verify facts or calculations, render or inspect delivered artifacts, or determine whether a prose-to-table rewrite is appropriate. These checks need separate evidence; zero findings is not proof of overall quality. Protected sections match exact heading titles case-insensitively and include their subtree through the next peer or ancestor heading.",
     "",
   ]
   return lines.join("\n")

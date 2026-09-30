@@ -14,6 +14,8 @@ A contrast is useful when it distinguishes two real alternatives. Keep the disti
 
 An adjective is a gap when a reader needs a measurable value to act. "Roll back if latency rises significantly" lacks a decision boundary unless another section supplies it. Report the missing metric, threshold, or observation window as a question; leave the source untouched.
 
+An underspecified operational expectation still carries meaning, including when it helps an operator recognize a stalled step. Preserve it and report the uncertainty. Do not remove it as filler or dismiss an acknowledged missing threshold as an intentional format choice.
+
 Attribution needs enough information for the reader to locate the source. Check existing links, citations, and surrounding context before reporting a missing reference. Never invent a citation or treat a protected citation string as prose to polish.
 
 Qualified language in risk-bearing documents carries meaning. Preserve likelihood, uncertainty, scope, and conditions exactly. "May cause stale reads" must not become "causes stale reads." Do not classify every qualification as `needs-author`; use that classification only when resolving a relevant issue requires an unavailable fact.

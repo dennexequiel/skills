@@ -1,6 +1,6 @@
 # Prep That Doc
 
-Prep That Doc reviews engineering Markdown for useful structure, clear prose, and missing operational facts. It combines a document-aware mechanical scanner with an agent's contextual judgment. It preserves exact facts, commands, citations, caveats, and operational order.
+Prep That Doc reviews engineering Markdown against its purpose, audience, and destination. A small universal checklist covers clarity, structure, Markdown and spacing, evidence, and verification. Optional document profiles supply reader questions without requiring templates or sections. The skill preserves author intent, exact facts, commands, citations, caveats, and operational order.
 
 ## Install
 
@@ -34,9 +34,13 @@ Roast this design doc. Leave the file unchanged.
 | Fix or improve | Authorized corrections, preservation checks, and unresolved questions. |
 | Roast | An optional blunt critique of the document, supported by evidence. Files remain unchanged. |
 
-A short, low-risk document gets a focused pass. Operational and risk-bearing documents get a complete review of sequence, conditions, verification, and recovery. Missing facts remain untouched and come back as questions; the skill does not insert placeholders automatically.
+A localized typo or wording fix gets an edit, comparison, and brief confirmation. Scanning adds coverage when relevant; a narrow fix does not trigger a broader completeness review. Complexity and operational risk determine how much context and verification are needed. Plain-language summaries help mixed audiences when useful; they are not required for every document. Missing facts remain untouched and come back as questions; vague operational guidance is preserved, not deleted as filler.
 
-The agent can summarize classified findings as `clean`, `minor`, `blocked`, or `rework`. The scanner itself reports candidates only. A clean scanner result does not prove that the document is complete, factual, or operationally safe.
+Markdown choices follow the destination's renderer. Review includes descriptive link labels, valid reference-style links, and spacing around blocks and at the end of the file. Evidence-dependent documents distinguish sourced facts, assumptions, proposals, and calculated figures without turning a wording edit into a research task.
+
+The report distinguishes mechanical scanning, editorial review, factual verification, and rendering checks in a format proportional to the task. Checks can be `not applicable` or `not verified`. When export or upload is requested, the agent inspects the delivered artifact if tools permit; otherwise it states local coverage and delivery limits. A success receipt is a reported outcome, not independent evidence of destination contents or attachments. Simple edits do not require a publishing workflow.
+
+The agent can summarize classified findings as `clean`, `minor`, `blocked`, or `rework` within stated coverage. A blocked verdict names the requested action that cannot proceed; unresolved document decisions do not prevent a completed editorial review. The scanner itself reports candidates only. Zero scanner findings do not prove overall quality, factual accuracy, or operational safety.
 
 ## Scanner
 
@@ -73,7 +77,8 @@ Repository checks verify scanner behavior and rule-reference consistency. Behavi
 
 - Candidate detection cannot establish factual truth, operational safety, or author intent. No command is executed and no external link is fetched.
 - The protected-region parser handles documented Markdown conventions. It is not a complete CommonMark renderer; unusual embedded formats need manual review.
-- Profiles infer document purpose and supply contextual expectations. Alternate headings or linked procedures can satisfy a requirement; the agent must judge them.
+- Spacing, reference-link labels, factual verification, and artifact rendering need separate checks; the scanner does not establish them.
+- Profiles infer document purpose and supply optional contextual expectations. Alternate headings, prose, or linked material can meet the reader's need; the agent must judge them.
 - `safe`, `review`, and `never` describe each rule's edit boundary. The scanner has no automatic edit mode.
 - Form edits preserve every claim, condition, qualifier, command, URL, path, and operational step. A reshape that cannot do so is rejected.
 - Marketing copy, fiction, translation, and source code refactoring are outside this skill's scope.

@@ -2,6 +2,12 @@
 
 Use this reference to judge which Markdown element serves the reader. Mechanical rule metadata and profile policies come from the [generated rule reference](rules.md).
 
+## Destination And Links
+
+Choose syntax supported by the destination's Markdown dialect, renderer, and publishing path. Repository previews, PR bodies, documentation sites, and exported files can handle tables, definition lists, footnotes, HTML, and relative links differently. Use known project configuration or an available preview; when compatibility cannot be checked, state the assumption or mark rendering `not verified`.
+
+Prefer link labels that describe the destination or action. Inline links and full, collapsed, or shortcut reference-style links are valid when supported. Check that reference definitions resolve and that labels remain meaningful; do not convert them solely to satisfy a preference for inline syntax. Inspect anchors, relative destinations, and image paths in the intended context. A local target's existence does not prove that an exported or uploaded link works.
+
 ## Choose The Container
 
 | Information | Useful form | Context to preserve |
@@ -9,7 +15,7 @@ Use this reference to judge which Markdown element serves the reader. Mechanical
 | Several options compared on the same axes | A table, one row per option | Each option's conditions, caveats, and distinct values |
 | Actions with an execution order | An ordered list | Existing order, identifiers, prerequisites, and branching |
 | Independent items | An unordered list | Any priority or grouping the author intends |
-| Terms and short definitions | A table or definition list | Exact terms and qualifications |
+| Terms and short definitions | A table or supported definition list | Exact terms and qualifications |
 | Terms requiring paragraphs | A heading and prose for each term | Context needed to interpret each definition |
 | Conditional paths | Explicit conditions beside the relevant steps | Which branch applies and where branches rejoin |
 | One developed idea | A paragraph | Connections between claims |
@@ -30,11 +36,26 @@ Lists do not need conversion because they look informal. Use ordered steps only 
 
 Headings should expose the information hierarchy. PR bodies and templates often begin at H2 because the host supplies a title. A parent heading may introduce several child sections without intervening prose. Questions can be useful headings when they match the reader's task.
 
-Code-fence labels help a reader distinguish runnable commands from output. The scanner can inspect fence boundaries and labels, but prose rules do not inspect the protected body. Flag an apparent command problem for review without silently changing its bytes or claiming that it was executed.
+Code-fence labels help a reader distinguish runnable commands from output. The scanner can inspect fence boundaries and labels, but prose rules do not inspect the protected body. A structural fix may adjust a block's container indentation to attach it to the correct list item while preserving code content and step order. If the user requires the fenced body byte-identical, preserve those bytes too. Flag an apparent command problem without silently changing it or claiming execution.
 
-## Document Purpose
+## Spacing
 
-A profile supplies useful expectations, not proof that a section is missing. Read alternate headings, prose, and linked procedures before classifying a candidate. Repository templates and explicit author choices take precedence over a generic skeleton.
+Inspect source spacing as well as any available rendered view. The bundled scanner does not check block spacing or excess trailing blank lines; review them manually.
+
+- Separate headings from surrounding blocks so hierarchy and block boundaries are clear. Follow destination conventions without inserting filler paragraphs between a parent and child heading.
+- Keep distinct paragraphs separated. Preserve intentional hard line breaks; a source line wrap alone does not create a rendered paragraph.
+- Check spacing around lists and between their items. Preserve meaningful indentation and intentional tight or loose list layouts; a blank line can change how a list renders.
+- Separate tables from adjacent prose or lists as the renderer requires. Keep header and delimiter rows together.
+- Check separation around code blocks and preserve intended list nesting. Adjust only container indentation when a justified structural repair requires it; preserve protected contents.
+- Remove excess blank lines between blocks or at the end only when they have no intended role. A normal final newline is not an excess blank line.
+
+Do not apply a fixed blank-line count blindly across Markdown dialects or inside protected content.
+
+## Optional Document Profiles
+
+Start with purpose, audience, and destination. Use a profile below only when its reader questions help; an engineering note need not fit any profile. These are optional review lenses, not mandatory templates or headings. Read alternate headings, prose, and linked material before reporting a gap. Honor repository templates when applicable, without adding sections solely to clear a scanner candidate.
+
+For mixed audiences, recommend a short plain-language summary when it helps readers understand a decision, consequence, or next action. Keep necessary technical detail available. A short PR description, specialist API reference, or focused edit may need no summary at all.
 
 | Document | Reader's question |
 | --- | --- |
