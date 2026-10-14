@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>Presentation layout checker fixtures</title>
+<style>
+body { margin: 0; font: 20px/1.5 Arial, sans-serif; }
+* { box-sizing: border-box; }
+[data-slide] { width: 800px; height: 450px; padding: 32px; margin-bottom: 20px; position: relative; overflow: hidden; }
+h1 { font-size: 32px; }
+.crop { width: 120px; height: 70px; overflow: hidden; }
+.crop svg { width: 240px; height: 100px; }
+#clipped { height: 18px; overflow: hidden; margin-top: 20px; }
+#outside { position: absolute; left: 780px; width: 120px; top: 100px; }
+#hidden { display: none; }
+</style>
+<section data-slide id="healthy"><h1>A readable page</h1><ul><li>A longer bullet wraps with a hanging indent while staying within the page's usable width.</li></ul><div class="crop" data-intentional-crop><svg viewBox="0 0 240 100" aria-hidden="true"><rect width="240" height="100" fill="#12685e"/></svg></div></section>
+<section data-slide id="unhealthy"><h1>Deliberate layout defects</h1><div id="clipped">This paragraph is intentionally clipped by its own container.</div><div id="outside">Outside label</div><img src="data:image/png;base64,invalid" alt="Deliberately broken image"></section>
+<section data-slide id="hidden"><h1>Hidden page</h1></section>
+</html>

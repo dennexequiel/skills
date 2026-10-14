@@ -1,0 +1,4 @@
+interface:
+  display_name: "Prep That Slide"
+  short_description: "PDF, PowerPoint and connected Google Slides design"
+  default_prompt: "Use $prep-that-slide to create or improve this presentation in the requested PDF, PPTX, HTML or Google Slides format, checking the available editing and export tools first."

@@ -24,6 +24,19 @@
         "writing"
       ],
       "path": "skills/prep-that-doc"
+    },
+    {
+      "name": "prep-that-slide",
+      "displayName": "Prep That Slide",
+      "description": "Create or refine PDF presentations, editable PowerPoint (PPTX), HTML talks, and Google Slides through an authorized integration with slide-editing tools. Use for slide narrative, adaptable presets, evidence layouts, typography and export quality. Use available authoring and rendering tools; the skill does not bundle an export engine or Google connection. Do not use for ordinary prose editing, website implementation, or PDF form filling and extraction.",
+      "summary": "Design PDF, PowerPoint (PPTX), HTML and connected Google Slides presentations with available authoring and export tools.",
+      "status": "experimental",
+      "areas": [
+        "presentations",
+        "documents",
+        "design"
+      ],
+      "path": "skills/prep-that-slide"
     }
   ]
 }

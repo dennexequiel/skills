@@ -1,0 +1,571 @@
+{
+  "kind": "automated-fixture-checks",
+  "skill": "prep-that-slide",
+  "runDate": "2026-10-14",
+  "runtime": {
+    "node": "v26.11.1",
+    "bun": "1.4.3",
+    "playwright": "1.61.0-alpha-1778188671000",
+    "browser": "Google Chrome 155.0.8059.40",
+    "pdfinfo": "pdfinfo version 26.10.0"
+  },
+  "sourceHashes": {
+    "skills/prep-that-slide/assets/fonts/Geist-Regular.ttf": "85a1c6b18a6b0a06dfe9fd4f6d6a5d4979f74ec861eaef4bc7868b5492b8a117",
+    "skills/prep-that-slide/assets/fonts/Geist-SemiBold.ttf": "b9f52322d6d20a7ff1e7fe1310ff12ec851aebb83d24f8b4f1d4149298f489b2",
+    "skills/prep-that-slide/assets/fonts/GeistMono-Medium.ttf": "6fa6a795c17a11bcbef410f52a853e8503f8e25d92762d202d907c54f5c0c0fb",
+    "skills/prep-that-slide/assets/fonts/geist-OFL.txt": "1781d2806a07d91c4edf4740b88449fab7d0eadad53f7c351b94cd4d4eb8c00f",
+    "skills/prep-that-slide/assets/fonts/geist-mono-OFL.txt": "1781d2806a07d91c4edf4740b88449fab7d0eadad53f7c351b94cd4d4eb8c00f",
+    "skills/prep-that-slide/assets/fonts/ibm-plex-mono-400.ttf": "a7fdc993f9f0387caedba4e42521136fa97e4c0837ae6239bf0413ccf8af00c2",
+    "skills/prep-that-slide/assets/fonts/ibm-plex-mono-600.ttf": "754dfc9d50cf7aabfb6b108d2c2f7d20a3f1f2cc6f6c01640c6728091272cec0",
+    "skills/prep-that-slide/assets/fonts/ibm-plex-mono-OFL.txt": "7e6b2818edbd8f6a01ae80641cc8f16a51080d08fb4e532be3a0b6f74adb07da",
+    "skills/prep-that-slide/assets/fonts/ibm-plex-sans-400.ttf": "6dbe082463cf749cfa057d45c3048c90f4df031496498e5b5bdfd0b6babb9d16",
+    "skills/prep-that-slide/assets/fonts/ibm-plex-sans-600.ttf": "5311c66fd6d04ae45671236f7eae667b671c06c1dc7e88d52c206e5fadd0fb21",
+    "skills/prep-that-slide/assets/fonts/ibm-plex-sans-OFL.txt": "7e6b2818edbd8f6a01ae80641cc8f16a51080d08fb4e532be3a0b6f74adb07da",
+    "skills/prep-that-slide/assets/fonts/inter-400.ttf": "1b08e7fc267a5c7e1d614100f604b83e7e8a0be241f0f288faa2b3ac93a683ba",
+    "skills/prep-that-slide/assets/fonts/inter-600.ttf": "e7a1aaf7eda9f2fad4131725fa556265ec75ca7b2d756260173a040363e8d4f7",
+    "skills/prep-that-slide/assets/fonts/inter-OFL.txt": "5b9321a4298cfeb6b34354164a1c3afc3db114569984c502b9b35d988fd58c57",
+    "skills/prep-that-slide/assets/fonts/manifest.json": "393cf026673c13719fa00114a726c00bef959bf56ee59e36b4d5e6ee3c5fae8d",
+    "skills/prep-that-slide/assets/fonts/manrope-400.ttf": "a13d9b41b0a471ce58f0e46d377fa3cc76615e4632c3b15eb397caadf7a13f0a",
+    "skills/prep-that-slide/assets/fonts/manrope-600.ttf": "6bad1a774228464cc88b8b0271555b266f7a3c64a7bedf15e165fdab4f6ac0ce",
+    "skills/prep-that-slide/assets/fonts/manrope-OFL.txt": "58172e0c0fac2cda8a37b348164bb55e44b0e69051e557e92b1d3f6910141f7b",
+    "skills/prep-that-slide/assets/fonts/nunito-sans-400.ttf": "a699fa825cd47524461c459a54fe3cd51eb13e1e76ba238fe6ea86932979a808",
+    "skills/prep-that-slide/assets/fonts/nunito-sans-600.ttf": "ad2699609215220841b2bbb16dd1899f32559d24f55b4cdaaa913ca3e15e3fbd",
+    "skills/prep-that-slide/assets/fonts/nunito-sans-OFL.txt": "efbb0c9e864cef973982d9a17567e6be5c3d1759695574586f3f18c7ecca064b",
+    "skills/prep-that-slide/assets/fonts/source-sans-3-400.ttf": "20ab9752bd19a373dba627393b6c142e6cf8fc2f219119a8e0cb1442ef679ec5",
+    "skills/prep-that-slide/assets/fonts/source-sans-3-600.ttf": "950e66c48e5e60c9407421d0fa601047176f17e0d22a598bbd084dde45a98be2",
+    "skills/prep-that-slide/assets/fonts/source-sans-3-OFL.txt": "09746787287a289323b0ec3cff4d1a4a801331b82b7207c1e186f5d26619a392",
+    "skills/prep-that-slide/assets/fonts/source-serif-4-400.ttf": "f01900495012279f1e95d721c59363395eeffb79ef806eaa4dfa8bd923ccec0b",
+    "skills/prep-that-slide/assets/fonts/source-serif-4-600.ttf": "0b03b227d7edf5addbf0094b88c3aa1d66d9448b2b501ed686eb4818b691c247",
+    "skills/prep-that-slide/assets/fonts/source-serif-4-OFL.txt": "5f94c3fd3a23131a417ab5a0c8452de57e70c3cfb9f604d88241f7065ebf9fd9",
+    "skills/prep-that-slide/assets/fonts/space-grotesk-400.ttf": "ec926d5065eaca49a48f96e312bbae0bbc5733c24215cf5dfabbdccee926fef7",
+    "skills/prep-that-slide/assets/fonts/space-grotesk-600.ttf": "6c0346b8d297ebdc225832833e03e884a26ad99d265ecd3924d46e1ba285ea87",
+    "skills/prep-that-slide/assets/fonts/space-grotesk-OFL.txt": "564ce565c371c5e5bbf286006565a7c9aa55a9f56e7ca58d56e05d649dd61a72",
+    "skills/prep-that-slide/assets/icons/phosphor/LICENSE.txt": "b5b1f1da112d18ea2147decfd48ddc1bf2b5aeb6c265381579340e95b15a2bb2",
+    "skills/prep-that-slide/assets/icons/phosphor/README.md": "f00f3c8bb1c621f469d151cd685c50fa8a59f7a5fc29024193ee3927f9071196",
+    "skills/prep-that-slide/assets/icons/phosphor/calendar-blank.svg": "6268583ae0ea04e93fd24f1e70d47a8e8d79c88fc304af397b95b318980215d6",
+    "skills/prep-that-slide/assets/icons/phosphor/chart-bar.svg": "d161e503af4f5386a370ffd742d19d85e98625fd6d6eadbabbdb36d58dcca22c",
+    "skills/prep-that-slide/assets/icons/phosphor/chart-line-up.svg": "1bcf22abc6fe9cfb6195f0781d3056509aade1a35d4279ed46de7f282cca8937",
+    "skills/prep-that-slide/assets/icons/phosphor/check-circle.svg": "e02a080c3d1a758de5c5fd41abd913dec4cffbc70fe1e9637dbf7ce35f377055",
+    "skills/prep-that-slide/assets/icons/phosphor/list-checks.svg": "b2d11fc95de627d6abe9feeced5f7e0cdce3ccdf8d9f9d2334d596b8b5cc5cc4",
+    "skills/prep-that-slide/assets/icons/phosphor/magnifying-glass.svg": "f9fa2561978a9a3291e8ae0ebfcb651104f5069fade8f84871627bca68889cde",
+    "skills/prep-that-slide/assets/icons/phosphor/sources.json": "5d7784f0c318e2d9905354b569713633f29e9ce845555d1336f19eb5afd4b64f",
+    "skills/prep-that-slide/assets/presentation.css": "b981a3d559518fef9bc19fde0b66e9c04fa0210f9ed4b7d7d686c568bfec7a6e",
+    "skills/prep-that-slide/assets/preset-preview.css": "50324455b8c9de20a3e68409ca3902c220a6f3b92f990412a76e43841fce82b8",
+    "skills/prep-that-slide/assets/presets.json": "543f5570c408e3a0e1bb5a06a084242c77c40e083ec688903b7bd72ee4031a1d",
+    "skills/prep-that-slide/scripts/check-layout.js": "aac09e69bd8bd475d7d07cd36778488cf57a5b28f837ab3a82fb53b0ce4a8a9f",
+    "skills/prep-that-slide/scripts/preview-presets.mjs": "51a9b5d05b42dd79969b5301bb34f6ca3e8a6ef1e8c386a3e38faba421b092f6",
+    "evals/prep-that-slide/layout-cases.html": "bbe23faa603ee08810a29b7504c3395dcf223fa2cf3c6f9d491d1b545cff5dbc",
+    "evals/prep-that-slide/verify-layout.cjs": "3ca6b3f24683b90e63501342046fbec4693d75f66bad65e002a983d501168d8c",
+    "evals/prep-that-slide/verify-presets.cjs": "76285bc1cb74943a42b91c144719dfe670ea8f75e98348d1d6f231c7d8b80083"
+  },
+  "repositoryChecks": {
+    "command": "bun run check",
+    "passed": 115,
+    "failed": 0
+  },
+  "layoutFixtures": {
+    "command": "node evals/prep-that-slide/verify-layout.cjs \"$PLAYWRIGHT_PATH\" \"$BROWSER_PATH\"",
+    "output": "Layout fixture checks passed: valid crop, clipped text, outside label, hidden page, broken image, healthy document, missing pages."
+  },
+  "presetSamples": {
+    "command": "node evals/prep-that-slide/verify-presets.cjs \"$PLAYWRIGHT_PATH\" \"$BROWSER_PATH\"",
+    "measurements": {
+      "colorPairs": 72,
+      "extendedColorPairs": [
+        {
+          "preset": "brutalist-cyberpunk",
+          "foreground": "paperInk",
+          "background": "accent",
+          "ratio": 17.34251469115205
+        },
+        {
+          "preset": "brutalist-cyberpunk",
+          "foreground": "paperInk",
+          "background": "paper",
+          "ratio": 17.12305765827904
+        },
+        {
+          "preset": "brutalist-cyberpunk",
+          "foreground": "accent",
+          "background": "paperInk",
+          "ratio": 17.34251469115205
+        },
+        {
+          "preset": "brutalist-cyberpunk",
+          "foreground": "cyan",
+          "background": "surface",
+          "ratio": 12.513966407379964
+        },
+        {
+          "preset": "signal",
+          "foreground": "inverseInk",
+          "background": "inverseSurface",
+          "ratio": 14.923747029466513
+        },
+        {
+          "preset": "signal",
+          "foreground": "inverseInk",
+          "background": "inversePanel",
+          "ratio": 11.3193556645174
+        },
+        {
+          "preset": "signal",
+          "foreground": "inverseMuted",
+          "background": "inverseSurface",
+          "ratio": 7.724895871804002
+        },
+        {
+          "preset": "signal",
+          "foreground": "inverseMuted",
+          "background": "inversePanel",
+          "ratio": 5.859174888964699
+        },
+        {
+          "preset": "signal",
+          "foreground": "inverseAccent",
+          "background": "inverseSurface",
+          "ratio": 6.429661931971039
+        },
+        {
+          "preset": "signal",
+          "foreground": "ink",
+          "background": "stepPale",
+          "ratio": 13.247475412892946
+        },
+        {
+          "preset": "signal",
+          "foreground": "ink",
+          "background": "stepLight",
+          "ratio": 10.97396226817386
+        },
+        {
+          "preset": "signal",
+          "foreground": "ink",
+          "background": "stepMid",
+          "ratio": 7.860353458339296
+        },
+        {
+          "preset": "signal",
+          "foreground": "inverseInk",
+          "background": "stepDark",
+          "ratio": 5.950286728434501
+        },
+        {
+          "preset": "signal",
+          "foreground": "inverseInk",
+          "background": "stepDeep",
+          "ratio": 12.66703186409302
+        },
+        {
+          "preset": "signal",
+          "foreground": "ink",
+          "background": "inverseInk",
+          "ratio": 14.371685288853449
+        }
+      ],
+      "layout": {
+        "pages": 27,
+        "issues": [],
+        "brokenImages": [],
+        "fonts": [
+          {
+            "family": "Manrope",
+            "weight": "400",
+            "status": "loaded"
+          },
+          {
+            "family": "Manrope",
+            "weight": "600",
+            "status": "loaded"
+          },
+          {
+            "family": "Inter",
+            "weight": "400",
+            "status": "loaded"
+          },
+          {
+            "family": "Inter",
+            "weight": "600",
+            "status": "loaded"
+          },
+          {
+            "family": "Geist Mono",
+            "weight": "500",
+            "status": "loaded"
+          },
+          {
+            "family": "Geist",
+            "weight": "400",
+            "status": "loaded"
+          },
+          {
+            "family": "Geist",
+            "weight": "600",
+            "status": "loaded"
+          },
+          {
+            "family": "Space Grotesk",
+            "weight": "400",
+            "status": "loaded"
+          },
+          {
+            "family": "Space Grotesk",
+            "weight": "600",
+            "status": "loaded"
+          },
+          {
+            "family": "IBM Plex Mono",
+            "weight": "400",
+            "status": "loaded"
+          },
+          {
+            "family": "IBM Plex Mono",
+            "weight": "600",
+            "status": "loaded"
+          }
+        ],
+        "ok": true
+      },
+      "pdfPages": 27,
+      "fontChecks": [
+        {
+          "preset": "clear-brief",
+          "renderedFamilies": [
+            "Inter SemiBold",
+            "Manrope SemiBold",
+            "Manrope",
+            "Inter"
+          ]
+        },
+        {
+          "preset": "mono-brief",
+          "renderedFamilies": [
+            "Geist SemiBold",
+            "Geist Mono Medium",
+            "Geist"
+          ]
+        },
+        {
+          "preset": "monochrome-grid",
+          "renderedFamilies": [
+            "Geist SemiBold",
+            "Geist"
+          ]
+        },
+        {
+          "preset": "orange-white",
+          "renderedFamilies": [
+            "Inter SemiBold",
+            "Inter"
+          ]
+        },
+        {
+          "preset": "navy-orange",
+          "renderedFamilies": [
+            "Geist SemiBold",
+            "Geist Mono Medium",
+            "Geist"
+          ]
+        },
+        {
+          "preset": "editorial-review",
+          "renderedFamilies": [
+            "Geist SemiBold",
+            "Geist"
+          ]
+        },
+        {
+          "preset": "technical-notes",
+          "renderedFamilies": [
+            "Inter SemiBold",
+            "Space Grotesk SemiBold",
+            "Inter"
+          ]
+        },
+        {
+          "preset": "bold-story",
+          "renderedFamilies": [
+            "Inter SemiBold",
+            "Space Grotesk SemiBold",
+            "Inter",
+            "Space Grotesk"
+          ]
+        },
+        {
+          "preset": "data-room",
+          "renderedFamilies": [
+            "Geist SemiBold",
+            "Geist Mono Medium",
+            "Geist"
+          ]
+        },
+        {
+          "preset": "warm-workshop",
+          "renderedFamilies": [
+            "Manrope SemiBold",
+            "Manrope"
+          ]
+        },
+        {
+          "preset": "brutalist-cyberpunk",
+          "renderedFamilies": [
+            "IBM Plex Mono SemiBold",
+            "Inter SemiBold",
+            "IBM Plex Mono"
+          ]
+        },
+        {
+          "preset": "signal",
+          "renderedFamilies": [
+            "Inter SemiBold",
+            "Inter"
+          ]
+        }
+      ],
+      "iconChecks": [
+        {
+          "preset": "clear-brief",
+          "icons": [
+            {
+              "name": "phosphor:magnifying-glass",
+              "width": 25,
+              "height": 25,
+              "hiddenFromAssistiveTech": true
+            }
+          ]
+        },
+        {
+          "preset": "mono-brief",
+          "icons": [
+            {
+              "name": "phosphor:chart-bar",
+              "width": 27.5,
+              "height": 27.5,
+              "hiddenFromAssistiveTech": true
+            },
+            {
+              "name": "phosphor:check-circle",
+              "width": 27.5,
+              "height": 27.5,
+              "hiddenFromAssistiveTech": true
+            }
+          ]
+        },
+        {
+          "preset": "monochrome-grid",
+          "icons": [
+            {
+              "name": "phosphor:check-circle",
+              "width": 27.5,
+              "height": 27.5,
+              "hiddenFromAssistiveTech": true
+            }
+          ]
+        },
+        {
+          "preset": "orange-white",
+          "icons": [
+            {
+              "name": "phosphor:chart-bar",
+              "width": 27.5,
+              "height": 27.5,
+              "hiddenFromAssistiveTech": true
+            },
+            {
+              "name": "phosphor:check-circle",
+              "width": 27.5,
+              "height": 27.5,
+              "hiddenFromAssistiveTech": true
+            }
+          ]
+        },
+        {
+          "preset": "navy-orange",
+          "icons": [
+            {
+              "name": "phosphor:chart-bar",
+              "width": 27.5,
+              "height": 27.5,
+              "hiddenFromAssistiveTech": true
+            },
+            {
+              "name": "phosphor:check-circle",
+              "width": 25,
+              "height": 25,
+              "hiddenFromAssistiveTech": true
+            }
+          ]
+        },
+        {
+          "preset": "editorial-review",
+          "icons": [
+            {
+              "name": "phosphor:chart-bar",
+              "width": 27.5,
+              "height": 27.5,
+              "hiddenFromAssistiveTech": true
+            }
+          ]
+        },
+        {
+          "preset": "technical-notes",
+          "icons": [
+            {
+              "name": "phosphor:check-circle",
+              "width": 27.5,
+              "height": 27.5,
+              "hiddenFromAssistiveTech": true
+            }
+          ]
+        },
+        {
+          "preset": "bold-story",
+          "icons": [
+            {
+              "name": "phosphor:calendar-blank",
+              "width": 25,
+              "height": 25,
+              "hiddenFromAssistiveTech": true
+            }
+          ]
+        },
+        {
+          "preset": "data-room",
+          "icons": [
+            {
+              "name": "phosphor:list-checks",
+              "width": 22.5,
+              "height": 22.5,
+              "hiddenFromAssistiveTech": true
+            },
+            {
+              "name": "phosphor:chart-bar",
+              "width": 22.5,
+              "height": 22.5,
+              "hiddenFromAssistiveTech": true
+            },
+            {
+              "name": "phosphor:calendar-blank",
+              "width": 23.75,
+              "height": 23.75,
+              "hiddenFromAssistiveTech": true
+            },
+            {
+              "name": "phosphor:check-circle",
+              "width": 18.75,
+              "height": 18.75,
+              "hiddenFromAssistiveTech": true
+            },
+            {
+              "name": "phosphor:list-checks",
+              "width": 22.5,
+              "height": 22.5,
+              "hiddenFromAssistiveTech": true
+            },
+            {
+              "name": "phosphor:list-checks",
+              "width": 22.5,
+              "height": 22.5,
+              "hiddenFromAssistiveTech": true
+            }
+          ]
+        },
+        {
+          "preset": "warm-workshop",
+          "icons": [
+            {
+              "name": "phosphor:check-circle",
+              "width": 30,
+              "height": 30,
+              "hiddenFromAssistiveTech": true
+            }
+          ]
+        },
+        {
+          "preset": "brutalist-cyberpunk",
+          "icons": [
+            {
+              "name": "phosphor:chart-bar",
+              "width": 20,
+              "height": 20,
+              "hiddenFromAssistiveTech": true
+            },
+            {
+              "name": "phosphor:calendar-blank",
+              "width": 23.75,
+              "height": 23.75,
+              "hiddenFromAssistiveTech": true
+            },
+            {
+              "name": "phosphor:list-checks",
+              "width": 21.25,
+              "height": 21.25,
+              "hiddenFromAssistiveTech": true
+            },
+            {
+              "name": "phosphor:check-circle",
+              "width": 18.75,
+              "height": 18.75,
+              "hiddenFromAssistiveTech": true
+            }
+          ]
+        },
+        {
+          "preset": "signal",
+          "icons": [
+            {
+              "name": "phosphor:calendar-blank",
+              "width": 28.75,
+              "height": 28.75,
+              "hiddenFromAssistiveTech": true
+            },
+            {
+              "name": "phosphor:chart-bar",
+              "width": 28.75,
+              "height": 28.75,
+              "hiddenFromAssistiveTech": true
+            },
+            {
+              "name": "phosphor:magnifying-glass",
+              "width": 22.5,
+              "height": 22.5,
+              "hiddenFromAssistiveTech": true
+            },
+            {
+              "name": "phosphor:list-checks",
+              "width": 22.5,
+              "height": 22.5,
+              "hiddenFromAssistiveTech": true
+            }
+          ]
+        }
+      ],
+      "externalRequests": [],
+      "stepperGeometry": {
+        "steps": [
+          {
+            "markerCenter": 245.328125,
+            "cardCenter": 245.328125
+          },
+          {
+            "markerCenter": 639.984375,
+            "cardCenter": 639.9921875
+          },
+          {
+            "markerCenter": 1034.65625,
+            "cardCenter": 1034.65625
+          }
+        ],
+        "lineStart": 245.328,
+        "lineEnd": 1034.672
+      }
+    }
+  },
+  "limits": [
+    "The source hashes identify the sample generator, assets, layout checker and browser fixtures evaluated in this run.",
+    "No agent behavioral task, native PowerPoint workflow or connected Google Slides workflow is evaluated by these commands.",
+    "Automatic layout and declared color-pair checks do not establish design quality, factual accuracy or accessibility conformance.",
+    "PDF verification covers export success and page count. HTML checks use browser print media; they are not visual inspection of the exported PDF.",
+    "Results depend on the recorded tools and fixtures. Rerun the commands for another environment or source revision."
+  ]
+}

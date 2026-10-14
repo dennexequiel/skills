@@ -1,0 +1,521 @@
+{
+  "version": 1,
+  "canvas": {
+    "widthPx": 1280,
+    "heightPx": 720
+  },
+  "presets": [
+    {
+      "id": "clear-brief",
+      "name": "Clear Brief",
+      "use": "Decisions and concise explanations",
+      "colors": {
+        "surface": "#FFFFFF",
+        "ink": "#253342",
+        "muted": "#52616F",
+        "accent": "#12685E",
+        "tint": "#F1F6F5",
+        "border": "#D7DFDF"
+      },
+      "composition": "Lead with the conclusion. Pair evidence with its implication; use a separate decision strip only when useful.",
+      "visuals": "Simple route diagrams, evidence crops and a small consistent icon set when requested.",
+      "fonts": {
+        "heading": [
+          "Manrope",
+          "Arial",
+          "sans-serif"
+        ],
+        "body": [
+          "Inter",
+          "Arial",
+          "sans-serif"
+        ]
+      },
+      "scale": {
+        "headingPx": 40,
+        "bodyPx": 22,
+        "gapPx": 32,
+        "padding": "48px 64px"
+      }
+    },
+    {
+      "id": "mono-brief",
+      "name": "Mono Brief",
+      "use": "Client reviews, recommendations and scoped delivery plans",
+      "colors": {
+        "surface": "#FFFFFF",
+        "ink": "#263344",
+        "muted": "#536173",
+        "accent": "#1F3166",
+        "tint": "#FDFBF0",
+        "border": "#D8DCE5",
+        "highlight": "#FCD34D"
+      },
+      "composition": "Use short mono headings, aligned evidence tables and readable explanations. Connect each finding to a recommendation. Keep page numbers unobtrusive and omit repeating prose footers.",
+      "visuals": "Use a few Phosphor regular icons to identify concepts, with evidence crops or diagrams when they explain the finding. Colors and icon family remain independent choices.",
+      "fonts": {
+        "heading": [
+          "Geist Mono",
+          "Courier New",
+          "monospace"
+        ],
+        "body": [
+          "Geist",
+          "Arial",
+          "sans-serif"
+        ],
+        "headingWeight": 500
+      },
+      "scale": {
+        "headingPx": 38,
+        "bodyPx": 22,
+        "gapPx": 36,
+        "padding": "44px 64px"
+      }
+    },
+    {
+      "id": "monochrome-grid",
+      "name": "Monochrome Grid",
+      "use": "Minimal product briefs, technical stories and direct decisions",
+      "colors": {
+        "surface": "#FFFFFF",
+        "ink": "#000000",
+        "muted": "#000000",
+        "accent": "#000000",
+        "tint": "#FFFFFF",
+        "border": "#000000"
+      },
+      "composition": "Use a strict grid, short Geist headings, fine black rules and occasional inverted black panels. Separate evidence, limits and decisions through alignment and spacing.",
+      "visuals": "Pure black and white, including charts and icons. Use filled and outlined shapes rather than gray fills or color accents. Vercel is a visual reference, not a branded template.",
+      "fonts": {
+        "heading": [
+          "Geist",
+          "Arial",
+          "sans-serif"
+        ],
+        "body": [
+          "Geist",
+          "Arial",
+          "sans-serif"
+        ]
+      },
+      "scale": {
+        "headingPx": 54,
+        "bodyPx": 22,
+        "gapPx": 32,
+        "padding": "44px 64px"
+      },
+      "reference": {
+        "name": "Vercel Geist Design System",
+        "url": "https://vercel.com/geist/introduction"
+      }
+    },
+    {
+      "id": "orange-white",
+      "name": "Orange White",
+      "use": "Platform explanations, service recommendations and delivery plans",
+      "colors": {
+        "surface": "#FFFFFF",
+        "ink": "#161616",
+        "muted": "#50545C",
+        "accent": "#B9380C",
+        "tint": "#FFF5EF",
+        "border": "#DEDDE1",
+        "highlight": "#FF6633"
+      },
+      "composition": "Keep the canvas white with large Inter headings, generous margins and open content groups. Use orange selectively for a chart, a numbered step or a decision marker.",
+      "visuals": "Simple outlined diagrams and Phosphor regular icons. Use dark text on bright orange fills and the darker accent for text on white. Cloudflare is a visual reference, not a branded template.",
+      "fonts": {
+        "heading": [
+          "Inter",
+          "Arial",
+          "sans-serif"
+        ],
+        "body": [
+          "Inter",
+          "Arial",
+          "sans-serif"
+        ]
+      },
+      "scale": {
+        "headingPx": 50,
+        "bodyPx": 22,
+        "gapPx": 40,
+        "padding": "44px 64px"
+      },
+      "reference": {
+        "name": "Cloudflare Developer Platform",
+        "url": "https://www.cloudflare.com/developer-platform/"
+      }
+    },
+    {
+      "id": "navy-orange",
+      "name": "Navy Orange",
+      "use": "Client recommendations, product plans and evidence-led briefs",
+      "colors": {
+        "surface": "#FFFFFF",
+        "ink": "#15233B",
+        "muted": "#15233B",
+        "accent": "#15233B",
+        "tint": "#FFFFFF",
+        "border": "#15233B",
+        "highlight": "#F05A27"
+      },
+      "composition": "Pair a navy evidence panel with open white reading space. Use short mono headings, orange counts or step markers, and a clear decision area. Alternate evidence and planning layouts rather than repeating a card grid.",
+      "visuals": "Use only navy #15233B, orange #F05A27 and white. Keep body text navy on white, white on navy, or navy on orange. Orange is a graphic highlight, not small text on white; do not use white body text on orange. Use labeled charts and restrained Phosphor regular icons.",
+      "fonts": {
+        "heading": [
+          "Geist Mono",
+          "Courier New",
+          "monospace"
+        ],
+        "body": [
+          "Geist",
+          "Arial",
+          "sans-serif"
+        ],
+        "headingWeight": 500
+      },
+      "scale": {
+        "headingPx": 42,
+        "bodyPx": 22,
+        "gapPx": 40,
+        "padding": "44px 64px"
+      }
+    },
+    {
+      "id": "editorial-review",
+      "name": "Editorial Review",
+      "use": "Investigations, research and evidence-led explanations",
+      "colors": {
+        "surface": "#FFFFFF",
+        "ink": "#151515",
+        "muted": "#454545",
+        "accent": "#2546B9",
+        "tint": "#F5F5F1",
+        "border": "#151515",
+        "highlight": "#E8F464",
+        "coral": "#FF896B",
+        "cobalt": "#315BDF"
+      },
+      "composition": "Lead with a short question and answer it with evidence on the same page. Use large clean sans headings, an asymmetric grid, hard edges and open reading space. Carry the facts into a separate planning page with clear geometric step markers.",
+      "visuals": "Cobalt, acid yellow and coral identify evidence and decisions. Use flat circles, squares and rules with readable labels. Keep chart marks equal in size and color meanings explicit. Avoid decorative gauges, faux newspaper textures and sensational claims.",
+      "fonts": {
+        "heading": [
+          "Geist",
+          "Arial",
+          "sans-serif"
+        ],
+        "body": [
+          "Geist",
+          "Arial",
+          "sans-serif"
+        ]
+      },
+      "scale": {
+        "headingPx": 76,
+        "bodyPx": 22,
+        "gapPx": 40,
+        "padding": "44px 64px"
+      }
+    },
+    {
+      "id": "technical-notes",
+      "name": "Blueprint",
+      "use": "Systems and technical explanations",
+      "colors": {
+        "surface": "#F7F9FC",
+        "ink": "#17253B",
+        "muted": "#4D5D73",
+        "accent": "#2454A6",
+        "tint": "#EAF0F9",
+        "border": "#CFD9E8"
+      },
+      "composition": "Make the evidence the focal point with a strong blue metric panel, a labeled chart and open explanations. Show parallel preparation tasks converging on one decision before the next step.",
+      "visuals": "Use precise connectors, clear labels and a few Phosphor regular icons. Give diagrams generous space and visible hierarchy; use color to distinguish roles, not to decorate every object.",
+      "fonts": {
+        "heading": [
+          "Space Grotesk",
+          "Arial",
+          "sans-serif"
+        ],
+        "body": [
+          "Inter",
+          "Arial",
+          "sans-serif"
+        ]
+      },
+      "scale": {
+        "headingPx": 52,
+        "bodyPx": 22,
+        "gapPx": 32,
+        "padding": "44px 56px"
+      }
+    },
+    {
+      "id": "bold-story",
+      "name": "Bold Story",
+      "use": "Product narratives and live talks",
+      "colors": {
+        "surface": "#161C28",
+        "ink": "#F5F7FC",
+        "muted": "#BAC5D8",
+        "accent": "#C6EE75",
+        "tint": "#243044",
+        "border": "#41516A"
+      },
+      "composition": "Use a short claim with generous negative space. Alternate statement pages with one strong image or diagram; split dense evidence into supporting pages.",
+      "visuals": "One focal visual at a time. Limit accent color to a key number or concept.",
+      "fonts": {
+        "heading": [
+          "Space Grotesk",
+          "Arial",
+          "sans-serif"
+        ],
+        "body": [
+          "Inter",
+          "Arial",
+          "sans-serif"
+        ]
+      },
+      "scale": {
+        "headingPx": 52,
+        "bodyPx": 26,
+        "gapPx": 40,
+        "padding": "48px 64px"
+      }
+    },
+    {
+      "id": "data-room",
+      "name": "Ledger",
+      "use": "Analyst briefs, measured results and comparisons",
+      "colors": {
+        "surface": "#FFFFFF",
+        "ink": "#1B1F24",
+        "muted": "#4A5059",
+        "accent": "#1E5B3C",
+        "tint": "#F4F2EC",
+        "border": "#D9D6CC",
+        "neutral": "#8C9198"
+      },
+      "composition": "Use short mono headings and a compact comparison table beside a labelled horizontal bar chart. Derive both from the same data, state the denominator and use a common zero-based scale. Right-align table figures and percentage shares. Use whitespace, a quiet header and an emphasized total row to group the table. Place the interpretation below both, and proposed numbered steps beneath the decision and open items on the planning page. An alternative evidence layout pairs a large donut with a centered total and aligned category counts and shares.",
+      "visuals": "Geist Mono figures with tabular numerals, decimal-aligned percentages and restrained green emphasis. Semantic tables provide exact values; directly labelled bars show their proportions on a stated scale. Use gray for the secondary category and avoid decorative gridlines. Keep table separators to the header and total when useful. Contextual Phosphor regular icons identify evidence and decisions. Donuts show a few non-overlapping parts of a stated whole, with labels and exact values alongside. Use bars for precise comparisons and lines only for ordered time-series data.",
+      "fonts": {
+        "heading": [
+          "Geist Mono",
+          "Courier New",
+          "monospace"
+        ],
+        "body": [
+          "Geist",
+          "Arial",
+          "sans-serif"
+        ],
+        "headingWeight": 500
+      },
+      "scale": {
+        "headingPx": 40,
+        "bodyPx": 20,
+        "gapPx": 28,
+        "padding": "44px 56px 56px"
+      },
+      "previewPages": [
+        "evidence",
+        "decision",
+        "part-to-whole"
+      ]
+    },
+    {
+      "id": "warm-workshop",
+      "name": "Clay",
+      "use": "Learning and people-focused material",
+      "colors": {
+        "surface": "#FFF9F1",
+        "ink": "#342D27",
+        "muted": "#6A5848",
+        "accent": "#97441E",
+        "tint": "#F5EBDD",
+        "border": "#E1D2C0"
+      },
+      "composition": "Use warm paper tones, tactile evidence marks and plain explanations. Center each milestone and its text within equal-width columns; align connecting lines with marker centers.",
+      "visuals": "Human imagery or clear illustrations when relevant. Use friendly icons sparingly and consistently.",
+      "fonts": {
+        "heading": [
+          "Manrope",
+          "Arial",
+          "sans-serif"
+        ],
+        "body": [
+          "Manrope",
+          "Arial",
+          "sans-serif"
+        ]
+      },
+      "scale": {
+        "headingPx": 42,
+        "bodyPx": 22,
+        "gapPx": 36,
+        "padding": "48px 64px"
+      }
+    },
+    {
+      "id": "brutalist-cyberpunk",
+      "name": "Hard Reset",
+      "use": "Launch notes, provocations and high-contrast recommendations",
+      "colors": {
+        "surface": "#0C0C0C",
+        "ink": "#F2F0E6",
+        "muted": "#B3B0A4",
+        "accent": "#E4FF1A",
+        "tint": "#1B1B1A",
+        "border": "#3D3D3A",
+        "paper": "#F2F0E6",
+        "paperInk": "#0C0C0C",
+        "cyan": "#2DE2FF"
+      },
+      "composition": "Print-poster pages on near-black: a huge uppercase claim, then one full-bleed bar whose blocks are the data. Pair context and limits in an asymmetric row at the foot. On a decision page, stack the steps on black, cut across them with a yellow approval slab from the page edge, and set the request in a full-height off-white column.",
+      "visuals": "Hard square edges, heavy flat blocks and 3px outlines. Acid yellow marks the main quantity, step numbers and the approval gate, with near-black text on it; cyan flags limits as text on black. Keep blocks to scale and labels plain. No glow, gradients, glitch text, rounded cards or decorative figures.",
+      "fonts": {
+        "heading": [
+          "Inter",
+          "Arial",
+          "sans-serif"
+        ],
+        "body": [
+          "IBM Plex Mono",
+          "Courier New",
+          "monospace"
+        ]
+      },
+      "scale": {
+        "headingPx": 92,
+        "bodyPx": 20,
+        "gapPx": 32,
+        "padding": "40px 48px 48px"
+      },
+      "contrastPairs": [
+        [
+          "paperInk",
+          "accent"
+        ],
+        [
+          "paperInk",
+          "paper"
+        ],
+        [
+          "accent",
+          "paperInk"
+        ],
+        [
+          "cyan",
+          "surface"
+        ]
+      ]
+    },
+    {
+      "id": "signal",
+      "name": "Signal",
+      "use": "Research explainers, product comparisons and practical recommendations",
+      "colors": {
+        "surface": "#F5F3EE",
+        "ink": "#222220",
+        "muted": "#5B5A55",
+        "accent": "#A3462A",
+        "tint": "#FFFFFF",
+        "border": "#D9D6CE",
+        "highlight": "#C2603C",
+        "neutral": "#898780",
+        "stepPale": "#ECEAE4",
+        "stepLight": "#D9D6CE",
+        "stepMid": "#B9B6AD",
+        "stepDark": "#5E5D58",
+        "stepDeep": "#2B2C29",
+        "inverseSurface": "#1E1F1D",
+        "inversePanel": "#33342F",
+        "inverseInk": "#F5F3EE",
+        "inverseMuted": "#B4B1A9",
+        "inverseAccent": "#E58A66"
+      },
+      "composition": "Spacious warm-white pages with bold Inter titles, rounded white panels and one idea per page. Pair two evidence panels above a ruled takeaway row, show a sequence as one broad segmented band that steps from pale gray to charcoal, branch requirements from a single charcoal center, and pair each limit with its response in rounded rows on a charcoal page.",
+      "visuals": "Grays carry structure, sequence and comparison; terracotta marks the main bar, small icons, arrows and the center label. Text sits on warm white, white, gray or charcoal, never on terracotta fills. Use 20px panel corners, 1.5px gray outlines and connectors with small arrowheads, and Phosphor regular icons where they name a panel's subject.",
+      "fonts": {
+        "heading": [
+          "Inter",
+          "Arial",
+          "sans-serif"
+        ],
+        "body": [
+          "Inter",
+          "Arial",
+          "sans-serif"
+        ]
+      },
+      "scale": {
+        "headingPx": 48,
+        "bodyPx": 20,
+        "gapPx": 24,
+        "padding": "44px 56px 52px"
+      },
+      "previewPages": [
+        "evidence",
+        "planning",
+        "decision-map",
+        "issues-and-actions"
+      ],
+      "contrastPairs": [
+        [
+          "inverseInk",
+          "inverseSurface"
+        ],
+        [
+          "inverseInk",
+          "inversePanel"
+        ],
+        [
+          "inverseMuted",
+          "inverseSurface"
+        ],
+        [
+          "inverseMuted",
+          "inversePanel"
+        ],
+        [
+          "inverseAccent",
+          "inverseSurface"
+        ],
+        [
+          "ink",
+          "stepPale"
+        ],
+        [
+          "ink",
+          "stepLight"
+        ],
+        [
+          "ink",
+          "stepMid"
+        ],
+        [
+          "inverseInk",
+          "stepDark"
+        ],
+        [
+          "inverseInk",
+          "stepDeep"
+        ],
+        [
+          "ink",
+          "inverseInk"
+        ]
+      ]
+    }
+  ],
+  "defaults": {
+    "icons": {
+      "family": "Phosphor",
+      "weight": "regular",
+      "format": "svg",
+      "usage": "Use when an icon helps explain or identify content. User preferences and brand requirements take precedence."
+    }
+  }
+}

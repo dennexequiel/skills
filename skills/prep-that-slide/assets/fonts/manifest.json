@@ -1,0 +1,342 @@
+{
+  "version": 1,
+  "retrievedOn": "2026-10-13",
+  "purpose": "Offline preview fonts, optional defaults that users can replace. Original unmodified static files with weights declared per face. Verify language coverage for each new presentation.",
+  "googleFontsCommit": "66928797f271fed5ee428544e7229685e2d90127",
+  "faces": [
+    {
+      "family": "Manrope",
+      "weight": 400,
+      "style": "normal",
+      "file": "manrope-400.ttf",
+      "format": "truetype",
+      "sha256": "a13d9b41b0a471ce58f0e46d377fa3cc76615e4632c3b15eb397caadf7a13f0a",
+      "source": "https://fonts.gstatic.com/s/manrope/v20/xn7_YHE41ni1AdIRqAuZuw1Bx9mbZk79FO_F.ttf",
+      "cssSource": "https://fonts.googleapis.com/css2?family=Manrope:wght@400;600&display=block",
+      "bytes": 94972,
+      "platformFamilies": [
+        "Manrope"
+      ]
+    },
+    {
+      "family": "Manrope",
+      "weight": 600,
+      "style": "normal",
+      "file": "manrope-600.ttf",
+      "format": "truetype",
+      "sha256": "6bad1a774228464cc88b8b0271555b266f7a3c64a7bedf15e165fdab4f6ac0ce",
+      "source": "https://fonts.gstatic.com/s/manrope/v20/xn7_YHE41ni1AdIRqAuZuw1Bx9mbZk4jE-_F.ttf",
+      "cssSource": "https://fonts.googleapis.com/css2?family=Manrope:wght@400;600&display=block",
+      "bytes": 95096,
+      "platformFamilies": [
+        "Manrope",
+        "Manrope SemiBold"
+      ]
+    },
+    {
+      "family": "Inter",
+      "weight": 400,
+      "style": "normal",
+      "file": "inter-400.ttf",
+      "format": "truetype",
+      "sha256": "1b08e7fc267a5c7e1d614100f604b83e7e8a0be241f0f288faa2b3ac93a683ba",
+      "source": "https://fonts.gstatic.com/s/inter/v20/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfMZg.ttf",
+      "cssSource": "https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=block",
+      "bytes": 324820,
+      "platformFamilies": [
+        "Inter"
+      ]
+    },
+    {
+      "family": "Inter",
+      "weight": 600,
+      "style": "normal",
+      "file": "inter-600.ttf",
+      "format": "truetype",
+      "sha256": "e7a1aaf7eda9f2fad4131725fa556265ec75ca7b2d756260173a040363e8d4f7",
+      "source": "https://fonts.gstatic.com/s/inter/v20/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuGKYMZg.ttf",
+      "cssSource": "https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=block",
+      "bytes": 326048,
+      "platformFamilies": [
+        "Inter",
+        "Inter SemiBold"
+      ]
+    },
+    {
+      "family": "Source Serif 4",
+      "weight": 400,
+      "style": "normal",
+      "file": "source-serif-4-400.ttf",
+      "format": "truetype",
+      "sha256": "f01900495012279f1e95d721c59363395eeffb79ef806eaa4dfa8bd923ccec0b",
+      "source": "https://fonts.gstatic.com/s/sourceserif4/v15/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUHf6OAVIJmeUDygwjihdqrhw.ttf",
+      "cssSource": "https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600&display=block",
+      "bytes": 194464,
+      "platformFamilies": [
+        "Source Serif 4"
+      ]
+    },
+    {
+      "family": "Source Serif 4",
+      "weight": 600,
+      "style": "normal",
+      "file": "source-serif-4-600.ttf",
+      "format": "truetype",
+      "sha256": "0b03b227d7edf5addbf0094b88c3aa1d66d9448b2b501ed686eb4818b691c247",
+      "source": "https://fonts.gstatic.com/s/sourceserif4/v15/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUHf6OAVIJmeUDygwjisltrhw.ttf",
+      "cssSource": "https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600&display=block",
+      "bytes": 194800,
+      "platformFamilies": [
+        "Source Serif 4",
+        "Source Serif 4 SemiBold"
+      ]
+    },
+    {
+      "family": "Source Sans 3",
+      "weight": 400,
+      "style": "normal",
+      "file": "source-sans-3-400.ttf",
+      "format": "truetype",
+      "sha256": "20ab9752bd19a373dba627393b6c142e6cf8fc2f219119a8e0cb1442ef679ec5",
+      "source": "https://fonts.gstatic.com/s/sourcesans3/v20/nwpBtKy2OAdR1K-IwhWudF-R9QMylBJAV3Bo8Ky461EN.ttf",
+      "cssSource": "https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600&display=block",
+      "bytes": 234708,
+      "platformFamilies": [
+        "Source Sans 3"
+      ]
+    },
+    {
+      "family": "Source Sans 3",
+      "weight": 600,
+      "style": "normal",
+      "file": "source-sans-3-600.ttf",
+      "format": "truetype",
+      "sha256": "950e66c48e5e60c9407421d0fa601047176f17e0d22a598bbd084dde45a98be2",
+      "source": "https://fonts.gstatic.com/s/sourcesans3/v20/nwpBtKy2OAdR1K-IwhWudF-R9QMylBJAV3Bo8Kxm7FEN.ttf",
+      "cssSource": "https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600&display=block",
+      "bytes": 234680,
+      "platformFamilies": [
+        "Source Sans 3",
+        "Source Sans 3 SemiBold"
+      ]
+    },
+    {
+      "family": "IBM Plex Mono",
+      "weight": 400,
+      "style": "normal",
+      "file": "ibm-plex-mono-400.ttf",
+      "format": "truetype",
+      "sha256": "a7fdc993f9f0387caedba4e42521136fa97e4c0837ae6239bf0413ccf8af00c2",
+      "source": "https://fonts.gstatic.com/s/ibmplexmono/v20/-F63fjptAgt5VM-kVkqdyU8n5ig.ttf",
+      "cssSource": "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&display=block",
+      "bytes": 128812,
+      "platformFamilies": [
+        "IBM Plex Mono"
+      ]
+    },
+    {
+      "family": "IBM Plex Mono",
+      "weight": 600,
+      "style": "normal",
+      "file": "ibm-plex-mono-600.ttf",
+      "format": "truetype",
+      "sha256": "754dfc9d50cf7aabfb6b108d2c2f7d20a3f1f2cc6f6c01640c6728091272cec0",
+      "source": "https://fonts.gstatic.com/s/ibmplexmono/v20/-F6qfjptAgt5VM-kVkqdyU8n3vAO8lc.ttf",
+      "cssSource": "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&display=block",
+      "bytes": 133444,
+      "platformFamilies": [
+        "IBM Plex Mono SemiBold"
+      ]
+    },
+    {
+      "family": "IBM Plex Sans",
+      "weight": 400,
+      "style": "normal",
+      "file": "ibm-plex-sans-400.ttf",
+      "format": "truetype",
+      "sha256": "6dbe082463cf749cfa057d45c3048c90f4df031496498e5b5bdfd0b6babb9d16",
+      "source": "https://fonts.gstatic.com/s/ibmplexsans/v23/zYXGKVElMYYaJe8bpLHnCwDKr932-G7dytD-Dmu1swZSAXcomDVmadSD6llzAA.ttf",
+      "cssSource": "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&display=block",
+      "bytes": 205252,
+      "platformFamilies": [
+        "IBM Plex Sans"
+      ]
+    },
+    {
+      "family": "IBM Plex Sans",
+      "weight": 600,
+      "style": "normal",
+      "file": "ibm-plex-sans-600.ttf",
+      "format": "truetype",
+      "sha256": "5311c66fd6d04ae45671236f7eae667b671c06c1dc7e88d52c206e5fadd0fb21",
+      "source": "https://fonts.gstatic.com/s/ibmplexsans/v23/zYXGKVElMYYaJe8bpLHnCwDKr932-G7dytD-Dmu1swZSAXcomDVmadSDNF5zAA.ttf",
+      "cssSource": "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&display=block",
+      "bytes": 205284,
+      "platformFamilies": [
+        "IBM Plex Sans",
+        "IBM Plex Sans SemiBold"
+      ]
+    },
+    {
+      "family": "Space Grotesk",
+      "weight": 400,
+      "style": "normal",
+      "file": "space-grotesk-400.ttf",
+      "format": "truetype",
+      "sha256": "ec926d5065eaca49a48f96e312bbae0bbc5733c24215cf5dfabbdccee926fef7",
+      "source": "https://fonts.gstatic.com/s/spacegrotesk/v22/V8mQoQDjQSkFtoMM3T6r8E7mF71Q-gOoraIAEj7oUUsj.ttf",
+      "cssSource": "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600&display=block",
+      "bytes": 69360,
+      "platformFamilies": [
+        "Space Grotesk"
+      ]
+    },
+    {
+      "family": "Space Grotesk",
+      "weight": 600,
+      "style": "normal",
+      "file": "space-grotesk-600.ttf",
+      "format": "truetype",
+      "sha256": "6c0346b8d297ebdc225832833e03e884a26ad99d265ecd3924d46e1ba285ea87",
+      "source": "https://fonts.gstatic.com/s/spacegrotesk/v22/V8mQoQDjQSkFtoMM3T6r8E7mF71Q-gOoraIAEj42Vksj.ttf",
+      "cssSource": "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600&display=block",
+      "bytes": 69356,
+      "platformFamilies": [
+        "Space Grotesk",
+        "Space Grotesk SemiBold"
+      ]
+    },
+    {
+      "family": "Nunito Sans",
+      "weight": 400,
+      "style": "normal",
+      "file": "nunito-sans-400.ttf",
+      "format": "truetype",
+      "sha256": "a699fa825cd47524461c459a54fe3cd51eb13e1e76ba238fe6ea86932979a808",
+      "source": "https://fonts.gstatic.com/s/nunitosans/v19/pe1mMImSLYBIv1o4X1M8ce2xCx3yop4tQpF_MeTm0lfGWVpNn64CL7U8upHZIbMV51Q42ptCp5F5bxqqtQ1yiU4G1ilntA.ttf",
+      "cssSource": "https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600&display=block",
+      "bytes": 106700,
+      "platformFamilies": [
+        "Nunito Sans"
+      ]
+    },
+    {
+      "family": "Nunito Sans",
+      "weight": 600,
+      "style": "normal",
+      "file": "nunito-sans-600.ttf",
+      "format": "truetype",
+      "sha256": "ad2699609215220841b2bbb16dd1899f32559d24f55b4cdaaa913ca3e15e3fbd",
+      "source": "https://fonts.gstatic.com/s/nunitosans/v19/pe1mMImSLYBIv1o4X1M8ce2xCx3yop4tQpF_MeTm0lfGWVpNn64CL7U8upHZIbMV51Q42ptCp5F5bxqqtQ1yiU4GCC5ntA.ttf",
+      "cssSource": "https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600&display=block",
+      "bytes": 106832,
+      "platformFamilies": [
+        "Nunito Sans",
+        "Nunito Sans SemiBold"
+      ]
+    },
+    {
+      "family": "Geist",
+      "weight": 400,
+      "style": "normal",
+      "file": "Geist-Regular.ttf",
+      "format": "truetype",
+      "sha256": "85a1c6b18a6b0a06dfe9fd4f6d6a5d4979f74ec861eaef4bc7868b5492b8a117",
+      "source": "https://raw.githubusercontent.com/vercel/geist-font/10dc7658f13c38a474cde201bb09a4617267545b/fonts/Geist/ttf/Geist-Regular.ttf",
+      "bytes": 126048,
+      "platformFamilies": [
+        "Geist"
+      ]
+    },
+    {
+      "family": "Geist",
+      "weight": 600,
+      "style": "normal",
+      "file": "Geist-SemiBold.ttf",
+      "format": "truetype",
+      "sha256": "b9f52322d6d20a7ff1e7fe1310ff12ec851aebb83d24f8b4f1d4149298f489b2",
+      "source": "https://raw.githubusercontent.com/vercel/geist-font/10dc7658f13c38a474cde201bb09a4617267545b/fonts/Geist/ttf/Geist-SemiBold.ttf",
+      "bytes": 127872,
+      "platformFamilies": [
+        "Geist",
+        "Geist SemiBold"
+      ]
+    },
+    {
+      "family": "Geist Mono",
+      "weight": 500,
+      "style": "normal",
+      "file": "GeistMono-Medium.ttf",
+      "format": "truetype",
+      "sha256": "6fa6a795c17a11bcbef410f52a853e8503f8e25d92762d202d907c54f5c0c0fb",
+      "source": "https://raw.githubusercontent.com/vercel/geist-font/10dc7658f13c38a474cde201bb09a4617267545b/fonts/GeistMono/ttf/GeistMono-Medium.ttf",
+      "bytes": 150096,
+      "platformFamilies": [
+        "Geist Mono",
+        "Geist Mono Medium"
+      ]
+    }
+  ],
+  "licenses": [
+    {
+      "family": "Manrope",
+      "file": "manrope-OFL.txt",
+      "source": "https://raw.githubusercontent.com/google/fonts/66928797f271fed5ee428544e7229685e2d90127/ofl/manrope/OFL.txt",
+      "sha256": "58172e0c0fac2cda8a37b348164bb55e44b0e69051e557e92b1d3f6910141f7b"
+    },
+    {
+      "family": "Inter",
+      "file": "inter-OFL.txt",
+      "source": "https://raw.githubusercontent.com/google/fonts/66928797f271fed5ee428544e7229685e2d90127/ofl/inter/OFL.txt",
+      "sha256": "5b9321a4298cfeb6b34354164a1c3afc3db114569984c502b9b35d988fd58c57"
+    },
+    {
+      "family": "Source Serif 4",
+      "file": "source-serif-4-OFL.txt",
+      "source": "https://raw.githubusercontent.com/google/fonts/66928797f271fed5ee428544e7229685e2d90127/ofl/sourceserif4/OFL.txt",
+      "sha256": "5f94c3fd3a23131a417ab5a0c8452de57e70c3cfb9f604d88241f7065ebf9fd9"
+    },
+    {
+      "family": "Source Sans 3",
+      "file": "source-sans-3-OFL.txt",
+      "source": "https://raw.githubusercontent.com/google/fonts/66928797f271fed5ee428544e7229685e2d90127/ofl/sourcesans3/OFL.txt",
+      "sha256": "09746787287a289323b0ec3cff4d1a4a801331b82b7207c1e186f5d26619a392"
+    },
+    {
+      "family": "IBM Plex Mono",
+      "file": "ibm-plex-mono-OFL.txt",
+      "source": "https://raw.githubusercontent.com/google/fonts/66928797f271fed5ee428544e7229685e2d90127/ofl/ibmplexmono/OFL.txt",
+      "sha256": "7e6b2818edbd8f6a01ae80641cc8f16a51080d08fb4e532be3a0b6f74adb07da"
+    },
+    {
+      "family": "IBM Plex Sans",
+      "file": "ibm-plex-sans-OFL.txt",
+      "source": "https://raw.githubusercontent.com/google/fonts/66928797f271fed5ee428544e7229685e2d90127/ofl/ibmplexsans/OFL.txt",
+      "sha256": "7e6b2818edbd8f6a01ae80641cc8f16a51080d08fb4e532be3a0b6f74adb07da"
+    },
+    {
+      "family": "Space Grotesk",
+      "file": "space-grotesk-OFL.txt",
+      "source": "https://raw.githubusercontent.com/google/fonts/66928797f271fed5ee428544e7229685e2d90127/ofl/spacegrotesk/OFL.txt",
+      "sha256": "564ce565c371c5e5bbf286006565a7c9aa55a9f56e7ca58d56e05d649dd61a72"
+    },
+    {
+      "family": "Nunito Sans",
+      "file": "nunito-sans-OFL.txt",
+      "source": "https://raw.githubusercontent.com/google/fonts/66928797f271fed5ee428544e7229685e2d90127/ofl/nunitosans/OFL.txt",
+      "sha256": "efbb0c9e864cef973982d9a17567e6be5c3d1759695574586f3f18c7ecca064b"
+    },
+    {
+      "family": "Geist",
+      "file": "geist-OFL.txt",
+      "source": "https://github.com/vercel/geist-font/tree/10dc7658f13c38a474cde201bb09a4617267545b",
+      "sha256": "1781d2806a07d91c4edf4740b88449fab7d0eadad53f7c351b94cd4d4eb8c00f"
+    },
+    {
+      "family": "Geist Mono",
+      "file": "geist-mono-OFL.txt",
+      "source": "https://github.com/vercel/geist-font/tree/10dc7658f13c38a474cde201bb09a4617267545b",
+      "sha256": "1781d2806a07d91c4edf4740b88449fab7d0eadad53f7c351b94cd4d4eb8c00f"
+    }
+  ]
+}
