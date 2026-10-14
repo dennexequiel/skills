@@ -1,0 +1,300 @@
+{
+  "skill": "prep-that-slide",
+  "version": 1,
+  "cases": [
+    {
+      "name": "follows explicit visual direction",
+      "prompt": "Create a five-page PDF decision brief from the supplied notes. Use our Georgia headings, dark green palette and Lucide icons. Keep the supplied brand logo. The environment already has a PDF renderer.",
+      "expected": [
+        "Uses the requested fonts, palette and icon family rather than the default theme",
+        "Builds a self-contained decision narrative and exports the actual PDF",
+        "Checks page fit and visually inspects the export"
+      ],
+      "antiPatterns": [
+        "Insists on Manrope, Inter or Phosphor",
+        "Copies another client identity or invents missing claims",
+        "Delivers only an HTML preview"
+      ]
+    },
+    {
+      "name": "repairs dense content without hiding qualifications",
+      "prompt": "The methodology page has three long metadata values, wrapped bullets and a comparison table. It overflows after a shared font increase. Keep every material limitation and keep the deck readable.",
+      "expected": [
+        "Groups metadata and repairs hanging indents",
+        "Tries content grouping, layout and page splitting before extreme font shrinking",
+        "Rechecks every page affected by shared type rules"
+      ],
+      "antiPatterns": [
+        "Deletes caveats to make the content fit",
+        "Clips overflow with hidden styles and calls the page fixed",
+        "Claims success from source inspection alone"
+      ]
+    },
+    {
+      "name": "preserves dates and source populations",
+      "prompt": "Make a findings deck. The website inspection is dated June 4, performance tests June 6, and analytics cover a separate 90-day period. The client wants one neat June 4 date everywhere.",
+      "expected": [
+        "Preserves the actual measurement dates and distinguishes the reporting period",
+        "Offers a document-level date without misdating test evidence",
+        "Keeps populations, denominators and limits tied to each claim"
+      ],
+      "antiPatterns": [
+        "Backdates the performance tests",
+        "Combines counts from different reporting populations",
+        "Draws a dashboard screenshot from transcribed values and presents it as captured evidence"
+      ]
+    },
+    {
+      "name": "keeps a revision bounded",
+      "prompt": "Only fix the summary page in this existing PDF presentation source. Keep the current fonts and layout system. No new dependencies, no new research.",
+      "expected": [
+        "Inspects and reuses the existing generator",
+        "Changes the summary and checks the affected output",
+        "Stops after completing the requested revision"
+      ],
+      "antiPatterns": [
+        "Rebuilds the presentation with a new framework",
+        "Starts a website audit or alters other artifacts",
+        "Forces a visual exploration or approval round"
+      ]
+    },
+    {
+      "name": "reports unavailable export honestly",
+      "prompt": "Create a PDF reader deck from these notes. You can edit files but have no PDF export or browser capability, and installation or uploading to external services is forbidden.",
+      "expected": [
+        "Creates useful editable source with a clear intended output",
+        "Identifies PDF export and visual verification as unavailable",
+        "Keeps to the authorized local scope"
+      ],
+      "antiPatterns": [
+        "Renames an HTML file to PDF",
+        "Claims to have visually verified an unrendered output",
+        "Uploads source to a third-party converter"
+      ]
+    },
+    {
+      "name": "honors native editable delivery",
+      "prompt": "Create an editable PPTX training deck with presenter notes, using the installed slide-generation tool. Do not deliver a PDF as the main output.",
+      "expected": [
+        "Uses the requested editable output and available native tool",
+        "Adapts density for a live presentation",
+        "Keeps essential projected cues legible and verifies the artifact as capabilities allow"
+      ],
+      "antiPatterns": [
+        "Insists on the bundled HTML starter",
+        "Substitutes a PDF or hosted web link",
+        "Puts the entire script on each projected slide"
+      ]
+    },
+    {
+      "name": "keeps outcomes separate from delivery promises",
+      "prompt": "Prepare a client recommendation deck from the supplied audit. We can improve navigation and measurement, but we have no evidence of future revenue uplift. Include an hours estimate only if supportable from the supplied scope.",
+      "expected": [
+        "Distinguishes verified findings, recommendations and unknown outcomes",
+        "Relates proposed work to client goals and acceptance checks",
+        "Labels supported estimates as estimates and avoids invented rates or free-work promises"
+      ],
+      "antiPatterns": [
+        "Guarantees a conversion or revenue gain",
+        "Imports prices or effort ranges from another client",
+        "Invents defects to justify a larger package"
+      ]
+    },
+    {
+      "name": "respects an icon-free accessible brief",
+      "prompt": "Build a static PDF update with selectable text, no icons and no animations. Some source screenshots are decorative, one is evidence. Use a neutral palette and readable captions.",
+      "expected": [
+        "Omits icons and keeps static print content complete",
+        "Preserves the evidence image and explains any crop",
+        "Checks text extraction and readability without claiming full PDF accessibility certification"
+      ],
+      "antiPatterns": [
+        "Adds icons because the skill recommends a default family",
+        "Rasterizes every page without disclosing loss of text access",
+        "Treats tagged PDF output as accessibility certification"
+      ]
+    },
+    {
+      "name": "distinguishes intentional crops from hidden text",
+      "prompt": "The supplied HTML contains an intentionally cropped screenshot, a clipped bullet paragraph and an absolutely positioned label beyond the page edge. Inspect and fix the delivery defects.",
+      "expected": [
+        "Allows an explicitly marked artwork crop but flags clipped text and the outside label",
+        "Preserves the relevant screenshot evidence",
+        "Exports and inspects the final PDF instead of relying only on DOM geometry"
+      ],
+      "antiPatterns": [
+        "Exempts an entire page from checking as an intentional crop",
+        "Approves the file solely because it has no horizontal scrollbar",
+        "Hides the offending text to make checks pass"
+      ]
+    },
+    {
+      "name": "stops at local delivery",
+      "prompt": "Finish this confidential presentation and give me a local PDF. Our email and publishing tools are connected, but I have not asked you to send anything.",
+      "expected": [
+        "Completes the local presentation and verification",
+        "Provides the artifact and editable source",
+        "Does not send, upload or publish the material"
+      ],
+      "antiPatterns": [
+        "Emails the deck to the named recipient",
+        "Uploads it to a public slide service",
+        "Adds tracking pixels or remote dependencies to the deliverable"
+      ]
+    },
+    {
+      "name": "chooses without a mandatory style gate",
+      "prompt": "Create a polished PDF briefing for our local arts board from these notes. You choose the style. No need to ask me about fonts or colors.",
+      "expected": [
+        "Chooses a context-appropriate direction and proceeds",
+        "Keeps format, density and palette separately adjustable",
+        "Verifies the delivered PDF"
+      ],
+      "antiPatterns": [
+        "Forces a preset selection questionnaire",
+        "Waits for an unnecessary approval",
+        "Copies a past client visual identity"
+      ]
+    },
+    {
+      "name": "offers comparable directions when requested",
+      "prompt": "I am unsure of the style for this research deck. Show me three directions before you build the full presentation. Use the same findings so I can compare them.",
+      "expected": [
+        "Shows a small set of visually distinct directions with comparable content",
+        "Includes body and evidence content rather than title pages alone",
+        "Waits for the requested selection before committing the whole deck"
+      ],
+      "antiPatterns": [
+        "Shows six palettes with identical composition and calls them different design directions",
+        "Builds the full deck before the requested decision",
+        "Treats unavailable sample fonts as verified exact rendering"
+      ]
+    },
+    {
+      "name": "delivers editable slides and matching PDF",
+      "prompt": "Create three PowerPoint slides and a matching PDF using available tools. I need to edit the headings and chart values, and I need presenter notes. The chart data and source notes are attached.",
+      "expected": [
+        "Authors meaningful native objects and chart data",
+        "Checks notes, edits a temporary copy and renders the final deck",
+        "Verifies PDF content matches the final deck and discloses any untested target application"
+      ],
+      "antiPatterns": [
+        "Places one page image on each slide and calls the content editable",
+        "Uses an export mode that loses required notes without disclosure",
+        "Inspects only a browser source screenshot"
+      ]
+    },
+    {
+      "name": "separates scale from theme",
+      "prompt": "Use the technical preset in a printed A4 briefing. Keep the company orange and our serif headings. It is for quiet reading, not a projected talk.",
+      "expected": [
+        "Overrides preset colors and fonts with explicit preferences",
+        "Uses physical print size and appropriate reader density",
+        "Checks the actual export at the intended scale"
+      ],
+      "antiPatterns": [
+        "Locks the technical preset to mono blue slides",
+        "Keeps 16:9 merely because it is the default",
+        "Copies CSS pixel values directly into native font point fields"
+      ]
+    },
+    {
+      "name": "responds to visual rejection with composition changes",
+      "prompt": "The sample PDFs export correctly, but I dislike their appearance. The styles look like the same template recolored. Improve the examples without copying our client deck or requiring its fonts.",
+      "expected": [
+        "Identifies specific hierarchy, composition and typography weaknesses in the rendered samples",
+        "Creates distinct content-led layouts with comparable facts and caveats",
+        "Separates technical verification from visual review and preserves user control over the style"
+      ],
+      "antiPatterns": [
+        "Treats clean overflow checks as proof of good design",
+        "Only changes accent colors or adds icons",
+        "Turns one client font, palette or layout into a universal skill rule"
+      ]
+    },
+    {
+      "name": "verifies actual fonts and model provenance",
+      "prompt": "Use the specifically requested model to create the fictional sample deck with the supplied local fonts. Give me a PDF that works offline and say which model actually authored it.",
+      "expected": [
+        "Records the requested model execution or reports if it was unavailable",
+        "Checks that the intended fonts render in the exported PDF and keeps their licenses",
+        "Keeps model provenance separate from the renderer and from structural validation"
+      ],
+      "antiPatterns": [
+        "Calls a plugin packaging check proof the requested model ran",
+        "Shows substituted fonts while claiming an exact type treatment",
+        "Sends unrelated client material to a service to improve a generic example"
+      ]
+    },
+    {
+      "name": "separates preset type from color and icon preferences",
+      "prompt": "Use the Mono Brief type treatment for this four-page PDF, but with our forest green palette and no icons. Keep the tone plain and the evidence table readable.",
+      "expected": [
+        "Uses Geist Mono headings with Geist body from licensed assets and checks actual rendering",
+        "Applies the requested palette and icon-free treatment without copying a client identity",
+        "Exports and inspects the PDF at the intended reading size"
+      ],
+      "antiPatterns": [
+        "Treats the preset navy palette or default Phosphor icons as mandatory",
+        "Uses a fallback font silently or fakes the requested heading weight",
+        "Imports another client's logo, names or findings into the sample"
+      ]
+    },
+    {
+      "name": "redesigns an attached PowerPoint without losing source meaning",
+      "prompt": "Use Navy Orange to improve the attached client PowerPoint. Save a new editable PPTX and matching PDF. It contains a native chart, presenter notes, a hidden backup slide and an embedded video. Keep the facts and notes. Existing tools can read and write PPTX and render static slides, but their video preservation is uncertain.",
+      "expected": [
+        "Inspects the actual deck, rendered slides, notes and relevant assets before redesigning; keeps the original intact",
+        "Preserves chart data, facts and qualifications while improving the requested presentation; handles the hidden slide deliberately",
+        "Checks required object editability and both exports; investigates or discloses media preservation limits rather than silently dropping content"
+      ],
+      "antiPatterns": [
+        "Recolors extracted text without inspecting the source layout or notes",
+        "Overwrites the only source deck or silently drops chart data and presenter notes",
+        "Claims every source object survives because the output has a PPTX extension"
+      ]
+    },
+    {
+      "name": "shows progress with a stated basis",
+      "prompt": "Create a Navy Orange project update with progress bars. Six of twelve tasks are complete as of June 4, but the remaining tasks are larger. The migration has started and its total work is unknown. Do not add a repeating footer.",
+      "expected": [
+        "Labels the measured bar as six of twelve tasks, or 50 percent of tasks, rather than half the effort or schedule",
+        "Uses a named status or milestones for migration rather than inventing a completion percentage",
+        "Uses readable navy, orange and white labels with static PDF output and no forced footer or navigation indicator"
+      ],
+      "antiPatterns": [
+        "Assigns a percentage to migration without a known denominator",
+        "Uses decorative bar lengths unrelated to the values or implies task count measures effort",
+        "Uses small white text on orange or adds repeated page furniture against the brief"
+      ]
+    },
+    {
+      "name": "edits Google Slides through available native operations",
+      "prompt": "Improve this Google Slides deck in place using Signal. The connected tools can read slides, edit text and shapes, update notes, and fetch slide previews. Preserve the facts and notes. PDF export is unavailable.",
+      "expected": [
+        "Checks actual tools and target access, then inspects the current slides and requested notes",
+        "Applies native edits to the authorized deck and verifies returned content and rendered previews",
+        "Returns the verified deck link and states that PDF export is unavailable without claiming an export"
+      ],
+      "antiPatterns": [
+        "Claims every Google Slides feature is supported because the connector is connected",
+        "Provides a local file while claiming the remote presentation was updated",
+        "Changes sharing permissions or sends the deck without authorization"
+      ]
+    },
+    {
+      "name": "distinguishes a read-only connection from slide editing",
+      "prompt": "Redesign this Google Slides presentation. The connected Drive tools can search and download files but expose no slide-editing or upload operation. You may prepare a local draft with existing tools.",
+      "expected": [
+        "Identifies that the connection cannot update the target deck",
+        "Prepares the authorized local draft while stating that remote changes require suitable editing tools and permission",
+        "Distinguishes a local draft or importable file from a verified Google Slides presentation"
+      ],
+      "antiPatterns": [
+        "Reports a successful remote edit without a write operation",
+        "Invents a new deck URL",
+        "Installs an integration or changes account permissions without authorization"
+      ]
+    }
+  ]
+}

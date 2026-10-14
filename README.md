@@ -15,6 +15,7 @@ Every skill is independently installable and keeps its portable instructions sep
 | --- | --- | --- | --- |
 | [Ace](skills/ace/) | stable | workflow, autonomy | Own a bounded mission through evidence-backed completion while preserving user judgment and authority. |
 | [Prep That Doc](skills/prep-that-doc/) | stable | documentation, writing | Review engineering Markdown with document-aware rules, protected content, and evidence before edits. |
+| [Prep That Slide](skills/prep-that-slide/) | experimental | presentations, documents, design | Design PDF, PowerPoint (PPTX), HTML and connected Google Slides presentations with available authoring and export tools. |
 <!-- catalog:end -->
 
 ## Install A Skill

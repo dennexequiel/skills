@@ -1,0 +1,36 @@
+{
+  "skill": "prep-that-slide",
+  "version": 1,
+  "positive": [
+    "Turn this inspection report into a polished PDF deck our client can read alone.",
+    "Improve the layout of these presentation pages and fix the crowded methodology slide.",
+    "Create a board presentation using our serif font, burgundy palette and no icons.",
+    "Convert these workshop notes into slides with large projected text and supporting notes.",
+    "Export this HTML presentation to PDF and verify the printed pages, fonts and screenshots.",
+    "Build an editable PowerPoint deck with speaker notes and a matching PDF from these findings.",
+    "Show me a few visual presets for this presentation, with the same content in each.",
+    "Use the connected Google Slides editing tools to improve this deck in place and export a PDF if supported.",
+    "Improve the attached PPTX while keeping the text and charts editable."
+  ],
+  "negative": [
+    "Extract the line items from this scanned invoice PDF.",
+    "Fill the address fields in this government PDF form.",
+    "Fix the CSS layout of our production ecommerce homepage.",
+    "Proofread this two-paragraph email without changing its formatting.",
+    "Build a ninety-second animated product launch video."
+  ],
+  "ambiguous": [
+    {
+      "prompt": "Make this proposal look more professional.",
+      "expected": "Inspect the artifact and requested delivery. Apply the skill if it is a presentation or needs designed pages; ordinary prose editing alone does not require it."
+    },
+    {
+      "prompt": "Can you make some slides for this?",
+      "expected": "Infer the topic, audience and format from supplied context. Ask briefly if the missing source or use setting prevents meaningful work, without imposing PDF when an editable slide file is requested."
+    },
+    {
+      "prompt": "Make this PDF shorter.",
+      "expected": "Establish whether it is a deck, report, form or another artifact. Apply this skill for presentation narrative and layout, preserving material evidence and qualifications."
+    }
+  ]
+}

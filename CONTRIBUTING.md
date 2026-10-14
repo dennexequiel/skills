@@ -2,6 +2,12 @@
 
 Contributions should keep each skill portable, self-contained, and independently installable.
 
+## Public Content
+
+Publish maintained instructions, reproducible evaluation evidence and reviewed examples. Keep client material, raw conversations, research scratchpads, temporary outputs and machine-specific paths in the ignored `.local/` directory unless their publication is explicitly authorized and their content is reviewed.
+
+Before a commit or push, inspect the files being published, including image content and metadata. Public results need reviewable artifacts or reproducible source; private artifact paths are not evidence readers can inspect. Preview images should use fictional or approved content. Preserve required third-party licenses and attribution.
+
 ## Add Or Change A Skill
 
 1. Keep the canonical path at `skills/<name>/SKILL.md`.

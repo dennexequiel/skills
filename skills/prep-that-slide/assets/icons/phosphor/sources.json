@@ -1,0 +1,22 @@
+[
+  {
+    "file": "chart-bar.svg",
+    "source": "https://raw.githubusercontent.com/phosphor-icons/core/2b75f3ad12b420c9504ef05df8d2564a28f8500e/assets/regular/chart-bar.svg",
+    "sha256": "d161e503af4f5386a370ffd742d19d85e98625fd6d6eadbabbdb36d58dcca22c"
+  },
+  {
+    "file": "list-checks.svg",
+    "source": "https://raw.githubusercontent.com/phosphor-icons/core/2b75f3ad12b420c9504ef05df8d2564a28f8500e/assets/regular/list-checks.svg",
+    "sha256": "b2d11fc95de627d6abe9feeced5f7e0cdce3ccdf8d9f9d2334d596b8b5cc5cc4"
+  },
+  {
+    "file": "magnifying-glass.svg",
+    "source": "https://raw.githubusercontent.com/phosphor-icons/core/2b75f3ad12b420c9504ef05df8d2564a28f8500e/assets/regular/magnifying-glass.svg",
+    "sha256": "f9fa2561978a9a3291e8ae0ebfcb651104f5069fade8f84871627bca68889cde"
+  },
+  {
+    "file": "calendar-blank.svg",
+    "source": "https://raw.githubusercontent.com/phosphor-icons/core/2b75f3ad12b420c9504ef05df8d2564a28f8500e/assets/regular/calendar-blank.svg",
+    "sha256": "6268583ae0ea04e93fd24f1e70d47a8e8d79c88fc304af397b95b318980215d6"
+  }
+]

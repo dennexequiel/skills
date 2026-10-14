@@ -26,6 +26,9 @@ Compatibility is recorded per skill so unrelated skills can adopt integrations i
 | [Prep That Doc](../skills/prep-that-doc/) | Codex CLI | Yes | Not yet | No | `$prep-that-doc` or `/skills` |
 | [Prep That Doc](../skills/prep-that-doc/) | Pi | Yes | Not yet | No | `/skill:prep-that-doc` |
 | [Prep That Doc](../skills/prep-that-doc/) | Antigravity CLI (`agy`) | Yes | Yes (`bun run smoke:agy`) | No | Plugin skill discovery after `agy plugin install` |
+| [Prep That Slide](../skills/prep-that-slide/) | Codex CLI | Unverified | Not yet | No | Native skill discovery (unverified) |
+| [Prep That Slide](../skills/prep-that-slide/) | Claude Code | Yes | Yes (`bun run smoke:claude-code`) | No | Native skill discovery |
+| [Prep That Slide](../skills/prep-that-slide/) | OpenCode | Unverified | Not yet | No | Native skill discovery (unverified) |
 
 ## Smoke Scope
 
@@ -36,6 +39,17 @@ Compatibility is recorded per skill so unrelated skills can adopt integrations i
 | `bun run smoke:agy` | Antigravity accepts the staged plugin and reports the catalog's skill count. |
 
 Packaging validation does not prove a model follows the skill, and an empty-session status call does not prove a mission lifecycle. Adapter regression tests and recorded behavioral runs provide that separate evidence.
+
+## Presentation Output Evidence
+
+Skill discovery and output-format delivery are separate checks. The [presentation format requirements](../skills/prep-that-slide/README.md#formats-and-requirements) describe the tools each output needs.
+
+| Output | Evidence in this repository | Limit |
+| --- | --- | --- |
+| PDF | [Reproducible preset exports](../evals/prep-that-slide/README.md#run-the-checks), layout checks and PDF page counts | Each delivered deck needs visual inspection. Sample checks do not certify every future deck or full PDF accessibility. |
+| Editable PPTX | Native slide authoring and delivery-check guidance | No reproducible native PowerPoint fixture is included. Editability, notes and recipient rendering need verification with the chosen tools. |
+| Google Slides | Connected editing workflow guidance | No reproducible end-to-end editing fixture is included. Required editing operations and target-deck write permission must be available. |
+| HTML | Offline static preview and browser layout checks | Full interactive-talk delivery is not tested. |
 
 ## Integration Gate
 
